@@ -5,7 +5,7 @@
 [![Nuxt](https://img.shields.io/badge/nuxt-3.x-00DC82.svg)](https://nuxt.com/)
 [![TypeScript](https://img.shields.io/badge/typescript-5.x-blue.svg)](https://www.typescriptlang.org/)
 [![Vite](https://img.shields.io/badge/vite-5.x-purple.svg)](https://vitejs.dev/)
-[![Tailwind CSS](https://img.shields.io/badge/tailwind-3.x-06B6D4.svg)](https://tailwindcss.com/)
+[![Tailwind CSS](https://img.shields.io/badge/tailwind-4.x-06B6D4.svg)](https://tailwindcss.com/)
 [![Tailwind UI](https://img.shields.io/badge/tailwind_ui-components-0EA5E9.svg)](https://tailwindui.com/)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
