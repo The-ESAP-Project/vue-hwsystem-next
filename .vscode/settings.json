@@ -8,5 +8,11 @@
   "tailwindCSS.classAttributes": ["class", "ui"],
   "tailwindCSS.experimental.classRegex": [
     ["ui:\\s*{([^)]*)\\s*}", "(?:'|\"|`)([^']*)(?:'|\"|`)"]
-  ]
+  ],
+  "i18n-ally.localesPaths": [
+    "i18n",
+    "locales",
+    "i18n/locales"
+  ],
+  "i18n-ally.keystyle": "nested"
 }

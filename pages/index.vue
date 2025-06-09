@@ -1,8 +1,250 @@
 <template>
-  <div>
-    <h1>Welcome to the homepage</h1>
-    <AppAlert>
-      This is an auto-imported component
-    </AppAlert>
+  <div class="bg-white">
+    <!-- Hero Section -->
+    <div class="relative isolate px-6 pt-6 lg:px-8">
+      <div class="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80" aria-hidden="true">
+        <div class="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[#ff80b5] to-[#9089fc] opacity-30 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]" style="clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)"></div>
+      </div>
+      
+      <div class="mx-auto max-w-2xl py-16 sm:py-24 lg:py-32">
+        <div class="hidden sm:mb-8 sm:flex sm:justify-center">
+          <div class="relative rounded-full px-3 py-1 text-sm/6 text-gray-600 ring-1 ring-gray-900/10 hover:ring-gray-900/20">
+            {{ $t('home.heroTagline') }}
+            <a href="#features" class="font-semibold text-indigo-600">
+              <span class="absolute inset-0" aria-hidden="true"></span>
+              {{ $t('home.learnMore') }} <span aria-hidden="true">&rarr;</span>
+            </a>
+          </div>
+        </div>
+        
+        <div class="text-center">
+          <h1 class="text-balance text-5xl font-semibold tracking-tight text-gray-900 sm:text-7xl">
+            {{ $t('home.title') }}
+          </h1>
+          <p class="mt-8 text-pretty text-lg font-medium text-gray-500 sm:text-xl/8">
+            {{ $t('home.subtitle') }}
+          </p>
+          <div class="mt-10 flex items-center justify-center gap-x-6">
+            <NuxtLink 
+              to="/login" 
+              class="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            >
+              {{ $t('home.loginNow') }}
+            </NuxtLink>
+            <a href="#roles" class="text-sm/6 font-semibold text-gray-900">
+              {{ $t('home.learnRoles') }} <span aria-hidden="true">→</span>
+            </a>
+          </div>
+        </div>
+      </div>
+      
+      <div class="absolute inset-x-0 top-[calc(100%-13rem)] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[calc(100%-30rem)]" aria-hidden="true">
+        <div class="relative left-[calc(50%+3rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 bg-gradient-to-tr from-[#ff80b5] to-[#9089fc] opacity-30 sm:left-[calc(50%+36rem)] sm:w-[72.1875rem]" style="clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)"></div>
+      </div>
+    </div>
+
+    <!-- Features Section -->
+    <div id="features" class="py-24 sm:py-32">
+      <div class="mx-auto max-w-7xl px-6 lg:px-8">
+        <div class="mx-auto max-w-2xl lg:text-center">
+          <h2 class="text-base/7 font-semibold text-indigo-600">{{ $t('home.modernFeatures') }}</h2>
+          <p class="mt-2 text-pretty text-4xl font-semibold tracking-tight text-gray-900 sm:text-5xl lg:text-balance">
+            {{ $t('home.comprehensiveSolution') }}
+          </p>
+          <p class="mt-6 text-lg/8 text-gray-600">
+            {{ $t('home.technologyDescription') }}
+          </p>
+        </div>
+        
+        <div class="mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-4xl">
+          <dl class="grid max-w-xl grid-cols-1 gap-x-8 gap-y-10 lg:max-w-none lg:grid-cols-2 lg:gap-y-16">
+            <div v-for="feature in features" :key="feature.name" class="relative pl-16">
+              <dt class="text-base/7 font-semibold text-gray-900">
+                <div class="absolute left-0 top-0 flex size-10 items-center justify-center rounded-lg bg-indigo-600">
+                  <component :is="feature.icon" class="size-6 text-white" aria-hidden="true" />
+                </div>
+                {{ $t(feature.name) }}
+              </dt>
+              <dd class="mt-2 text-base/7 text-gray-600">{{ $t(feature.description) }}</dd>
+            </div>
+          </dl>
+        </div>
+      </div>
+    </div>
+
+    <!-- Roles Section -->
+    <div id="roles" class="bg-gray-50 py-24 sm:py-32">
+      <div class="mx-auto max-w-7xl px-6 lg:px-8">
+        <div class="mx-auto max-w-2xl text-center">
+          <h2 class="text-base/7 font-semibold text-indigo-600">{{ $t('home.roleFunctions') }}</h2>
+          <p class="mt-2 text-balance text-4xl font-semibold tracking-tight text-gray-900 sm:text-5xl">
+            {{ $t('home.tailoredForEachRole') }}
+          </p>
+          <p class="mt-6 text-lg/8 text-gray-600">
+            {{ $t('home.roleDescription') }}
+          </p>
+        </div>
+        
+        <div class="mx-auto mt-16 grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 sm:mt-20 lg:mx-0 lg:max-w-none lg:grid-cols-3">
+          <div v-for="role in roles" :key="role.name" class="flex max-w-xl flex-col items-start justify-between bg-white p-8 rounded-2xl shadow-sm ring-1 ring-gray-200">
+            <div class="group relative">
+              <div class="flex items-center gap-x-4">
+                <div class="flex size-12 items-center justify-center rounded-lg bg-indigo-50">
+                  <component :is="role.icon" class="size-6 text-indigo-600" aria-hidden="true" />
+                </div>
+                <h3 class="text-lg/6 font-semibold text-gray-900">{{ $t(role.name) }}</h3>
+              </div>
+              <p class="mt-4 text-sm/6 text-gray-600">{{ $t(role.description) }}</p>
+              <div class="mt-6">
+                <ul class="space-y-2">
+                  <li v-for="feature in role.features" :key="feature" class="flex items-center text-sm text-gray-600">
+                    <svg class="mr-2 size-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                    </svg>
+                    {{ $t(feature) }}
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <NuxtLink 
+              to="/login" 
+              class="mt-6 w-full rounded-md bg-indigo-50 px-3 py-2 text-sm font-semibold text-indigo-600 hover:bg-indigo-100 text-center transition-colors"
+            >
+              {{ $t('home.loginAs', { role: $t(role.name) }) }}
+            </NuxtLink>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CTA Section -->
+    <div class="bg-indigo-600">
+      <div class="px-6 py-24 sm:px-6 sm:py-32 lg:px-8">
+        <div class="mx-auto max-w-2xl text-center">
+          <h2 class="text-balance text-4xl font-semibold tracking-tight text-white sm:text-5xl">
+            {{ $t('home.startJourney') }}
+          </h2>
+          <p class="mx-auto mt-6 max-w-xl text-lg/8 text-indigo-200">
+            {{ $t('home.joinDescription') }}
+          </p>
+          <div class="mt-10 flex items-center justify-center gap-x-6">
+            <NuxtLink 
+              to="/login" 
+              class="rounded-md bg-white px-3.5 py-2.5 text-sm font-semibold text-indigo-600 shadow-sm hover:bg-gray-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+            >
+              {{ $t('home.tryNow') }}
+            </NuxtLink>
+            <a href="https://github.com/The-ESAP-Project/vue-hwsystem-next" class="text-sm/6 font-semibold text-white">
+              {{ $t('home.viewSource') }} <span aria-hidden="true">→</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
+
+<script setup lang="ts">
+import {
+  AcademicCapIcon,
+  ChartBarIcon,
+  DevicePhoneMobileIcon,
+  LightBulbIcon,
+  ShieldCheckIcon,
+  UserGroupIcon,
+  PresentationChartBarIcon,
+  BellIcon,
+  PencilSquareIcon
+} from '@heroicons/vue/24/outline'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
+
+const features = [
+  {
+    name: 'home.features.responsive.name',
+    description: 'home.features.responsive.description',
+    icon: DevicePhoneMobileIcon,
+  },
+  {
+    name: 'home.features.realtime.name',
+    description: 'home.features.realtime.description',
+    icon: BellIcon,
+  },
+  {
+    name: 'home.features.visualization.name',
+    description: 'home.features.visualization.description',
+    icon: ChartBarIcon,
+  },
+  {
+    name: 'home.features.grading.name',
+    description: 'home.features.grading.description',
+    icon: PencilSquareIcon,
+  },
+  {
+    name: 'home.features.security.name',
+    description: 'home.features.security.description',
+    icon: ShieldCheckIcon,
+  },
+  {
+    name: 'home.features.performance.name',
+    description: 'home.features.performance.description',
+    icon: LightBulbIcon,
+  },
+]
+
+const roles = [
+  {
+    name: 'home.roles.student.name',
+    description: 'home.roles.student.description',
+    icon: AcademicCapIcon,
+    features: [
+      'home.roles.student.features.homework',
+      'home.roles.student.features.grades',
+      'home.roles.student.features.notifications',
+      'home.roles.student.features.profile',
+      'home.roles.student.features.reminders'
+    ]
+  },
+  {
+    name: 'home.roles.monitor.name',
+    description: 'home.roles.monitor.description',
+    icon: UserGroupIcon,
+    features: [
+      'home.roles.monitor.features.statistics',
+      'home.roles.monitor.features.monitoring',
+      'home.roles.monitor.features.reminder',
+      'home.roles.monitor.features.charts',
+      'home.roles.monitor.features.communication'
+    ]
+  },
+  {
+    name: 'home.roles.teacher.name',
+    description: 'home.roles.teacher.description',
+    icon: PresentationChartBarIcon,
+    features: [
+      'home.roles.teacher.features.assignment',
+      'home.roles.teacher.features.grading',
+      'home.roles.teacher.features.management',
+      'home.roles.teacher.features.analytics',
+      'home.roles.teacher.features.classroom'
+    ]
+  }
+]
+
+// SEO Meta - 修复标题翻译问题
+useHead({
+  title: t('home.title'),
+  titleTemplate: '%s - ' + t('home.metaTitle'),
+  meta: [
+    {
+      name: 'description',
+      content: t('home.metaDescription')
+    },
+    {
+      name: 'keywords',
+      content: t('home.metaKeywords')
+    }
+  ]
+})
+</script>
