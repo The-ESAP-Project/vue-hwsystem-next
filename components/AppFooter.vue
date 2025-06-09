@@ -27,7 +27,6 @@
 </template>
 
 <script setup>
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const { t } = useI18n()
 const localePath = useLocalePath()
 

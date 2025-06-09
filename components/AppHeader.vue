@@ -148,7 +148,6 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
 import {
   Dialog,
   DialogPanel,
@@ -170,8 +169,6 @@ import {
   XMarkIcon,
 } from '@heroicons/vue/24/outline'
 import { ChevronDownIcon, PhoneIcon, PlayCircleIcon } from '@heroicons/vue/20/solid'
-import { useI18n } from 'vue-i18n'
-import LanguageSwitcher from './LanguageSwitcher.vue'
 
 const { t, locale, setLocale } = useI18n()
 const localePath = useLocalePath()
