@@ -5,15 +5,16 @@
     
     <!-- Main Content -->
     <div class="flex-1 overflow-auto">
-      <NuxtPage />
+      <div class="min-h-full flex flex-col">
+        <!-- Page Content -->
+        <div class="flex-1">
+          <NuxtPage />
+        </div>
+        
+        <!-- Footer -->
+        <AppFooter class="flex-none" />
+      </div>
     </div>
-
-    <!-- Footer -->
-    <AppFooter class="flex-none" />
   </div>
 </template>
 
-<script setup lang="ts">
-import AppHeader from '../components/AppHeader.vue'
-import AppFooter from '../components/AppFooter.vue'
-</script>
