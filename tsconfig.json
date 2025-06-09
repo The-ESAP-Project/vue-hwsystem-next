@@ -2,9 +2,14 @@
   "extends": "./.nuxt/tsconfig.json",
   "compilerOptions": {
     "strict": true,
+    "module": "ESNext",
     "types": [
       "node"
     ]
+  },
+  "typescript": {
+    "strict": true,
+    "typeCheck": true
   },
   "include": [
     "nuxt.config.ts"
