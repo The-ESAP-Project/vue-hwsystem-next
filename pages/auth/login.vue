@@ -1,11 +1,11 @@
 <template>
-  <div class="min-h-screen bg-gray-100 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+  <div class="min-h-screen bg-gray-100 dark:bg-gray-900 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 transition-colors duration-200">
     <div class="w-full max-w-md space-y-8">
       <div class="text-center">
-        <h1 class="text-3xl font-bold tracking-tight text-gray-900">
+        <h1 class="text-3xl font-bold tracking-tight text-gray-900 dark:text-white transition-colors duration-200">
           {{ $t('login.title') }}
         </h1>
-        <p class="mt-2 text-sm text-gray-600">
+        <p class="mt-2 text-sm text-gray-600 dark:text-gray-400 transition-colors duration-200">
           {{ $t('login.subtitle', { 
             student: $t('common.student'),
             teacher: $t('common.teacher'),
@@ -14,11 +14,11 @@
         </p>
       </div>
 
-      <div class="bg-white py-8 px-6 shadow-sm rounded-lg">
+      <div class="bg-white dark:bg-gray-800 py-8 px-6 shadow-sm rounded-lg transition-colors duration-200">
         <!-- 登录表单 -->
         <form class="space-y-6" @submit.prevent="handleLogin">
           <div>
-            <label for="username" class="block text-sm/6 font-medium text-gray-900">
+            <label for="username" class="block text-sm/6 font-medium text-gray-900 dark:text-white transition-colors duration-200">
               {{ $t('common.username') }}
             </label>
             <div class="mt-2">
@@ -31,14 +31,14 @@
                 autocomplete="username" 
                 required 
                 :disabled="pending"
-                class="border border-solid border-zinc-200 block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6 disabled:opacity-50 disabled:cursor-not-allowed" 
+                class="border border-solid border-zinc-200 dark:border-gray-600 block w-full rounded-md bg-white dark:bg-gray-700 px-3 py-1.5 text-base text-gray-900 dark:text-white outline-1 -outline-offset-1 outline-gray-300 dark:outline-gray-600 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 dark:focus:outline-indigo-500 sm:text-sm/6 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200" 
                 :class="{ 'border-red-500 focus:outline-red-500': error }"
               >
             </div>
           </div>
 
           <div>
-            <label for="password" class="block text-sm/6 font-medium text-gray-900">
+            <label for="password" class="block text-sm/6 font-medium text-gray-900 dark:text-white transition-colors duration-200">
               {{ $t('common.password') }}
             </label>
             <div class="mt-2 relative">
@@ -51,12 +51,12 @@
                 autocomplete="current-password" 
                 required 
                 :disabled="pending"
-                class="border border-solid border-zinc-200 block w-full rounded-md bg-white px-3 py-1.5 pr-10 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6 disabled:opacity-50 disabled:cursor-not-allowed"
+                class="border border-solid border-zinc-200 dark:border-gray-600 block w-full rounded-md bg-white dark:bg-gray-700 px-3 py-1.5 pr-10 text-base text-gray-900 dark:text-white outline-1 -outline-offset-1 outline-gray-300 dark:outline-gray-600 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 dark:focus:outline-indigo-500 sm:text-sm/6 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
                 :class="{ 'border-red-500 focus:outline-red-500': error }"
               >
               <button
                 type="button"
-                class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600"
+                class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors duration-200"
                 @click="showPassword = !showPassword"
               >
                 <EyeIcon v-if="!showPassword" class="h-5 w-5" />
@@ -67,13 +67,13 @@
 
           <!-- 错误信息 -->
           <Transition name="fade">
-            <div v-if="error" class="rounded-md bg-red-50 p-4">
+            <div v-if="error" class="rounded-md bg-red-50 dark:bg-red-900/50 p-4 transition-colors duration-200">
               <div class="flex">
                 <div class="flex-shrink-0">
                   <XCircleIcon class="h-5 w-5 text-red-400" />
                 </div>
                 <div class="ml-3">
-                  <p class="text-sm text-red-800">
+                  <p class="text-sm text-red-800 dark:text-red-200 transition-colors duration-200">
                     {{ error }}
                   </p>
                 </div>
@@ -91,21 +91,21 @@
                     v-model="form.rememberMe" 
                     name="remember-me" 
                     type="checkbox" 
-                    class="col-start-1 row-start-1 appearance-none rounded-sm border border-gray-300 bg-white checked:border-indigo-600 checked:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                    class="col-start-1 row-start-1 appearance-none rounded-sm border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 checked:border-indigo-600 checked:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 transition-colors duration-200"
                   >
                   <svg class="pointer-events-none col-start-1 row-start-1 size-3.5 self-center justify-self-center stroke-white" viewBox="0 0 14 14" fill="none">
                     <path class="opacity-0 group-has-checked:opacity-100" d="M3 8L6 11L11 3.5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                   </svg>
                 </div>
               </div>
-              <label for="remember-me" class="block text-sm/6 text-gray-900">
+              <label for="remember-me" class="block text-sm/6 text-gray-900 dark:text-white transition-colors duration-200">
                 {{ $t('login.rememberMe') }}
               </label>
             </div>
             
             <NuxtLink
               :to="localePath('/forgot-password')"
-              class="text-sm text-indigo-600 hover:text-indigo-500"
+              class="text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300 transition-colors duration-200"
             >
               {{ $t('login.forgotPassword') }}
             </NuxtLink>
@@ -116,7 +116,7 @@
             <button 
               type="submit" 
               :disabled="pending || !form.username || !form.password"
-              class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              class="flex w-full justify-center rounded-md bg-indigo-600 dark:bg-indigo-500 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-500 dark:hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:focus-visible:outline-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               <span v-if="pending" class="flex items-center">
                 <svg class="animate-spin -ml-1 mr-3 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -130,34 +130,13 @@
           </div>
         </form>
 
-        <!-- 演示账号提示 -->
-        <div class="mt-6 border-t border-gray-200 pt-6">
-          <p class="text-center text-sm text-gray-600 mb-3">
-            {{ $t('login.demoAccounts') }}
-          </p>
-          <div class="grid grid-cols-1 gap-2 sm:grid-cols-3 text-xs">
-            <div class="bg-gray-50 p-2 rounded text-center">
-              <div class="font-medium">{{ $t('common.student') }}</div>
-              <div class="text-gray-500">student / 123456</div>
-            </div>
-            <div class="bg-gray-50 p-2 rounded text-center">
-              <div class="font-medium">{{ $t('common.teacher') }}</div>
-              <div class="text-gray-500">teacher / 123456</div>
-            </div>
-            <div class="bg-gray-50 p-2 rounded text-center">
-              <div class="font-medium">{{ $t('common.admin') }}</div>
-              <div class="text-gray-500">admin / admin</div>
-            </div>
-          </div>
-        </div>
-
         <!-- 注册链接 -->
-        <div class="mt-6 border-t border-gray-200 pt-6 text-center">
-          <p class="text-sm text-gray-600">
+        <div class="mt-6 border-t border-gray-200 dark:border-gray-700 pt-6 text-center transition-colors duration-200">
+          <p class="text-sm text-gray-600 dark:text-gray-400 transition-colors duration-200">
             {{ $t('login.noAccount') }}
             <NuxtLink
               :to="localePath('/auth/register')"
-              class="text-indigo-600 hover:text-indigo-500 font-medium"
+              class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300 font-medium transition-colors duration-200"
             >
               {{ $t('login.signUp') }}
             </NuxtLink>
@@ -189,7 +168,7 @@ useHead({
 
 // 页面配置
 definePageMeta({
-  layout: 'auth',
+  layout: 'app',
   auth: false,
   keepalive: false
 })

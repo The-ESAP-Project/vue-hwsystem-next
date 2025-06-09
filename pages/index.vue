@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-white">
+  <div class="bg-white dark:bg-gray-900 transition-colors duration-200">
     <!-- Hero Section -->
     <div class="relative isolate px-6 pt-6 lg:px-8">
       <div class="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80" aria-hidden="true">
@@ -8,9 +8,9 @@
       
       <div class="mx-auto max-w-2xl py-16 sm:py-24 lg:py-32">
         <div class="hidden sm:mb-8 sm:flex sm:justify-center">
-          <div class="relative rounded-full px-3 py-1 text-sm/6 text-gray-600 ring-1 ring-gray-900/10 hover:ring-gray-900/20">
+          <div class="relative rounded-full px-3 py-1 text-sm/6 text-gray-600 dark:text-gray-300 ring-1 ring-gray-900/10 dark:ring-gray-700/50 hover:ring-gray-900/20 dark:hover:ring-gray-700 transition-colors duration-200">
             {{ $t('home.heroTagline') }}
-            <a href="#features" class="font-semibold text-indigo-600">
+            <a href="#features" class="font-semibold text-indigo-600 dark:text-indigo-400">
               <span class="absolute inset-0" aria-hidden="true"/>
               {{ $t('home.learnMore') }} <span aria-hidden="true">&rarr;</span>
             </a>
@@ -18,20 +18,20 @@
         </div>
         
         <div class="text-center">
-          <h1 class="text-balance text-5xl font-semibold tracking-tight text-gray-900 sm:text-7xl">
+          <h1 class="text-balance text-5xl font-semibold tracking-tight text-gray-900 dark:text-white sm:text-7xl transition-colors duration-200">
             {{ $t('home.title') }}
           </h1>
-          <p class="mt-8 text-pretty text-lg font-medium text-gray-500 sm:text-xl/8">
+          <p class="mt-8 text-pretty text-lg font-medium text-gray-500 dark:text-gray-400 sm:text-xl/8 transition-colors duration-200">
             {{ $t('home.subtitle') }}
           </p>
           <div class="mt-10 flex items-center justify-center gap-x-6">
             <NuxtLink
               :to="localePath('/auth/login')"
-              class="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              class="rounded-md bg-indigo-600 dark:bg-indigo-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 dark:hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:focus-visible:outline-indigo-500 transition-colors duration-200"
             >
               {{ $t('home.loginNow') }}
             </NuxtLink>
-            <a href="#roles" class="text-sm/6 font-semibold text-gray-900">
+            <a href="#roles" class="text-sm/6 font-semibold text-gray-900 dark:text-white transition-colors duration-200">
               {{ $t('home.learnRoles') }} <span aria-hidden="true">→</span>
             </a>
           </div>
@@ -47,11 +47,11 @@
     <div id="features" class="py-24 sm:py-32">
       <div class="mx-auto max-w-7xl px-6 lg:px-8">
         <div class="mx-auto max-w-2xl lg:text-center">
-          <h2 class="text-base/7 font-semibold text-indigo-600">{{ $t('home.modernFeatures') }}</h2>
-          <p class="mt-2 text-pretty text-4xl font-semibold tracking-tight text-gray-900 sm:text-5xl lg:text-balance">
+          <h2 class="text-base/7 font-semibold text-indigo-600 dark:text-indigo-400 transition-colors duration-200">{{ $t('home.modernFeatures') }}</h2>
+          <p class="mt-2 text-pretty text-4xl font-semibold tracking-tight text-gray-900 dark:text-white sm:text-5xl lg:text-balance transition-colors duration-200">
             {{ $t('home.comprehensiveSolution') }}
           </p>
-          <p class="mt-6 text-lg/8 text-gray-600">
+          <p class="mt-6 text-lg/8 text-gray-600 dark:text-gray-300 transition-colors duration-200">
             {{ $t('home.technologyDescription') }}
           </p>
         </div>
@@ -59,13 +59,13 @@
         <div class="mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-4xl">
           <dl class="grid max-w-xl grid-cols-1 gap-x-8 gap-y-10 lg:max-w-none lg:grid-cols-2 lg:gap-y-16">
             <div v-for="feature in features" :key="feature.name" class="relative pl-16">
-              <dt class="text-base/7 font-semibold text-gray-900">
-                <div class="absolute left-0 top-0 flex size-10 items-center justify-center rounded-lg bg-indigo-600">
+              <dt class="text-base/7 font-semibold text-gray-900 dark:text-white transition-colors duration-200">
+                <div class="absolute left-0 top-0 flex size-10 items-center justify-center rounded-lg bg-indigo-600 dark:bg-indigo-500">
                   <component :is="feature.icon" class="size-6 text-white" aria-hidden="true" />
                 </div>
                 {{ $t(feature.name) }}
               </dt>
-              <dd class="mt-2 text-base/7 text-gray-600">{{ $t(feature.description) }}</dd>
+              <dd class="mt-2 text-base/7 text-gray-600 dark:text-gray-300 transition-colors duration-200">{{ $t(feature.description) }}</dd>
             </div>
           </dl>
         </div>
@@ -73,32 +73,32 @@
     </div>
 
     <!-- Roles Section -->
-    <div id="roles" class="bg-gray-50 py-24 sm:py-32">
+    <div id="roles" class="bg-gray-50 dark:bg-gray-800 py-24 sm:py-32 transition-colors duration-200">
       <div class="mx-auto max-w-7xl px-6 lg:px-8">
         <div class="mx-auto max-w-2xl text-center">
-          <h2 class="text-base/7 font-semibold text-indigo-600">{{ $t('home.roleFunctions') }}</h2>
-          <p class="mt-2 text-balance text-4xl font-semibold tracking-tight text-gray-900 sm:text-5xl">
+          <h2 class="text-base/7 font-semibold text-indigo-600 dark:text-indigo-400 transition-colors duration-200">{{ $t('home.roleFunctions') }}</h2>
+          <p class="mt-2 text-balance text-4xl font-semibold tracking-tight text-gray-900 dark:text-white sm:text-5xl transition-colors duration-200">
             {{ $t('home.tailoredForEachRole') }}
           </p>
-          <p class="mt-6 text-lg/8 text-gray-600">
+          <p class="mt-6 text-lg/8 text-gray-600 dark:text-gray-300 transition-colors duration-200">
             {{ $t('home.roleDescription') }}
           </p>
         </div>
         
         <div class="mx-auto mt-16 grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 sm:mt-20 lg:mx-0 lg:max-w-none lg:grid-cols-3">
-          <div v-for="role in roles" :key="role.name" class="flex max-w-xl flex-col items-start justify-between bg-white p-8 rounded-2xl shadow-sm ring-1 ring-gray-200">
+          <div v-for="role in roles" :key="role.name" class="flex max-w-xl flex-col items-start justify-between bg-white dark:bg-gray-700 p-8 rounded-2xl shadow-sm ring-1 ring-gray-200 dark:ring-gray-600 transition-colors duration-200">
             <div class="group relative">
               <div class="flex items-center gap-x-4">
-                <div class="flex size-12 items-center justify-center rounded-lg bg-indigo-50">
-                  <component :is="role.icon" class="size-6 text-indigo-600" aria-hidden="true" />
+                <div class="flex size-12 items-center justify-center rounded-lg bg-indigo-50 dark:bg-indigo-900/50">
+                  <component :is="role.icon" class="size-6 text-indigo-600 dark:text-indigo-400" aria-hidden="true" />
                 </div>
-                <h3 class="text-lg/6 font-semibold text-gray-900">{{ $t(role.name) }}</h3>
+                <h3 class="text-lg/6 font-semibold text-gray-900 dark:text-white transition-colors duration-200">{{ $t(role.name) }}</h3>
               </div>
-              <p class="mt-4 text-sm/6 text-gray-600">{{ $t(role.description) }}</p>
+              <p class="mt-4 text-sm/6 text-gray-600 dark:text-gray-300 transition-colors duration-200">{{ $t(role.description) }}</p>
               <div class="mt-6">
                 <ul class="space-y-2">
-                  <li v-for="feature in role.features" :key="feature" class="flex items-center text-sm text-gray-600">
-                    <svg class="mr-2 size-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                  <li v-for="feature in role.features" :key="feature" class="flex items-center text-sm text-gray-600 dark:text-gray-300 transition-colors duration-200">
+                    <svg class="mr-2 size-4 text-green-500 dark:text-green-400" fill="currentColor" viewBox="0 0 20 20">
                       <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
                     </svg>
                     {{ $t(feature) }}
@@ -108,7 +108,7 @@
             </div>
             <NuxtLink
               :to="localePath('/auth/login')"
-              class="mt-6 w-full rounded-md bg-indigo-50 px-3 py-2 text-sm font-semibold text-indigo-600 hover:bg-indigo-100 text-center transition-colors"
+              class="mt-6 w-full rounded-md bg-indigo-50 dark:bg-indigo-900/50 px-3 py-2 text-sm font-semibold text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100 dark:hover:bg-indigo-900/75 text-center transition-colors duration-200"
             >
               {{ $t('home.loginAs', { role: $t(role.name) }) }}
             </NuxtLink>
@@ -118,19 +118,19 @@
     </div>
 
     <!-- CTA Section -->
-    <div class="bg-indigo-600">
+    <div class="bg-indigo-600 dark:bg-indigo-900/50 transition-colors duration-200">
       <div class="px-6 py-24 sm:px-6 sm:py-32 lg:px-8">
         <div class="mx-auto max-w-2xl text-center">
           <h2 class="text-balance text-4xl font-semibold tracking-tight text-white sm:text-5xl">
             {{ $t('home.startJourney') }}
           </h2>
-          <p class="mx-auto mt-6 max-w-xl text-lg/8 text-indigo-200">
+          <p class="mx-auto mt-6 max-w-xl text-lg/8 text-indigo-200 dark:text-indigo-100">
             {{ $t('home.joinDescription') }}
           </p>
           <div class="mt-10 flex items-center justify-center gap-x-6">
             <NuxtLink
               :to="localePath('/auth/login')"
-              class="rounded-md bg-white px-3.5 py-2.5 text-sm font-semibold text-indigo-600 shadow-sm hover:bg-gray-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+              class="rounded-md bg-white dark:bg-gray-100 px-3.5 py-2.5 text-sm font-semibold text-indigo-600 dark:text-indigo-700 shadow-sm hover:bg-gray-50 dark:hover:bg-gray-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white transition-colors duration-200"
             >
               {{ $t('home.tryNow') }}
             </NuxtLink>
@@ -246,5 +246,12 @@ useHead({
       content: t('home.metaKeywords')
     }
   ]
+})
+
+// 初始化主题
+const { initTheme } = useTheme()
+
+onMounted(() => {
+  initTheme()
 })
 </script>

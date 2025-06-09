@@ -1,8 +1,8 @@
 <template>
   <Popover class="relative">
-    <PopoverButton class="flex items-center gap-x-1 text-sm/6 font-semibold text-gray-900">
+    <PopoverButton class="flex items-center gap-x-1 text-sm/6 font-semibold text-gray-900 dark:text-white transition-colors duration-200">
       {{ currentLocaleName }}
-      <ChevronDownIcon class="size-5 flex-none text-gray-400" aria-hidden="true" />
+      <ChevronDownIcon class="size-5 flex-none text-gray-400 dark:text-gray-500" aria-hidden="true" />
     </PopoverButton>
 
     <transition 
@@ -13,11 +13,11 @@
       leave-from-class="opacity-100 translate-y-0" 
       leave-to-class="opacity-0 translate-y-1"
     >
-      <PopoverPanel class="absolute top-full right-0 z-10 mt-3 w-40 rounded-xl bg-white p-2 shadow-lg ring-1 ring-gray-900/5">
+      <PopoverPanel class="absolute top-full right-0 z-10 mt-3 w-40 rounded-xl bg-white dark:bg-gray-800 p-2 shadow-lg ring-1 ring-gray-900/5 dark:ring-gray-700/50 transition-colors duration-200">
         <button 
           v-for="localeOption in availableLocales" 
           :key="localeOption.code"
-          class="flex w-full items-center rounded-lg px-3 py-2 text-sm/6 font-semibold text-gray-900 hover:bg-gray-50 transition-colors"
+          class="flex w-full items-center rounded-lg px-3 py-2 text-sm/6 font-semibold text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
           @click="switchLocale(localeOption.code)"
         >
           <span class="mr-2 text-lg">{{ localeOption.flag }}</span>

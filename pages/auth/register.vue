@@ -1,20 +1,20 @@
 <template>
-  <div class="min-h-screen bg-gray-100 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+  <div class="min-h-screen bg-gray-100 dark:bg-gray-900 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 transition-colors duration-200">
     <div class="w-full max-w-md space-y-8">
       <div class="text-center">
-        <h1 class="text-3xl font-bold tracking-tight text-gray-900">
+        <h1 class="text-3xl font-bold tracking-tight text-gray-900 dark:text-white transition-colors duration-200">
           {{ $t('register.title') }}
         </h1>
-        <p class="mt-2 text-sm text-gray-600">
+        <p class="mt-2 text-sm text-gray-600 dark:text-gray-400 transition-colors duration-200">
           {{ $t('register.subtitle') }}
         </p>
       </div>
 
-      <div class="bg-white py-8 px-6 shadow-sm rounded-lg">
+      <div class="bg-white dark:bg-gray-800 py-8 px-6 shadow-sm rounded-lg transition-colors duration-200">
         <!-- 注册表单 -->
         <form class="space-y-6" @submit.prevent="handleRegister">
           <div>
-            <label for="username" class="block text-sm/6 font-medium text-gray-900">
+            <label for="username" class="block text-sm/6 font-medium text-gray-900 dark:text-white transition-colors duration-200">
               {{ $t('common.username') }}
             </label>
             <div class="mt-2">
@@ -27,15 +27,15 @@
                 autocomplete="username" 
                 required 
                 :disabled="pending"
-                class="border border-solid border-zinc-200 block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6 disabled:opacity-50 disabled:cursor-not-allowed" 
+                class="border border-solid border-zinc-200 dark:border-gray-600 block w-full rounded-md bg-white dark:bg-gray-700 px-3 py-1.5 text-base text-gray-900 dark:text-white outline-1 -outline-offset-1 outline-gray-300 dark:outline-gray-600 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 dark:focus:outline-indigo-500 sm:text-sm/6 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200" 
                 :class="{ 'border-red-500 focus:outline-red-500': errors.username }"
               >
             </div>
-            <p v-if="errors.username" class="mt-1 text-sm text-red-600">{{ errors.username }}</p>
+            <p v-if="errors.username" class="mt-1 text-sm text-red-600 dark:text-red-400 transition-colors duration-200">{{ errors.username }}</p>
           </div>
 
           <div>
-            <label for="email" class="block text-sm/6 font-medium text-gray-900">
+            <label for="email" class="block text-sm/6 font-medium text-gray-900 dark:text-white transition-colors duration-200">
               {{ $t('common.email') }}
             </label>
             <div class="mt-2">
@@ -48,15 +48,15 @@
                 autocomplete="email" 
                 required 
                 :disabled="pending"
-                class="border border-solid border-zinc-200 block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6 disabled:opacity-50 disabled:cursor-not-allowed" 
+                class="border border-solid border-zinc-200 dark:border-gray-600 block w-full rounded-md bg-white dark:bg-gray-700 px-3 py-1.5 text-base text-gray-900 dark:text-white outline-1 -outline-offset-1 outline-gray-300 dark:outline-gray-600 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 dark:focus:outline-indigo-500 sm:text-sm/6 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200" 
                 :class="{ 'border-red-500 focus:outline-red-500': errors.email }"
               >
             </div>
-            <p v-if="errors.email" class="mt-1 text-sm text-red-600">{{ errors.email }}</p>
+            <p v-if="errors.email" class="mt-1 text-sm text-red-600 dark:text-red-400 transition-colors duration-200">{{ errors.email }}</p>
           </div>
 
           <div>
-            <label for="name" class="block text-sm/6 font-medium text-gray-900">
+            <label for="name" class="block text-sm/6 font-medium text-gray-900 dark:text-white transition-colors duration-200">
               {{ $t('common.name') }}
             </label>
             <div class="mt-2">
@@ -69,15 +69,15 @@
                 autocomplete="name" 
                 required 
                 :disabled="pending"
-                class="border border-solid border-zinc-200 block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6 disabled:opacity-50 disabled:cursor-not-allowed" 
+                class="border border-solid border-zinc-200 dark:border-gray-600 block w-full rounded-md bg-white dark:bg-gray-700 px-3 py-1.5 text-base text-gray-900 dark:text-white outline-1 -outline-offset-1 outline-gray-300 dark:outline-gray-600 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 dark:focus:outline-indigo-500 sm:text-sm/6 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200" 
                 :class="{ 'border-red-500 focus:outline-red-500': errors.name }"
               >
             </div>
-            <p v-if="errors.name" class="mt-1 text-sm text-red-600">{{ errors.name }}</p>
+            <p v-if="errors.name" class="mt-1 text-sm text-red-600 dark:text-red-400 transition-colors duration-200">{{ errors.name }}</p>
           </div>
 
           <div>
-            <label for="role" class="block text-sm/6 font-medium text-gray-900">
+            <label for="role" class="block text-sm/6 font-medium text-gray-900 dark:text-white transition-colors duration-200">
               {{ $t('common.role') }}
             </label>
             <div class="mt-2">
@@ -87,19 +87,19 @@
                 name="role" 
                 required 
                 :disabled="pending"
-                class="border border-solid border-zinc-200 block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6 disabled:opacity-50 disabled:cursor-not-allowed" 
+                class="border border-solid border-zinc-200 dark:border-gray-600 block w-full rounded-md bg-white dark:bg-gray-700 px-3 py-1.5 text-base text-gray-900 dark:text-white outline-1 -outline-offset-1 outline-gray-300 dark:outline-gray-600 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 dark:focus:outline-indigo-500 sm:text-sm/6 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200" 
                 :class="{ 'border-red-500 focus:outline-red-500': errors.role }"
               >
-                <option value="">{{ $t('register.selectRole') }}</option>
-                <option value="student">{{ $t('common.student') }}</option>
-                <option value="teacher">{{ $t('common.teacher') }}</option>
+                <option value="" class="text-gray-400 dark:text-gray-500">{{ $t('register.selectRole') }}</option>
+                <option value="student" class="text-gray-900 dark:text-white">{{ $t('common.student') }}</option>
+                <option value="teacher" class="text-gray-900 dark:text-white">{{ $t('common.teacher') }}</option>
               </select>
             </div>
-            <p v-if="errors.role" class="mt-1 text-sm text-red-600">{{ errors.role }}</p>
+            <p v-if="errors.role" class="mt-1 text-sm text-red-600 dark:text-red-400 transition-colors duration-200">{{ errors.role }}</p>
           </div>
 
           <div>
-            <label for="password" class="block text-sm/6 font-medium text-gray-900">
+            <label for="password" class="block text-sm/6 font-medium text-gray-900 dark:text-white transition-colors duration-200">
               {{ $t('common.password') }}
             </label>
             <div class="mt-2 relative">
@@ -112,23 +112,23 @@
                 autocomplete="new-password" 
                 required 
                 :disabled="pending"
-                class="border border-solid border-zinc-200 block w-full rounded-md bg-white px-3 py-1.5 pr-10 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6 disabled:opacity-50 disabled:cursor-not-allowed"
+                class="border border-solid border-zinc-200 dark:border-gray-600 block w-full rounded-md bg-white dark:bg-gray-700 px-3 py-1.5 pr-10 text-base text-gray-900 dark:text-white outline-1 -outline-offset-1 outline-gray-300 dark:outline-gray-600 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 dark:focus:outline-indigo-500 sm:text-sm/6 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
                 :class="{ 'border-red-500 focus:outline-red-500': errors.password }"
               >
               <button
                 type="button"
-                class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600"
+                class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors duration-200"
                 @click="showPassword = !showPassword"
               >
                 <EyeIcon v-if="!showPassword" class="h-5 w-5" />
                 <EyeSlashIcon v-else class="h-5 w-5" />
               </button>
             </div>
-            <p v-if="errors.password" class="mt-1 text-sm text-red-600">{{ errors.password }}</p>
+            <p v-if="errors.password" class="mt-1 text-sm text-red-600 dark:text-red-400 transition-colors duration-200">{{ errors.password }}</p>
           </div>
 
           <div>
-            <label for="confirmPassword" class="block text-sm/6 font-medium text-gray-900">
+            <label for="confirmPassword" class="block text-sm/6 font-medium text-gray-900 dark:text-white transition-colors duration-200">
               {{ $t('register.confirmPassword') }}
             </label>
             <div class="mt-2 relative">
@@ -141,19 +141,19 @@
                 autocomplete="new-password" 
                 required 
                 :disabled="pending"
-                class="border border-solid border-zinc-200 block w-full rounded-md bg-white px-3 py-1.5 pr-10 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6 disabled:opacity-50 disabled:cursor-not-allowed"
+                class="border border-solid border-zinc-200 dark:border-gray-600 block w-full rounded-md bg-white dark:bg-gray-700 px-3 py-1.5 pr-10 text-base text-gray-900 dark:text-white outline-1 -outline-offset-1 outline-gray-300 dark:outline-gray-600 placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 dark:focus:outline-indigo-500 sm:text-sm/6 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
                 :class="{ 'border-red-500 focus:outline-red-500': errors.confirmPassword }"
               >
               <button
                 type="button"
-                class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600"
+                class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors duration-200"
                 @click="showConfirmPassword = !showConfirmPassword"
               >
                 <EyeIcon v-if="!showConfirmPassword" class="h-5 w-5" />
                 <EyeSlashIcon v-else class="h-5 w-5" />
               </button>
             </div>
-            <p v-if="errors.confirmPassword" class="mt-1 text-sm text-red-600">{{ errors.confirmPassword }}</p>
+            <p v-if="errors.confirmPassword" class="mt-1 text-sm text-red-600 dark:text-red-400 transition-colors duration-200">{{ errors.confirmPassword }}</p>
           </div>
 
           <!-- 服务条款同意 -->
@@ -166,20 +166,20 @@
                   name="agree-terms" 
                   type="checkbox" 
                   required
-                  class="col-start-1 row-start-1 appearance-none rounded-sm border border-gray-300 bg-white checked:border-indigo-600 checked:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                  class="col-start-1 row-start-1 appearance-none rounded-sm border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 checked:border-indigo-600 checked:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 transition-colors duration-200"
                 >
                 <svg class="pointer-events-none col-start-1 row-start-1 size-3.5 self-center justify-self-center stroke-white" viewBox="0 0 14 14" fill="none">
                   <path class="opacity-0 group-has-checked:opacity-100" d="M3 8L6 11L11 3.5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                 </svg>
               </div>
             </div>
-            <label for="agree-terms" class="ml-3 block text-sm/6 text-gray-900">
+            <label for="agree-terms" class="ml-3 block text-sm/6 text-gray-900 dark:text-white transition-colors duration-200">
               {{ $t('register.agreeTerms') }}
-              <NuxtLink :to="localePath('/terms')" class="text-indigo-600 hover:text-indigo-500">
+              <NuxtLink :to="localePath('/terms')" class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300 transition-colors duration-200">
                 {{ $t('register.termsOfService') }}
               </NuxtLink>
               {{ $t('register.and') }}
-              <NuxtLink :to="localePath('/privacy')" class="text-indigo-600 hover:text-indigo-500">
+              <NuxtLink :to="localePath('/privacy')" class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300 transition-colors duration-200">
                 {{ $t('register.privacyPolicy') }}
               </NuxtLink>
             </label>
@@ -187,13 +187,13 @@
 
           <!-- 错误信息 -->
           <Transition name="fade">
-            <div v-if="error" class="rounded-md bg-red-50 p-4">
+            <div v-if="error" class="rounded-md bg-red-50 dark:bg-red-900/50 p-4 transition-colors duration-200">
               <div class="flex">
                 <div class="flex-shrink-0">
                   <XCircleIcon class="h-5 w-5 text-red-400" />
                 </div>
                 <div class="ml-3">
-                  <p class="text-sm text-red-800">
+                  <p class="text-sm text-red-800 dark:text-red-200 transition-colors duration-200">
                     {{ error }}
                   </p>
                 </div>
@@ -203,13 +203,13 @@
 
           <!-- 成功信息 -->
           <Transition name="fade">
-            <div v-if="success" class="rounded-md bg-green-50 p-4">
+            <div v-if="success" class="rounded-md bg-green-50 dark:bg-green-900/50 p-4 transition-colors duration-200">
               <div class="flex">
                 <div class="flex-shrink-0">
                   <CheckCircleIcon class="h-5 w-5 text-green-400" />
                 </div>
                 <div class="ml-3">
-                  <p class="text-sm text-green-800">
+                  <p class="text-sm text-green-800 dark:text-green-200 transition-colors duration-200">
                     {{ success }}
                   </p>
                 </div>
@@ -222,7 +222,7 @@
             <button 
               type="submit" 
               :disabled="pending || !isFormValid"
-              class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              class="flex w-full justify-center rounded-md bg-indigo-600 dark:bg-indigo-500 px-3 py-1.5 text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-500 dark:hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:focus-visible:outline-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               <span v-if="pending" class="flex items-center">
                 <svg class="animate-spin -ml-1 mr-3 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -237,12 +237,12 @@
         </form>
 
         <!-- 登录链接 -->
-        <div class="mt-6 border-t border-gray-200 pt-6 text-center">
-          <p class="text-sm text-gray-600">
+        <div class="mt-6 border-t border-gray-200 dark:border-gray-700 pt-6 text-center transition-colors duration-200">
+          <p class="text-sm text-gray-600 dark:text-gray-400 transition-colors duration-200">
             {{ $t('register.alreadyHaveAccount') }}
             <NuxtLink
               :to="localePath('/auth/login')"
-              class="text-indigo-600 hover:text-indigo-500 font-medium"
+              class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300 font-medium transition-colors duration-200"
             >
               {{ $t('register.signIn') }}
             </NuxtLink>
@@ -274,7 +274,7 @@ useHead({
 
 // 页面配置
 definePageMeta({
-  layout: 'auth',
+  layout: 'app',
   auth: false,
   keepalive: false
 })
