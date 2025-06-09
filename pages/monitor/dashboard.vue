@@ -10,35 +10,25 @@
         <div class="relative flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
             <h1 class="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400 bg-clip-text text-transparent">
-              {{ $t('dashboard.title') || '作业仪表盘' }}
+              {{ $t('monitor.dashboard.title') || '课代表工作台' }}
             </h1>
             <p class="mt-2 text-gray-600 dark:text-gray-300 text-lg">
-              {{ $t('dashboard.subtitle') || '管理您的学习进度' }}
+              {{ $t('monitor.dashboard.subtitle') || '协助管理班级作业' }}
             </p>
           </div>
           
-          <!-- 现代化视图切换按钮 -->
+          <!-- 视图切换按钮 -->
           <div class="flex items-center bg-gray-100 dark:bg-gray-700 rounded-2xl p-1 transition-colors duration-200">
             <button 
               @click="isListView = true" 
-              :class="[
-                'flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200',
-                isListView 
-                  ? 'bg-white dark:bg-gray-800 text-indigo-600 dark:text-indigo-400 shadow-lg transform scale-105' 
-                  : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'
-              ]"
+              :class="viewButtonClass(isListView)"
             >
               <Bars4Icon class="h-4 w-4" />
               {{ $t('dashboard.listView') || '列表' }}
             </button>
             <button 
               @click="isListView = false" 
-              :class="[
-                'flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200',
-                !isListView 
-                  ? 'bg-white dark:bg-gray-800 text-indigo-600 dark:text-indigo-400 shadow-lg transform scale-105' 
-                  : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'
-              ]"
+              :class="viewButtonClass(!isListView)"
             >
               <Squares2X2Icon class="h-4 w-4" />
               {{ $t('dashboard.gridView') || '网格' }}
@@ -66,10 +56,11 @@
         </div>
       </div>
 
-      <!-- 主体区域：日历在左，作业列表在右 -->
+      <!-- 主体区域 -->
       <div class="grid grid-cols-1 xl:grid-cols-3 gap-6 lg:gap-8">
-        <!-- 现代化日历区域 -->
-        <div class="xl:col-span-1">
+        <!-- 左侧：日历和提交情况概览 -->
+        <div class="xl:col-span-1 space-y-6">
+          <!-- 日历 -->
           <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-lg border border-gray-200/50 dark:border-gray-700/50 p-6 transition-all duration-200 hover:shadow-xl">
             <div class="flex items-center justify-between mb-6">
               <h2 class="text-xl font-bold text-gray-900 dark:text-white">
@@ -88,9 +79,58 @@
             </div>
             <div id="calendar" class="calendar-container"></div>
           </div>
+
+          <!-- 提交情况概览 -->
+          <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-lg border border-gray-200/50 dark:border-gray-700/50 p-6 transition-all duration-200 hover:shadow-xl">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="text-lg font-bold text-gray-900 dark:text-white">
+                {{ $t('monitor.dashboard.submissionOverview') || '提交情况概览' }}
+              </h3>
+              <button 
+                @click="refreshSubmissionData"
+                class="p-2 rounded-lg text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200"
+              >
+                <ArrowPathIcon class="h-4 w-4" />
+              </button>
+            </div>
+            
+            <div class="space-y-3">
+              <div v-for="assignment in recentAssignments" :key="assignment.id" class="p-3 rounded-xl bg-gray-50 dark:bg-gray-700/50 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200">
+                <div class="flex items-center justify-between mb-2">
+                  <h4 class="text-sm font-medium text-gray-900 dark:text-white truncate pr-2">
+                    {{ assignment.title }}
+                  </h4>
+                  <span class="text-xs text-gray-500 dark:text-gray-400 whitespace-nowrap">
+                    {{ assignment.dueDate }}
+                  </span>
+                </div>
+                
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-2">
+                    <div class="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2 min-w-[60px]">
+                      <div 
+                        class="bg-gradient-to-r from-green-500 to-emerald-500 h-2 rounded-full transition-all duration-300" 
+                        :style="{ width: `${(assignment.submitted / assignment.totalStudents) * 100}%` }"
+                      ></div>
+                    </div>
+                    <span class="text-xs text-gray-600 dark:text-gray-400 whitespace-nowrap">
+                      {{ assignment.submitted }}/{{ assignment.totalStudents }}
+                    </span>
+                  </div>
+                  
+                  <button 
+                    @click="viewSubmissionDetails(assignment)"
+                    class="ml-2 px-2 py-1 text-xs font-medium text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 rounded-lg transition-all duration-200"
+                  >
+                    详情
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
-        <!-- 现代化作业列表区域 -->
+        <!-- 右侧：作业列表 -->
         <div class="xl:col-span-2">
           <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-lg border border-gray-200/50 dark:border-gray-700/50 overflow-hidden transition-all duration-200 hover:shadow-xl">
             <div class="p-6 border-b border-gray-200 dark:border-gray-700">
@@ -98,17 +138,15 @@
                 <h2 class="text-xl font-bold text-gray-900 dark:text-white">
                   {{ $t('dashboard.assignments') || '作业列表' }}
                 </h2>
-                <div class="flex items-center gap-2">
-                  <span class="text-sm text-gray-500 dark:text-gray-400">
-                    {{ assignments.length }} {{ $t('dashboard.total') || '项' }}
-                  </span>
-                </div>
+                <span class="text-sm text-gray-500 dark:text-gray-400">
+                  {{ assignments.length }} {{ $t('dashboard.total') || '项' }}
+                </span>
               </div>
             </div>
 
             <div class="max-h-[600px] overflow-y-auto">
+              <!-- 列表视图 -->
               <div v-if="isListView" class="divide-y divide-gray-100 dark:divide-gray-700">
-                <!-- 现代化列表视图 -->
                 <div
                   v-for="assignment in assignments"
                   :key="assignment.id"
@@ -117,18 +155,17 @@
                   <div class="flex items-start justify-between">
                     <div class="flex-1">
                       <div class="flex items-center gap-3 mb-3">
-                        <div 
-                          :class="[
-                            'w-3 h-3 rounded-full',
-                            assignment.status === 'submitted' ? 'bg-green-500' : 'bg-yellow-500'
-                          ]"
-                        ></div>
+                        <div :class="statusIndicatorClass(assignment.status)"></div>
                         <h3 class="text-lg font-semibold text-gray-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors duration-200">
                           {{ assignment.title }}
                         </h3>
+                        <div class="flex items-center gap-2 px-2 py-1 rounded-lg bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200">
+                          <UsersIcon class="h-3 w-3" />
+                          <span class="text-xs font-medium">{{ assignment.classSubmitted }}/{{ assignment.classTotal }}</span>
+                        </div>
                       </div>
                       
-                      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
+                      <div class="grid grid-cols-1 sm:grid-cols-4 gap-4 text-sm">
                         <div class="flex items-center gap-2 text-gray-600 dark:text-gray-400">
                           <CalendarIcon class="h-4 w-4" />
                           {{ $t('dashboard.assigned') || '布置' }}: {{ assignment.assignDate }}
@@ -141,49 +178,47 @@
                           <ArrowPathIcon class="h-4 w-4" />
                           {{ $t('dashboard.attempts') || '提交次数' }}: {{ assignment.attempts }}
                         </div>
+                        <div class="flex items-center gap-2 text-gray-600 dark:text-gray-400">
+                          <ChartBarIcon class="h-4 w-4" />
+                          班级进度: {{ Math.round((assignment.classSubmitted / assignment.classTotal) * 100) }}%
+                        </div>
                       </div>
                     </div>
                     
                     <div class="ml-4 flex flex-col items-end gap-2">
-                      <span
-                        :class="[
-                          'inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium transition-colors duration-200',
-                          assignment.status === 'submitted'
-                            ? 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200'
-                            : 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-200'
-                        ]"
-                      >
-                        {{ assignment.status === 'submitted' 
-                          ? ($t('dashboard.submitted') || '已提交') 
-                          : ($t('dashboard.pending') || '未提交') 
-                        }}
+                      <span :class="statusBadgeClass(assignment.status)">
+                        {{ assignment.status === 'submitted' ? '已提交' : '未提交' }}
                       </span>
                       
-                      <button class="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 rounded-lg transition-all duration-200">
-                        {{ $t('dashboard.viewDetails') || '查看详情' }}
-                        <ChevronRightIcon class="h-3 w-3" />
-                      </button>
+                      <div class="flex items-center gap-1">
+                        <button 
+                          @click="viewClassSubmissions(assignment)"
+                          class="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-all duration-200"
+                        >
+                          <UsersIcon class="h-3 w-3" />
+                          班级情况
+                        </button>
+                        
+                        <button class="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 rounded-lg transition-all duration-200">
+                          {{ $t('dashboard.viewDetails') || '查看详情' }}
+                          <ChevronRightIcon class="h-3 w-3" />
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
               
+              <!-- 网格视图 -->
               <div v-else class="p-6">
-                <!-- 现代化网格视图 -->
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                   <div
                     v-for="assignment in assignments"
                     :key="assignment.id"
                     class="relative group bg-gradient-to-br from-white to-gray-50 dark:from-gray-700 dark:to-gray-800 rounded-2xl p-6 border border-gray-200 dark:border-gray-600 hover:border-indigo-300 dark:hover:border-indigo-500 hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 cursor-pointer"
                   >
-                    <!-- 状态指示器 -->
                     <div class="absolute top-4 right-4">
-                      <div 
-                        :class="[
-                          'w-3 h-3 rounded-full',
-                          assignment.status === 'submitted' ? 'bg-green-500' : 'bg-yellow-500'
-                        ]"
-                      ></div>
+                      <div :class="statusIndicatorClass(assignment.status)"></div>
                     </div>
                     
                     <div class="mb-4">
@@ -194,35 +229,36 @@
                       <div class="space-y-2 text-sm text-gray-600 dark:text-gray-400">
                         <div class="flex items-center gap-2">
                           <CalendarIcon class="h-4 w-4" />
-                          {{ assignment.assignDate }}
-                        </div>
-                        <div class="flex items-center gap-2">
-                          <ClockIcon class="h-4 w-4" />
-                          {{ assignment.dueDate }}
+                          {{ assignment.assignDate }} - {{ assignment.dueDate }}
                         </div>
                         <div class="flex items-center gap-2">
                           <ArrowPathIcon class="h-4 w-4" />
                           {{ assignment.attempts }} 次提交
                         </div>
+                        <div class="flex items-center gap-2">
+                          <UsersIcon class="h-4 w-4" />
+                          班级: {{ assignment.classSubmitted }}/{{ assignment.classTotal }} 已提交
+                        </div>
                       </div>
                     </div>
                     
                     <div class="flex items-center justify-between">
-                      <span
-                        :class="[
-                          'inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium',
-                          assignment.status === 'submitted'
-                            ? 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200'
-                            : 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-200'
-                        ]"
-                      >
+                      <span :class="statusBadgeClass(assignment.status)">
                         {{ assignment.status === 'submitted' ? '已提交' : '未提交' }}
                       </span>
                       
-                      <button class="opacity-0 group-hover:opacity-100 inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 rounded-lg transition-all duration-200">
-                        查看
-                        <ChevronRightIcon class="h-3 w-3" />
-                      </button>
+                      <div class="opacity-0 group-hover:opacity-100 flex items-center gap-1 transition-all duration-200">
+                        <button 
+                          @click="viewClassSubmissions(assignment)"
+                          class="inline-flex items-center gap-1 px-2 py-1.5 text-xs font-medium text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-all duration-200"
+                        >
+                          <UsersIcon class="h-3 w-3" />
+                        </button>
+                        <button class="inline-flex items-center gap-1 px-2 py-1.5 text-xs font-medium text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 rounded-lg transition-all duration-200">
+                          查看
+                          <ChevronRightIcon class="h-3 w-3" />
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -232,6 +268,14 @@
         </div>
       </div>
     </div>
+
+    <!-- 班级提交情况模态框 -->
+    <ClassSubmissionModal 
+      v-if="showSubmissionModal"
+      :assignment="selectedAssignment"
+      :students="classStudents"
+      @close="showSubmissionModal = false"
+    />
   </div>
 </template>
 
@@ -246,7 +290,8 @@ import {
   AcademicCapIcon,
   CheckCircleIcon,
   ExclamationTriangleIcon,
-  ChartBarIcon
+  ChartBarIcon,
+  UsersIcon
 } from '@heroicons/vue/24/outline'
 import { Calendar } from '@fullcalendar/core'
 import dayGridPlugin from '@fullcalendar/daygrid'
@@ -256,117 +301,89 @@ import interactionPlugin from '@fullcalendar/interaction'
 const { t } = useI18n()
 const localePath = useLocalePath()
 
-// 页面元信息 - 修复标题翻译问题
+// 页面元信息
 useHead({
-  title: t('dashboard.title'),
+  title: t('monitor.dashboard.title'),
   titleTemplate: '%s | ' + t('home.title'),
   meta: [
-    { name: 'description', content: t('dashboard.subtitle') },
-    { name: 'robots', content: 'noindex, nofollow' },
-    { property: 'og:title', content: t('dashboard.title') + ' | ' + t('home.title') },
-    { property: 'og:description', content: t('dashboard.subtitle') },
+    { name: 'description', content: t('monitor.dashboard.subtitle') },
+    { name: 'robots', content: 'noindex, nofollow' }
   ]
 })
 
-// 页面配置
 definePageMeta({
   layout: 'app',
   auth: false,
   keepalive: false
 })
 
-
 // 视图模式切换
 const isListView = ref(true)
+const showSubmissionModal = ref(false)
+const selectedAssignment = ref(null)
 
-// 计算作业紧急程度
-const getEventStatus = (assignment) => {
-  if (assignment.status === 'submitted') return 'submitted' 
+// 模拟数据
+const assignments = ref([
+  { id: 1, title: '数学习题集第一章', assignDate: '2025-05-29', dueDate: '2025-06-07', status: 'submitted', attempts: 1, classSubmitted: 28, classTotal: 35 },
+  { id: 2, title: '英语口语作业', assignDate: '2025-06-01', dueDate: '2025-06-28', status: 'pending', attempts: 0, classSubmitted: 15, classTotal: 35 },
+  { id: 3, title: '物理实验报告', assignDate: '2025-06-03', dueDate: '2025-06-12', status: 'pending', attempts: 0, classSubmitted: 8, classTotal: 35 }
+])
 
-  const now = new Date()
-  const dueDate = new Date(assignment.dueDate)
-  const diffDays = Math.ceil((dueDate - now) / (1000 * 60 * 60 * 24))
+const classStudents = ref([
+  { id: 1, name: '张三', submitted: true, submitTime: '2025-06-02 14:30' },
+  { id: 2, name: '李四', submitted: true, submitTime: '2025-06-02 15:45' },
+  { id: 3, name: '王五', submitted: false, submitTime: null }
+])
 
-  if (diffDays < 0) return 'overdue'
-  if (diffDays <= 3) return 'urgent'
-  if (diffDays <= 7) return 'warning'
-  return 'normal'
+// 计算属性
+const recentAssignments = computed(() => 
+  assignments.value.slice(0, 3).map(a => ({
+    ...a,
+    submitted: a.classSubmitted,
+    totalStudents: a.classTotal
+  }))
+)
+
+const stats = computed(() => [
+  { label: '总作业数', value: assignments.value.length, icon: AcademicCapIcon, bgColor: 'bg-blue-100 dark:bg-blue-900/30', iconColor: 'text-blue-600 dark:text-blue-400' },
+  { label: '我已完成', value: assignments.value.filter(a => a.status === 'submitted').length, icon: CheckCircleIcon, bgColor: 'bg-green-100 dark:bg-green-900/30', iconColor: 'text-green-600 dark:text-green-400' },
+  { label: '班级平均进度', value: Math.round(assignments.value.reduce((acc, a) => acc + (a.classSubmitted / a.classTotal), 0) / assignments.value.length * 100) + '%', icon: ChartBarIcon, bgColor: 'bg-purple-100 dark:bg-purple-900/30', iconColor: 'text-purple-600 dark:text-purple-400' },
+  { label: '待提醒同学', value: assignments.value.reduce((acc, a) => acc + (a.classTotal - a.classSubmitted), 0), icon: ExclamationTriangleIcon, bgColor: 'bg-orange-100 dark:bg-orange-900/30', iconColor: 'text-orange-600 dark:text-orange-400' }
+])
+
+// 样式类方法
+const viewButtonClass = (isActive: boolean) => [
+  'flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200',
+  isActive 
+    ? 'bg-white dark:bg-gray-800 text-indigo-600 dark:text-indigo-400 shadow-lg transform scale-105' 
+    : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'
+]
+
+const statusIndicatorClass = (status: string) => [
+  'w-3 h-3 rounded-full',
+  status === 'submitted' ? 'bg-green-500' : 'bg-yellow-500'
+]
+
+const statusBadgeClass = (status: string) => [
+  'inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium transition-colors duration-200',
+  status === 'submitted'
+    ? 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200'
+    : 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-200'
+]
+
+// 方法
+const viewClassSubmissions = (assignment) => {
+  selectedAssignment.value = assignment
+  showSubmissionModal.value = true
 }
 
-// 模拟作业数据
-const assignments = ref([
-  {
-    id: 1,
-    title: '数学习题集第一章',
-    assignDate: '2025-05-29',
-    dueDate: '2025-06-07',
-    submitTime: '2025-06-02 14:30',
-    status: 'submitted',
-    attempts: 1
-  },
-  {
-    id: 2,
-    title: '英语口语作业',
-    assignDate: '2025-06-01',
-    dueDate: '2025-06-28',
-    submitTime: null,
-    status: 'pending',
-    attempts: 0
-  },
-  {
-    id: 3,
-    title: '物理实验报告',
-    assignDate: '2025-06-03',
-    dueDate: '2025-06-12',
-    submitTime: null,
-    status: 'pending',
-    attempts: 0
-  },
-  {
-    id: 4,
-    title: '化学作业第二章',
-    assignDate: '2025-06-05',
-    dueDate: '2025-06-15',
-    submitTime: null,
-    status: 'pending',
-    attempts: 0
-  }
-])
+const viewSubmissionDetails = (assignment) => {
+  viewClassSubmissions(assignment)
+}
 
-// 统计数据
-const stats = computed(() => [
-  {
-    label: t('dashboard.stats.total') || '总作业',
-    value: assignments.value.length,
-    icon: AcademicCapIcon,
-    bgColor: 'bg-blue-100 dark:bg-blue-900/30',
-    iconColor: 'text-blue-600 dark:text-blue-400'
-  },
-  {
-    label: t('dashboard.stats.completed') || '已完成',
-    value: assignments.value.filter(a => a.status === 'submitted').length,
-    icon: CheckCircleIcon,
-    bgColor: 'bg-green-100 dark:bg-green-900/30',
-    iconColor: 'text-green-600 dark:text-green-400'
-  },
-  {
-    label: t('dashboard.stats.pending') || '待完成',
-    value: assignments.value.filter(a => a.status === 'pending').length,
-    icon: ExclamationTriangleIcon,
-    bgColor: 'bg-yellow-100 dark:bg-yellow-900/30',
-    iconColor: 'text-yellow-600 dark:text-yellow-400'
-  },
-  {
-    label: t('dashboard.stats.progress') || '完成率',
-    value: Math.round((assignments.value.filter(a => a.status === 'submitted').length / assignments.value.length) * 100) + '%',
-    icon: ChartBarIcon,
-    bgColor: 'bg-purple-100 dark:bg-purple-900/30',
-    iconColor: 'text-purple-600 dark:text-purple-400'
-  }
-])
-
-// 添加主题管理
-const { isDark } = useTheme()
+const refreshSubmissionData = () => {
+  console.log('刷新提交数据...')
+}
 
 // 初始化日历
 onMounted(() => {
@@ -380,24 +397,13 @@ onMounted(() => {
       events: assignments.value.map(assignment => ({
         title: assignment.title,
         start: assignment.dueDate,
-        className: getEventStatus(assignment),
+        className: assignment.status === 'submitted' ? 'submitted' : 'pending',
         display: 'background',
-        extendedProps: {
-          status: getEventStatus(assignment),
-          title: assignment.title,
-          dueDate: assignment.dueDate
-        }
+        extendedProps: { status: assignment.status, title: assignment.title, dueDate: assignment.dueDate }
       })),
-      headerToolbar: {
-        left: 'prev,next',
-        center: 'title',
-        right: ''
-      },
-      buttonText: {
-        today: '今'
-      },
+      headerToolbar: { left: 'prev,next', center: 'title', right: '' },
+      buttonText: { today: '今' },
       eventDidMount: function(info) {
-        // 为有作业的日期添加圆形样式和tooltip
         const dayNumber = info.el.closest('.fc-daygrid-day').querySelector('.fc-daygrid-day-number')
         if (dayNumber) {
           dayNumber.classList.add('has-assignment', info.event.extendedProps.status)
@@ -406,31 +412,11 @@ onMounted(() => {
       }
     })
     calendar.render()
-
-    // 监听主题变化，更新日历样式
-    watch(isDark, () => {
-      updateCalendarTheme()
-    })
-
-    // 初始化主题
-    updateCalendarTheme()
-
-    function updateCalendarTheme() {
-      const calendarEl = document.getElementById('calendar')
-      if (calendarEl) {
-        if (isDark.value) {
-          calendarEl.classList.add('dark-theme')
-        } else {
-          calendarEl.classList.remove('dark-theme')
-        }
-      }
-    }
   }
 })
 </script>
 
 <style scoped>
-/* 现代化日历样式优化 */
 .calendar-container {
   width: 100%;
   font-family: system-ui, -apple-system, sans-serif;
@@ -439,7 +425,6 @@ onMounted(() => {
   overflow: hidden;
 }
 
-/* 日历整体样式 */
 :deep(.fc) {
   background: transparent;
   border: none;
@@ -451,7 +436,6 @@ onMounted(() => {
   color: #f3f4f6;
 }
 
-/* 工具栏样式 */
 :deep(.fc-toolbar) {
   margin-bottom: 1rem;
   padding: 0;
@@ -469,7 +453,6 @@ onMounted(() => {
   color: #f3f4f6;
 }
 
-/* 现代化按钮样式 */
 :deep(.fc-button-primary) {
   background: #f3f4f6;
   border: 1px solid #e5e7eb;
@@ -500,11 +483,6 @@ onMounted(() => {
   border-color: #9ca3af;
 }
 
-:deep(.fc-button-primary:focus) {
-  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
-}
-
-/* 现代化三角形箭头 */
 :deep(.fc-prev-button::after) {
   content: '';
   position: absolute;
@@ -517,10 +495,6 @@ onMounted(() => {
   border-bottom: 5px solid transparent;
   border-right: 7px solid #6b7280;
   transition: border-color 0.2s;
-}
-
-.dark :deep(.fc-prev-button::after) {
-  border-right-color: #d1d5db;
 }
 
 :deep(.fc-next-button::after) {
@@ -537,34 +511,12 @@ onMounted(() => {
   transition: border-color 0.2s;
 }
 
-.dark :deep(.fc-next-button::after) {
-  border-left-color: #d1d5db;
-}
-
-/* 表头样式 */
-:deep(.fc-col-header-cell) {
-  background-color: transparent;
-  border: none;
-  padding: 0.5rem 0;
-}
-
 :deep(.fc-col-header-cell-cushion) {
   color: #6b7280;
   font-weight: 500;
   font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-}
-
-.dark :deep(.fc-col-header-cell-cushion) {
-  color: #9ca3af;
-}
-
-/* 日期单元格样式 */
-:deep(.fc-daygrid-day) {
-  border: none;
-  min-height: 2.5rem;
-  background: transparent;
 }
 
 :deep(.fc-daygrid-day-number) {
@@ -586,17 +538,6 @@ onMounted(() => {
   color: #f3f4f6;
 }
 
-/* 其他月份日期 */
-:deep(.fc-day-other .fc-daygrid-day-number) {
-  color: #d1d5db;
-  opacity: 0.5;
-}
-
-.dark :deep(.fc-day-other .fc-daygrid-day-number) {
-  color: #6b7280;
-}
-
-/* 现代化作业日期样式 */
 :deep(.fc-daygrid-day-number.has-assignment) {
   background: #3b82f6;
   color: white;
@@ -610,28 +551,16 @@ onMounted(() => {
   box-shadow: 0 4px 8px rgba(59, 130, 246, 0.4);
 }
 
-/* 不同状态的现代化颜色 */
 :deep(.fc-daygrid-day-number.submitted) {
   background: #10b981;
   box-shadow: 0 2px 4px rgba(16, 185, 129, 0.3);
 }
 
-:deep(.fc-daygrid-day-number.overdue) {
-  background: #ef4444;
-  box-shadow: 0 2px 4px rgba(239, 68, 68, 0.3);
-}
-
-:deep(.fc-daygrid-day-number.urgent) {
+:deep(.fc-daygrid-day-number.pending) {
   background: #f59e0b;
   box-shadow: 0 2px 4px rgba(245, 158, 11, 0.3);
 }
 
-:deep(.fc-daygrid-day-number.warning) {
-  background: #eab308;
-  box-shadow: 0 2px 4px rgba(234, 179, 8, 0.3);
-}
-
-/* 自定义滚动条 */
 .max-h-\[600px\]::-webkit-scrollbar {
   width: 6px;
 }
@@ -647,27 +576,5 @@ onMounted(() => {
 
 .dark .max-h-\[600px\]::-webkit-scrollbar-thumb {
   background: #4b5563;
-}
-
-/* 隐藏背景事件 */
-:deep(.fc-bg-event) {
-  display: none;
-}
-
-/* 清理样式 */
-:deep(.fc-daygrid-day-frame) {
-  padding: 0;
-}
-
-:deep(.fc-scrollgrid-section > *) {
-  border: none;
-}
-
-:deep(.fc-scrollgrid-sync-table) {
-  border: none;
-}
-
-:deep(.fc-daygrid-day-top) {
-  justify-content: center;
 }
 </style>

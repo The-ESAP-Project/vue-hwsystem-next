@@ -16,5 +16,17 @@
     "locales",
     "i18n/locales"
   ],
-  "i18n-ally.keystyle": "nested"
+  "i18n-ally.keystyle": "nested",
+  "i18n-ally.sourceLanguage": "zh",
+  "i18n-ally.displayLanguage": "zh",
+  "i18n-ally.defaultNamespace": "default",
+  "i18n-ally.enabledParsers": ["json", "yaml", "js", "ts"],
+  "i18n-ally.sortKeys": true,
+  "i18n-ally.translate.engines": ["google", "deepl"],
+  "i18n-ally.annotations": true,
+  "i18n-ally.usage.scanningIgnore": [
+    "node_modules/**",
+    ".nuxt/**",
+    "dist/**"
+  ]
 }
