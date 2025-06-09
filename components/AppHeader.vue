@@ -72,7 +72,7 @@
         <div class="w-px h-5 bg-gray-300"/>
         
         <!-- 登录按钮 -->
-        <NuxtLink to="/login" class="text-sm/6 font-semibold text-gray-900 hover:text-indigo-600 transition-colors">
+        <NuxtLink to="/auth/login" class="text-sm/6 font-semibold text-gray-900 hover:text-indigo-600 transition-colors">
           {{ $t('common.login') }} <span aria-hidden="true">&rarr;</span>
         </NuxtLink>
       </div>
@@ -136,7 +136,7 @@
               </div>
             </div>
             <div class="py-6">
-              <NuxtLink to="/login" class="block text-sm/6 font-semibold text-gray-900" @click="mobileMenuOpen = false">
+              <NuxtLink to="/auth/login" class="block text-sm/6 font-semibold text-gray-900" @click="mobileMenuOpen = false">
                 {{ $t('common.login') }} <span aria-hidden="true">&rarr;</span>
               </NuxtLink>
             </div>

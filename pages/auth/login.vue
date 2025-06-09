@@ -150,6 +150,19 @@
             </div>
           </div>
         </div>
+
+        <!-- 注册链接 -->
+        <div class="mt-6 border-t border-gray-200 pt-6 text-center">
+          <p class="text-sm text-gray-600">
+            {{ $t('login.noAccount') }}
+            <NuxtLink 
+              to="/auth/register" 
+              class="text-indigo-600 hover:text-indigo-500 font-medium"
+            >
+              {{ $t('login.signUp') }}
+            </NuxtLink>
+          </p>
+        </div>
       </div>
     </div>
   </div>

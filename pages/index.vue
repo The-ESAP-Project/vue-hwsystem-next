@@ -107,7 +107,7 @@
               </div>
             </div>
             <NuxtLink 
-              to="/login" 
+              to="/auth/login" 
               class="mt-6 w-full rounded-md bg-indigo-50 px-3 py-2 text-sm font-semibold text-indigo-600 hover:bg-indigo-100 text-center transition-colors"
             >
               {{ $t('home.loginAs', { role: $t(role.name) }) }}
@@ -129,7 +129,7 @@
           </p>
           <div class="mt-10 flex items-center justify-center gap-x-6">
             <NuxtLink 
-              to="/login" 
+              to="/auth/login" 
               class="rounded-md bg-white px-3.5 py-2.5 text-sm font-semibold text-indigo-600 shadow-sm hover:bg-gray-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
             >
               {{ $t('home.tryNow') }}

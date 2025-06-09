@@ -45,7 +45,10 @@
     "student": "Student",
     "teacher": "Teacher",
     "monitor": "Monitor",
-    "admin": "Administrator"
+    "admin": "Administrator",
+    "email": "Email",
+    "name": "Name",
+    "role": "Role"
   },
   "login": {
     "title": "System Login",
@@ -63,18 +66,48 @@
       "passwordRequired": "Please enter password",
       "invalidCredentials": "Invalid username or password",
       "loginFailed": "Login failed, please try again"
-    }
+    },
+    "noAccount": "Don't have an account?",
+    "signUp": "Sign up"
   },
   "register": {
     "title": "Register Account",
+    "subtitle": "Create your account to get started",
     "usernamePlaceholder": "Set username",
     "passwordPlaceholder": "Set password",
     "confirmPasswordPlaceholder": "Confirm password",
+    "confirmPassword": "Confirm Password",
     "emailPlaceholder": "Please enter email",
-    "registerWithEmail": "Register with Email",
-    "registerWithPhone": "Register with Phone",
-    "registerFailed": "Registration failed, please try again",
-    "registerSuccess": "Registration successful, please login"
+    "namePlaceholder": "Please enter your name",
+    "selectRole": "Please select role",
+    "agreeTerms": "I agree to the",
+    "termsOfService": "Terms of Service",
+    "and": "and",
+    "privacyPolicy": "Privacy Policy",
+    "createAccount": "Create Account",
+    "alreadyHaveAccount": "Already have an account?",
+    "signIn": "Sign in",
+    "metaDescription": "Register for homework management system account",
+    "errors": {
+      "usernameRequired": "Please enter username",
+      "usernameTooShort": "Username must be at least 3 characters",
+      "usernameInvalid": "Username can only contain letters, numbers and underscores",
+      "emailRequired": "Please enter email",
+      "emailInvalid": "Please enter a valid email address",
+      "nameRequired": "Please enter your name",
+      "nameTooShort": "Name must be at least 2 characters",
+      "roleRequired": "Please select a role",
+      "passwordRequired": "Please enter password",
+      "passwordTooShort": "Password must be at least 6 characters",
+      "confirmPasswordRequired": "Please confirm password",
+      "passwordMismatch": "Passwords do not match",
+      "termsRequired": "Please agree to the terms of service",
+      "usernameExists": "Username already exists",
+      "registrationFailed": "Registration failed, please try again"
+    },
+    "success": {
+      "accountCreated": "Account created successfully! Redirecting to login..."
+    }
   },
   "dashboard": {
     "welcome": "Welcome back, {name}!",

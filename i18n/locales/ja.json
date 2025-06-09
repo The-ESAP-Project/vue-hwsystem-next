@@ -63,7 +63,10 @@
     "student": "学生",
     "teacher": "教師",
     "monitor": "学級委員",
-    "admin": "管理者"
+    "admin": "管理者",
+    "email": "メールアドレス",
+    "name": "名前",
+    "role": "役割"
   },
   "login": {
     "title": "システムログイン",
@@ -81,18 +84,48 @@
       "passwordRequired": "パスワードを入力してください",
       "invalidCredentials": "ユーザー名またはパスワードが正しくありません",
       "loginFailed": "ログインに失敗しました。再度お試しください"
-    }
+    },
+    "noAccount": "アカウントをお持ちでないですか？",
+    "signUp": "今すぐ登録"
   },
   "register": {
     "title": "アカウント登録",
+    "subtitle": "アカウントを作成して始めましょう",
     "usernamePlaceholder": "ユーザー名を設定",
     "passwordPlaceholder": "パスワードを設定",
     "confirmPasswordPlaceholder": "パスワードを確認",
+    "confirmPassword": "パスワード確認",
     "emailPlaceholder": "メールアドレスを入力してください",
-    "registerWithEmail": "メールで登録",
-    "registerWithPhone": "電話番号で登録",
-    "registerFailed": "登録に失敗しました。再度お試しください",
-    "registerSuccess": "登録が完了しました。ログインしてください"
+    "namePlaceholder": "お名前を入力してください",
+    "selectRole": "役割を選択してください",
+    "agreeTerms": "私は",
+    "termsOfService": "利用規約",
+    "and": "と",
+    "privacyPolicy": "プライバシーポリシー",
+    "createAccount": "アカウント作成",
+    "alreadyHaveAccount": "既にアカウントをお持ちですか？",
+    "signIn": "今すぐログイン",
+    "metaDescription": "宿題管理システムのアカウント登録",
+    "errors": {
+      "usernameRequired": "ユーザー名を入力してください",
+      "usernameTooShort": "ユーザー名は3文字以上で入力してください",
+      "usernameInvalid": "ユーザー名は英数字とアンダースコアのみ使用できます",
+      "emailRequired": "メールアドレスを入力してください",
+      "emailInvalid": "有効なメールアドレスを入力してください",
+      "nameRequired": "お名前を入力してください",
+      "nameTooShort": "お名前は2文字以上で入力してください",
+      "roleRequired": "役割を選択してください",
+      "passwordRequired": "パスワードを入力してください",
+      "passwordTooShort": "パスワードは6文字以上で入力してください",
+      "confirmPasswordRequired": "パスワードを確認してください",
+      "passwordMismatch": "パスワードが一致しません",
+      "termsRequired": "利用規約に同意してください",
+      "usernameExists": "ユーザー名は既に存在します",
+      "registrationFailed": "登録に失敗しました。再度お試しください"
+    },
+    "success": {
+      "accountCreated": "アカウントが作成されました！ログインページにリダイレクトしています..."
+    }
   },
   "dashboard": {
     "welcome": "お帰りなさい、{name}さん！",

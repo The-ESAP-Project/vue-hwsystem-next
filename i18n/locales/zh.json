@@ -63,7 +63,10 @@
     "student": "学生",
     "teacher": "教师",
     "monitor": "课代表",
-    "admin": "管理员"
+    "admin": "管理员",
+    "email": "邮箱",
+    "name": "姓名",
+    "role": "角色"
   },
   "login": {
     "title": "登录系统",
@@ -81,18 +84,48 @@
       "passwordRequired": "请输入密码",
       "invalidCredentials": "用户名或密码错误",
       "loginFailed": "登录失败，请重试"
-    }
+    },
+    "noAccount": "还没有账号？",
+    "signUp": "立即注册"
   },
   "register": {
     "title": "注册账号",
+    "subtitle": "创建您的账号开始使用",
     "usernamePlaceholder": "设置用户名",
     "passwordPlaceholder": "设置密码",
     "confirmPasswordPlaceholder": "确认密码",
+    "confirmPassword": "确认密码",
     "emailPlaceholder": "请输入邮箱",
-    "registerWithEmail": "邮箱注册",
-    "registerWithPhone": "手机注册",
-    "registerFailed": "注册失败，请重试",
-    "registerSuccess": "注册成功，请登录"
+    "namePlaceholder": "请输入您的姓名",
+    "selectRole": "请选择角色",
+    "agreeTerms": "我同意",
+    "termsOfService": "服务条款",
+    "and": "和",
+    "privacyPolicy": "隐私政策",
+    "createAccount": "创建账号",
+    "alreadyHaveAccount": "已有账号？",
+    "signIn": "立即登录",
+    "metaDescription": "注册作业管理系统账号",
+    "errors": {
+      "usernameRequired": "请输入用户名",
+      "usernameTooShort": "用户名至少需要3个字符",
+      "usernameInvalid": "用户名只能包含字母、数字和下划线",
+      "emailRequired": "请输入邮箱",
+      "emailInvalid": "请输入有效的邮箱地址",
+      "nameRequired": "请输入您的姓名",
+      "nameTooShort": "姓名至少需要2个字符",
+      "roleRequired": "请选择角色",
+      "passwordRequired": "请输入密码",
+      "passwordTooShort": "密码至少需要6个字符",
+      "confirmPasswordRequired": "请确认密码",
+      "passwordMismatch": "两次输入的密码不一致",
+      "termsRequired": "请同意服务条款",
+      "usernameExists": "用户名已存在",
+      "registrationFailed": "注册失败，请重试"
+    },
+    "success": {
+      "accountCreated": "账号创建成功！正在跳转到登录页面..."
+    }
   },
   "dashboard": {
     "welcome": "欢迎回来，{name}！",
