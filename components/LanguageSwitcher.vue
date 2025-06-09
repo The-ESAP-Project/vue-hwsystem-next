@@ -15,13 +15,13 @@
     >
       <PopoverPanel class="absolute top-full right-0 z-10 mt-3 w-40 rounded-xl bg-white p-2 shadow-lg ring-1 ring-gray-900/5">
         <button 
-          v-for="locale in availableLocales" 
-          :key="locale.code"
-          @click="switchLocale(locale.code)"
+          v-for="localeOption in availableLocales" 
+          :key="localeOption.code"
           class="flex w-full items-center rounded-lg px-3 py-2 text-sm/6 font-semibold text-gray-900 hover:bg-gray-50 transition-colors"
+          @click="switchLocale(localeOption.code)"
         >
-          <span class="mr-2 text-lg">{{ locale.flag }}</span>
-          {{ locale.name }}
+          <span class="mr-2 text-lg">{{ localeOption.flag }}</span>
+          {{ localeOption.name }}
         </button>
       </PopoverPanel>
     </transition>
@@ -33,7 +33,6 @@ import { Popover, PopoverButton, PopoverPanel } from '@headlessui/vue'
 import { ChevronDownIcon } from '@heroicons/vue/20/solid'
 
 const { locale, setLocale } = useI18n()
-const { t } = useI18n()
 
 interface LocaleOption {
   code: string
@@ -48,16 +47,13 @@ const getLocaleOptions = (): LocaleOption[] => [
   { code: 'ja', name: '日本語', flag: '🇯🇵' },
 ]
 
-const currentLocale = computed(() => locale.value)
-
 const currentLocaleName = computed(() => {
   const options = getLocaleOptions()
   return options.find(l => l.code === locale.value)?.name || '中文'
 })
 
 const availableLocales = computed(() => {
-  const options = getLocaleOptions()
-  return options
+  return getLocaleOptions()
 })
 
 const switchLocale = async (code: string) => {
@@ -65,7 +61,7 @@ const switchLocale = async (code: string) => {
     await setLocale(code)
     
     // 保存到本地存储
-    if (process.client) {
+    if (import.meta.client) {
       localStorage.setItem('i18n_locale', code)
     }
   } catch (error) {
@@ -75,7 +71,7 @@ const switchLocale = async (code: string) => {
 
 // 在客户端初始化时从本地存储恢复语言设置
 onMounted(() => {
-  if (process.client) {
+  if (import.meta.client) {
     const savedLocale = localStorage.getItem('i18n_locale')
     if (savedLocale && savedLocale !== locale.value) {
       switchLocale(savedLocale)

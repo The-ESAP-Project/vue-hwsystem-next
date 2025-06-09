@@ -33,7 +33,7 @@
                 :disabled="pending"
                 class="border border-solid border-zinc-200 block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6 disabled:opacity-50 disabled:cursor-not-allowed" 
                 :class="{ 'border-red-500 focus:outline-red-500': error }"
-              />
+              >
             </div>
           </div>
 
@@ -53,11 +53,11 @@
                 :disabled="pending"
                 class="border border-solid border-zinc-200 block w-full rounded-md bg-white px-3 py-1.5 pr-10 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6 disabled:opacity-50 disabled:cursor-not-allowed"
                 :class="{ 'border-red-500 focus:outline-red-500': error }"
-              />
+              >
               <button
                 type="button"
-                @click="showPassword = !showPassword"
                 class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600"
+                @click="showPassword = !showPassword"
               >
                 <EyeIcon v-if="!showPassword" class="h-5 w-5" />
                 <EyeSlashIcon v-else class="h-5 w-5" />
@@ -92,7 +92,7 @@
                     name="remember-me" 
                     type="checkbox" 
                     class="col-start-1 row-start-1 appearance-none rounded-sm border border-gray-300 bg-white checked:border-indigo-600 checked:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                  />
+                  >
                   <svg class="pointer-events-none col-start-1 row-start-1 size-3.5 self-center justify-self-center stroke-white" viewBox="0 0 14 14" fill="none">
                     <path class="opacity-0 group-has-checked:opacity-100" d="M3 8L6 11L11 3.5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                   </svg>
@@ -120,8 +120,8 @@
             >
               <span v-if="pending" class="flex items-center">
                 <svg class="animate-spin -ml-1 mr-3 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/>
                 </svg>
                 {{ $t('common.loading') }}
               </span>
@@ -228,7 +228,7 @@ const handleLogin = async () => {
     const token = `mock-token-${Date.now()}`
     const userData = { ...user, token }
     
-    if (process.client) {
+    if (import.meta.client) {
       localStorage.setItem('token', token)
       localStorage.setItem('user', JSON.stringify(userData))
       
@@ -264,7 +264,7 @@ const getRoleRedirectPath = (role: string) => {
 
 // 自动填充记住的用户名
 onMounted(() => {
-  if (process.client) {
+  if (import.meta.client) {
     const rememberedUser = localStorage.getItem('rememberedUser')
     if (rememberedUser) {
       form.username = rememberedUser

@@ -11,7 +11,7 @@
                 class="h-8 w-auto" 
                 src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600" 
                 :alt="t('home.title')"
-              />
+              >
               <span class="ml-2 text-xl font-bold text-gray-900">{{ t('home.title') }}</span>
             </NuxtLink>
           </div>

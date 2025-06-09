@@ -4,7 +4,7 @@
       <div class="flex lg:flex-1">
         <NuxtLink to="/" class="-m-1.5 p-1.5">
           <span class="sr-only">{{ t('home.title') }}</span>
-          <img class="h-8 w-auto" src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600" :alt="t('home.title')" />
+          <img class="h-8 w-auto" src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600" :alt="t('home.title')" >
         </NuxtLink>
       </div>
       <div class="flex lg:hidden">
@@ -69,7 +69,7 @@
         <LanguageSwitcher />
         
         <!-- 分隔线 -->
-        <div class="w-px h-5 bg-gray-300"></div>
+        <div class="w-px h-5 bg-gray-300"/>
         
         <!-- 登录按钮 -->
         <NuxtLink to="/login" class="text-sm/6 font-semibold text-gray-900 hover:text-indigo-600 transition-colors">
@@ -79,13 +79,13 @@
     </nav>
     
     <!-- Mobile Menu -->
-    <Dialog class="lg:hidden" @close="mobileMenuOpen = false" :open="mobileMenuOpen">
+    <Dialog class="lg:hidden" :open="mobileMenuOpen" @close="mobileMenuOpen = false">
       <div class="fixed inset-0 z-50" />
       <DialogPanel class="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
         <div class="flex items-center justify-between">
           <NuxtLink to="/" class="-m-1.5 p-1.5" @click="mobileMenuOpen = false">
             <span class="sr-only">{{ t('home.title') }}</span>
-            <img class="h-8 w-auto" src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600" :alt="t('home.title')" />
+            <img class="h-8 w-auto" src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600" :alt="t('home.title')" >
           </NuxtLink>
           <button type="button" class="-m-2.5 rounded-md p-2.5 text-gray-700" @click="mobileMenuOpen = false">
             <span class="sr-only">{{ t('common.close') }}</span>
@@ -95,7 +95,7 @@
         <div class="mt-6 flow-root">
           <div class="-my-6 divide-y divide-gray-500/10">
             <div class="space-y-2 py-6">
-              <Disclosure as="div" class="-mx-3" v-slot="{ open }">
+              <Disclosure v-slot="{ open }" as="div" class="-mx-3">
                 <DisclosureButton class="flex w-full items-center justify-between rounded-lg py-2 pr-3.5 pl-3 text-base/7 font-semibold text-gray-900 hover:bg-gray-50">
                   {{ $t('nav.product') }}
                   <ChevronDownIcon :class="[open ? 'rotate-180' : '', 'size-5 flex-none']" aria-hidden="true" />
@@ -108,7 +108,7 @@
               <NuxtLink to="/features" class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50">{{ $t('nav.features') }}</NuxtLink>
               <NuxtLink to="/marketplace" class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50">{{ $t('nav.marketplace') }}</NuxtLink>
 
-              <Disclosure as="div" class="-mx-3" v-slot="{ open }">
+              <Disclosure v-slot="{ open }" as="div" class="-mx-3">
                 <DisclosureButton class="flex w-full items-center justify-between rounded-lg py-2 pr-3.5 pl-3 text-base/7 font-semibold text-gray-900 hover:bg-gray-50">
                   {{ $t('nav.company') }}
                   <ChevronDownIcon :class="[open ? 'rotate-180' : '', 'size-5 flex-none']" aria-hidden="true" />
@@ -125,9 +125,9 @@
                   <button 
                     v-for="locale in availableLocales" 
                     :key="locale.code"
-                    @click="switchLocale(locale.code)"
                     class="flex w-full items-center rounded-lg px-3 py-2 text-sm font-semibold text-gray-900 hover:bg-gray-50 transition-colors"
                     :class="{ 'bg-indigo-50 text-indigo-600': locale.code === currentLocale }"
+                    @click="switchLocale(locale.code)"
                   >
                     <span class="mr-3 text-lg">{{ locale.flag }}</span>
                     {{ locale.name }}
@@ -208,7 +208,7 @@ const availableLocales = computed(() => [
 
 const switchLocale = async (code) => {
   await setLocale(code)
-  if (process.client) {
+  if (import.meta.client) {
     localStorage.setItem('i18n_locale', code)
   }
   mobileMenuOpen.value = false

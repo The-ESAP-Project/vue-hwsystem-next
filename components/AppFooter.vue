@@ -18,7 +18,7 @@
         </div>
         <div class="mt-8 md:mt-0 md:order-1">
           <p class="text-center text-gray-500 text-sm">
-            {{ $t('footer.copyright', { year: new Date().getFullYear(), company: $t('home.title') }) }}
+            {{ $t('footer.copyright', { year: currentYear, company: $t('home.title') }) }}
           </p>
         </div>
       </div>
@@ -27,5 +27,9 @@
 </template>
 
 <script setup>
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const { t } = useI18n()
+
+// 使用计算属性避免每次渲染时创建新的 Date 对象
+const currentYear = computed(() => new Date().getFullYear())
 </script>

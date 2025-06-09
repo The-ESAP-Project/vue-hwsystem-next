@@ -45,11 +45,15 @@ export default defineNuxtConfig({
       }
     ],
     lazy: true,
+    langDir: 'locales/',
     defaultLocale: 'zh',
     detectBrowserLanguage: {
       useCookie: true,
       cookieKey: 'i18n_redirected',
       redirectOn: 'root'
+    },
+    bundle: {
+      optimizeTranslationDirective: false
     }
   }
 })
