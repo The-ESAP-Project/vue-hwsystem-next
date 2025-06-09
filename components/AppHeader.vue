@@ -2,7 +2,7 @@
   <header class="bg-white shadow-sm">
     <nav class="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8" aria-label="Global">
       <div class="flex lg:flex-1">
-        <NuxtLink to="/" class="-m-1.5 p-1.5">
+        <NuxtLink :to="localePath('/')" class="-m-1.5 p-1.5">
           <span class="sr-only">{{ t('home.title') }}</span>
           <img class="h-8 w-auto" src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600" :alt="t('home.title')" >
         </NuxtLink>
@@ -46,8 +46,8 @@
           </transition>
         </Popover>
 
-        <NuxtLink to="/features" class="text-sm/6 font-semibold text-gray-900">{{ $t('nav.features') }}</NuxtLink>
-        <NuxtLink to="/marketplace" class="text-sm/6 font-semibold text-gray-900">{{ $t('nav.marketplace') }}</NuxtLink>
+        <NuxtLink :to="localePath('/features')" class="text-sm/6 font-semibold text-gray-900">{{ $t('nav.features') }}</NuxtLink>
+        <NuxtLink :to="localePath('/marketplace')" class="text-sm/6 font-semibold text-gray-900">{{ $t('nav.marketplace') }}</NuxtLink>
 
         <Popover class="relative">
           <PopoverButton class="flex items-center gap-x-1 text-sm/6 font-semibold text-gray-900">
@@ -72,7 +72,7 @@
         <div class="w-px h-5 bg-gray-300"/>
         
         <!-- 登录按钮 -->
-        <NuxtLink to="/auth/login" class="text-sm/6 font-semibold text-gray-900 hover:text-indigo-600 transition-colors">
+        <NuxtLink :to="localePath('/auth/login')" class="text-sm/6 font-semibold text-gray-900 hover:text-indigo-600 transition-colors">
           {{ $t('common.login') }} <span aria-hidden="true">&rarr;</span>
         </NuxtLink>
       </div>
@@ -83,7 +83,7 @@
       <div class="fixed inset-0 z-50" />
       <DialogPanel class="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
         <div class="flex items-center justify-between">
-          <NuxtLink to="/" class="-m-1.5 p-1.5" @click="mobileMenuOpen = false">
+          <NuxtLink :to="localePath('/')" class="-m-1.5 p-1.5" @click="mobileMenuOpen = false">
             <span class="sr-only">{{ t('home.title') }}</span>
             <img class="h-8 w-auto" src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600" :alt="t('home.title')" >
           </NuxtLink>
@@ -105,8 +105,8 @@
                 </DisclosurePanel>
               </Disclosure>
 
-              <NuxtLink to="/features" class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50">{{ $t('nav.features') }}</NuxtLink>
-              <NuxtLink to="/marketplace" class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50">{{ $t('nav.marketplace') }}</NuxtLink>
+              <NuxtLink :to="localePath('/features')" class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50">{{ $t('nav.features') }}</NuxtLink>
+              <NuxtLink :to="localePath('/marketplace')" class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50">{{ $t('nav.marketplace') }}</NuxtLink>
 
               <Disclosure v-slot="{ open }" as="div" class="-mx-3">
                 <DisclosureButton class="flex w-full items-center justify-between rounded-lg py-2 pr-3.5 pl-3 text-base/7 font-semibold text-gray-900 hover:bg-gray-50">
@@ -136,7 +136,7 @@
               </div>
             </div>
             <div class="py-6">
-              <NuxtLink to="/auth/login" class="block text-sm/6 font-semibold text-gray-900" @click="mobileMenuOpen = false">
+              <NuxtLink :to="localePath('/auth/login')" class="block text-sm/6 font-semibold text-gray-900" @click="mobileMenuOpen = false">
                 {{ $t('common.login') }} <span aria-hidden="true">&rarr;</span>
               </NuxtLink>
             </div>
@@ -174,6 +174,7 @@ import { useI18n } from 'vue-i18n'
 import LanguageSwitcher from './LanguageSwitcher.vue'
 
 const { t, locale, setLocale } = useI18n()
+const localePath = useLocalePath()
 
 const products = [
   { nameKey: 'product.analytics', descKey: 'product.analyticsDesc', href: '#', icon: ChartPieIcon },

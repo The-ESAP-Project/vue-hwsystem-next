@@ -3,16 +3,16 @@
     <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
       <div class="md:flex md:items-center md:justify-between">
         <div class="flex justify-center space-x-6 md:order-2">
-          <NuxtLink to="/about" class="text-gray-400 hover:text-gray-500 text-sm">
+          <NuxtLink :to="localePath('/about')" class="text-gray-400 hover:text-gray-500 text-sm">
             {{ $t('footer.about') }}
           </NuxtLink>
-          <NuxtLink to="/contact" class="text-gray-400 hover:text-gray-500 text-sm">
+          <NuxtLink :to="localePath('/contact')" class="text-gray-400 hover:text-gray-500 text-sm">
             {{ $t('footer.contact') }}
           </NuxtLink>
-          <NuxtLink to="/privacy" class="text-gray-400 hover:text-gray-500 text-sm">
+          <NuxtLink :to="localePath('/privacy')" class="text-gray-400 hover:text-gray-500 text-sm">
             {{ $t('footer.privacy') }}
           </NuxtLink>
-          <NuxtLink to="/terms" class="text-gray-400 hover:text-gray-500 text-sm">
+          <NuxtLink :to="localePath('/terms')" class="text-gray-400 hover:text-gray-500 text-sm">
             {{ $t('footer.terms') }}
           </NuxtLink>
         </div>
@@ -29,6 +29,7 @@
 <script setup>
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const { t } = useI18n()
+const localePath = useLocalePath()
 
 // 使用计算属性避免每次渲染时创建新的 Date 对象
 const currentYear = computed(() => new Date().getFullYear())

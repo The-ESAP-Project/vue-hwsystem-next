@@ -6,7 +6,7 @@
         <div class="flex items-center justify-between h-16">
           <!-- Logo -->
           <div class="flex items-center">
-            <NuxtLink to="/" class="flex items-center">
+            <NuxtLink :to="localePath('/')" class="flex items-center">
               <img 
                 class="h-8 w-auto" 
                 src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600" 
@@ -20,7 +20,7 @@
           <div class="flex items-center space-x-4">
             <LanguageSwitcher />
             <NuxtLink 
-              to="/" 
+              :to="localePath('/')" 
               class="text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors"
             >
               {{ $t('common.back') }}
@@ -39,15 +39,15 @@
     <footer class="bg-white border-t border-gray-200 mt-auto">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
         <div class="flex items-center justify-center space-x-6 text-sm text-gray-500">
-          <NuxtLink to="/privacy" class="hover:text-gray-900 transition-colors">
+          <NuxtLink :to="localePath('/privacy')" class="hover:text-gray-900 transition-colors">
             {{ $t('footer.privacy') }}
           </NuxtLink>
           <span class="text-gray-300">|</span>
-          <NuxtLink to="/terms" class="hover:text-gray-900 transition-colors">
+          <NuxtLink :to="localePath('/terms')" class="hover:text-gray-900 transition-colors">
             {{ $t('footer.terms') }}
           </NuxtLink>
           <span class="text-gray-300">|</span>
-          <NuxtLink to="/help" class="hover:text-gray-900 transition-colors">
+          <NuxtLink :to="localePath('/help')" class="hover:text-gray-900 transition-colors">
             {{ $t('footer.help') }}
           </NuxtLink>
         </div>
@@ -63,6 +63,7 @@
 import LanguageSwitcher from '~/components/LanguageSwitcher.vue'
 
 const { t } = useI18n()
+const localePath = useLocalePath()
 </script>
 
 <style scoped>
