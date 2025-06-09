@@ -175,11 +175,11 @@
             </div>
             <label for="agree-terms" class="ml-3 block text-sm/6 text-gray-900">
               {{ $t('register.agreeTerms') }}
-              <NuxtLink to="/terms" class="text-indigo-600 hover:text-indigo-500">
+              <NuxtLink :to="localePath('/terms')" class="text-indigo-600 hover:text-indigo-500">
                 {{ $t('register.termsOfService') }}
               </NuxtLink>
               {{ $t('register.and') }}
-              <NuxtLink to="/privacy" class="text-indigo-600 hover:text-indigo-500">
+              <NuxtLink :to="localePath('/privacy')" class="text-indigo-600 hover:text-indigo-500">
                 {{ $t('register.privacyPolicy') }}
               </NuxtLink>
             </label>
@@ -240,8 +240,8 @@
         <div class="mt-6 border-t border-gray-200 pt-6 text-center">
           <p class="text-sm text-gray-600">
             {{ $t('register.alreadyHaveAccount') }}
-            <NuxtLink 
-              to="/auth/login" 
+            <NuxtLink
+              :to="localePath('/auth/login')"
               class="text-indigo-600 hover:text-indigo-500 font-medium"
             >
               {{ $t('register.signIn') }}
@@ -258,6 +258,7 @@ import { EyeIcon, EyeSlashIcon, XCircleIcon, CheckCircleIcon } from '@heroicons/
 
 // i18n
 const { t } = useI18n()
+const localePath = useLocalePath()
 
 // 页面元信息
 useHead({
@@ -415,8 +416,9 @@ const handleRegister = async () => {
       navigateTo('/auth/login')
     }, 3000)
 
-  } catch (err: any) {
-    error.value = err.message || t('register.errors.registrationFailed')
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : String(err)
+    error.value = message || t('register.errors.registrationFailed')
   } finally {
     pending.value = false
   }

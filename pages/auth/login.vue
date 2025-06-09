@@ -103,8 +103,8 @@
               </label>
             </div>
             
-            <NuxtLink 
-              to="/forgot-password" 
+            <NuxtLink
+              :to="localePath('/forgot-password')"
               class="text-sm text-indigo-600 hover:text-indigo-500"
             >
               {{ $t('login.forgotPassword') }}
@@ -155,8 +155,8 @@
         <div class="mt-6 border-t border-gray-200 pt-6 text-center">
           <p class="text-sm text-gray-600">
             {{ $t('login.noAccount') }}
-            <NuxtLink 
-              to="/auth/register" 
+            <NuxtLink
+              :to="localePath('/auth/register')"
               class="text-indigo-600 hover:text-indigo-500 font-medium"
             >
               {{ $t('login.signUp') }}
@@ -173,6 +173,7 @@ import { EyeIcon, EyeSlashIcon, XCircleIcon } from '@heroicons/vue/24/outline'
 
 // i18n
 const { t } = useI18n()
+const localePath = useLocalePath()
 
 // 页面元信息 - 修复标题翻译问题
 useHead({
@@ -254,8 +255,9 @@ const handleLogin = async () => {
     const redirectPath = getRoleRedirectPath(user.role)
     await navigateTo(redirectPath)
 
-  } catch (err: any) {
-    error.value = err.message || t('login.errors.loginFailed')
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : String(err)
+    error.value = message || t('login.errors.loginFailed')
   } finally {
     pending.value = false
   }
