@@ -31,6 +31,10 @@ export interface AuthResponse {
 
 export const useAuth = () => {
   // 使用 useState 保持在各组件间共享的响应式状态
+  const AUTH_USER_STATE_KEY = 'auth-user'
+  const AUTH_LOADING_STATE_KEY = 'auth-loading'
+  const AUTH_ERROR_STATE_KEY = 'auth-error'
+
   const user = useState<User | null>(AUTH_USER_STATE_KEY, () => null)
   const loading = useState<boolean>(AUTH_LOADING_STATE_KEY, () => false)
   const error = useState<string | null>(AUTH_ERROR_STATE_KEY, () => null)
