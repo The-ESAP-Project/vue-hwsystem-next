@@ -6,7 +6,7 @@
         <!-- 背景装饰 -->
         <div class="absolute inset-0 bg-gradient-to-r from-indigo-600/5 to-purple-600/5 dark:from-indigo-400/10 dark:to-purple-400/10"></div>
         <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-indigo-200 to-purple-200 dark:from-indigo-800 dark:to-purple-800 rounded-full opacity-20 transform translate-x-16 -translate-y-16"></div>
-        
+
         <div class="relative flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
             <h1 class="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400 bg-clip-text text-transparent">
@@ -16,27 +16,27 @@
               {{ $t('dashboard.subtitle') || '管理您的学习进度' }}
             </p>
           </div>
-          
+
           <!-- 现代化视图切换按钮 -->
           <div class="flex items-center bg-gray-100 dark:bg-gray-700 rounded-2xl p-1 transition-colors duration-200">
-            <button 
-              @click="isListView = true" 
-              :class="[
+            <button
+                @click="isListView = true"
+                :class="[
                 'flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200',
-                isListView 
-                  ? 'bg-white dark:bg-gray-800 text-indigo-600 dark:text-indigo-400 shadow-lg transform scale-105' 
+                isListView
+                  ? 'bg-white dark:bg-gray-800 text-indigo-600 dark:text-indigo-400 shadow-lg transform scale-105'
                   : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'
               ]"
             >
               <Bars4Icon class="h-4 w-4" />
               {{ $t('dashboard.listView') || '列表' }}
             </button>
-            <button 
-              @click="isListView = false" 
-              :class="[
+            <button
+                @click="isListView = false"
+                :class="[
                 'flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200',
-                !isListView 
-                  ? 'bg-white dark:bg-gray-800 text-indigo-600 dark:text-indigo-400 shadow-lg transform scale-105' 
+                !isListView
+                  ? 'bg-white dark:bg-gray-800 text-indigo-600 dark:text-indigo-400 shadow-lg transform scale-105'
                   : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'
               ]"
             >
@@ -54,21 +54,22 @@
       <div class="grid grid-cols-1 xl:grid-cols-3 gap-6 lg:gap-8">
         <!-- 现代化日历区域 -->
         <div class="xl:col-span-1">
-          <Calendar 
-            :events="calendarEvents"
-            :legends="calendarLegends"
+          <Calendar
+              :events="calendarEvents"
+              :legends="calendarLegends"
+              @date-click="handleDateClick"
           />
         </div>
 
         <!-- 现代化作业列表区域 -->
         <div class="xl:col-span-2">
           <AssignmentList
-            :assignments="assignments"
-            :is-list-view="isListView"
-            :show-attempts="true"
-            :show-progress="false"
-            :show-class-progress="false"
-            @assignment-click="handleAssignmentClick"
+              :assignments="assignments"
+              :is-list-view="isListView"
+              :show-attempts="true"
+              :show-progress="false"
+              :show-class-progress="false"
+              @assignment-click="handleAssignmentClick"
           />
         </div>
       </div>
@@ -77,11 +78,11 @@
 </template>
 
 <script setup lang="ts">
-import { 
-  Bars4Icon, 
-  Squares2X2Icon, 
-  CalendarIcon, 
-  ClockIcon, 
+import {
+  Bars4Icon,
+  Squares2X2Icon,
+  CalendarIcon,
+  ClockIcon,
   ArrowPathIcon,
   ChevronRightIcon,
   AcademicCapIcon,
@@ -92,7 +93,7 @@ import {
 import Calendar from '@/components/Calendar.vue'
 import StatsCards from '@/components/StatsCards.vue'
 import AssignmentList from '@/components/AssignmentList.vue'
-import { useStudentDashboard } from '~/composables/useDashboardData'
+import { useStudentDashboard, type Assignment } from '~/composables/useDashboardData'
 
 // i18n
 const { t } = useI18n()
@@ -132,11 +133,11 @@ const isListView = ref(true)
 
 // 计算作业紧急程度
 const getEventStatus = (assignment) => {
-  if (assignment.status === 'submitted') return 'submitted' 
+  if (assignment.status === 'submitted') return 'submitted'
 
   const now = new Date()
   now.setHours(0, 0, 0, 0)
-  
+
   const dueDate = new Date(assignment.dueDate + 'T00:00:00')
   const diffDays = Math.ceil((dueDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))
 
@@ -160,8 +161,31 @@ const calendarLegends = computed(() => [
 // 添加主题管理
 const { isDark } = useTheme()
 
+// 处理作业点击事件 - 跳转到作业详情页面
 const handleAssignmentClick = (assignment) => {
   console.log('点击作业:', assignment)
+
+  // 检查作业是否有ID字段
+  if (assignment.id) {
+    // 跳转到作业详情页面
+    navigateTo(localePath(`/student/view/${assignment.id}`))
+  } else {
+    console.error('作业数据缺少ID字段:', assignment)
+    // 可以显示错误提示
+    alert('作业数据错误：缺少ID字段')
+  }
+}
+
+// 处理日历日期点击事件（可选）
+const handleDateClick = (date) => {
+  console.log('点击日期:', date)
+  // 如果该日期有作业，可以跳转到第一个作业
+  if (date.events && date.events.length > 0) {
+    const firstAssignment = assignments.value.find(a => a.id === date.events[0].id)
+    if (firstAssignment) {
+      handleAssignmentClick(firstAssignment)
+    }
+  }
 }
 
 // 页面加载时获取数据
@@ -170,10 +194,20 @@ await fetchStudentData()
 // 监听错误
 watch(error, (newError) => {
   if (newError) {
-    // 可以在这里显示错误提示
     console.error('Dashboard Error:', newError)
   }
 })
+
+// 监听作业数据变化，用于调试
+watch(assignments, (newAssignments) => {
+  console.log('作业数据更新:', newAssignments)
+  // 检查每个作业是否有ID字段
+  newAssignments.forEach((assignment, index) => {
+    if (!assignment.id) {
+      console.warn(`作业 ${index} 缺少ID字段:`, assignment)
+    }
+  })
+}, { immediate: true })
 </script>
 
 <style scoped>

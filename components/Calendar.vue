@@ -39,7 +39,7 @@
           <span class="sm:hidden">{{ day.short }}</span>
         </div>
       </div>
-      
+
       <!-- 日期网格 -->
       <div class="days-grid">
         <div 
@@ -229,27 +229,27 @@ const localizedWeekdays = computed(() => {
 const calendarDates = computed(() => {
   const year = currentDate.value.getFullYear()
   const month = currentDate.value.getMonth()
-  
+
   // 获取当月第一天和最后一天
   const firstDay = new Date(year, month, 1)
   const lastDay = new Date(year, month + 1, 0)
-  
+
   // 获取日历网格开始日期（包含上月末尾）
   const startDate = new Date(firstDay)
   startDate.setDate(startDate.getDate() - firstDay.getDay())
-  
+
   // 生成42天的日历网格（6周）
   const dates: CalendarDate[] = []
   const today = new Date()
-  
+
   for (let i = 0; i < 42; i++) {
     const date = new Date(startDate)
     date.setDate(startDate.getDate() + i)
-    
+
     // 修复日期匹配问题：使用本地日期格式而不是ISO格式
     const dateStr = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
     const dayEvents = props.events.filter(event => event.start === dateStr)
-    
+
     dates.push({
       day: date.getDate(),
       month: date.getMonth(),
@@ -260,14 +260,14 @@ const calendarDates = computed(() => {
       events: dayEvents
     })
   }
-  
+
   return dates
 })
 
 // 修改tooltip样式计算
 const tooltipStyle = computed(() => {
   if (!tooltipPosition.value) return {}
-  
+
   if (isMobile.value) {
     return {
       position: 'fixed' as const,
@@ -277,7 +277,7 @@ const tooltipStyle = computed(() => {
       zIndex: 1001
     }
   }
-  
+
   return {
     left: `${tooltipPosition.value.x}px`,
     top: `${tooltipPosition.value.y}px`,
@@ -339,15 +339,15 @@ const hasUrgentEvents = (date: CalendarDate) => {
 
 const getDayClasses = (date: CalendarDate) => {
   const classes = ['day-cell']
-  
+
   if (!date.isCurrentMonth) {
     classes.push('is-other-month')
   }
-  
+
   if (date.isToday) {
     classes.push('is-today')
   }
-  
+
   if (date.hasEvent) {
     classes.push('has-event')
     
@@ -371,11 +371,11 @@ const getDayClasses = (date: CalendarDate) => {
       classes.push(`event-${status}`)
     }
   }
-  
+
   if (hoveredDate.value === date) {
     classes.push('is-hovered')
   }
-  
+
   return classes
 }
 
@@ -416,7 +416,7 @@ const getEventStatus = (date: CalendarDate) => {
   
   const primaryEvent = getPrimaryEvent(date.events)
   const status = primaryEvent.extendedProps?.status || primaryEvent.className
-  
+
   switch (status) {
     case 'submitted': return 'event-success'
     case 'overdue': return 'event-danger'
@@ -442,10 +442,11 @@ const handleDateClick = (date: CalendarDate) => {
 }
 
 const handleDateHover = (date: CalendarDate, isHovered: boolean) => {
+  // 只有在有事件的日期才显示悬浮提示
   if (isHovered && date.hasEvent) {
     hoveredDate.value = date
     showTooltip.value = true
-    
+
     // 获取鼠标位置
     nextTick(() => {
       const event = window.event as MouseEvent
@@ -871,14 +872,8 @@ onMounted(() => {
   min-height: 36px;
 }
 
-.day-cell:hover {
-  background: rgba(99, 102, 241, 0.1);
-  transform: scale(1.05);
-}
-
-.dark .day-cell:hover {
-  background: rgba(129, 140, 248, 0.2);
-}
+/* 移除通用的hover效果 */
+/* .day-cell:hover 已移除 */
 
 .day-cell.is-other-month {
   opacity: 0.3;
@@ -895,21 +890,26 @@ onMounted(() => {
   font-weight: 700;
 }
 
-.day-cell.is-today:hover {
-  background: linear-gradient(135deg, #6366f1, #8b5cf6);
-  transform: scale(1.1);
-  box-shadow: 0 6px 16px rgba(99, 102, 241, 0.6);
-}
+/* 今日不显示hover效果 */
 
 .day-cell.has-event {
-  background: linear-gradient(135deg, #10b981, #059669);
+  background: transparent;
   color: white;
-  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+  box-shadow: none;
 }
 
 .day-cell.has-event .day-number {
   color: white !important;
   font-weight: 600;
+}
+
+/* 只对有事件的日期添加hover效果 */
+.day-cell.has-event:hover {
+  transform: scale(1.05);
+}
+
+.dark .day-cell.has-event:hover {
+  /* 保持原有的hover效果 */
 }
 
 /* 事件状态样式 */
@@ -924,7 +924,6 @@ onMounted(() => {
 
 .day-cell.has-event.event-urgent {
   background: linear-gradient(135deg, #ff6b35, #e55039);
-  animation: urgentPulse 1.5s infinite;
   box-shadow: 0 4px 12px rgba(255, 107, 53, 0.6);
 }
 
@@ -953,7 +952,7 @@ onMounted(() => {
   background: linear-gradient(135deg, #3b82f6, #2563eb);
 }
 
-/* hover效果保持原背景色 */
+/* hover效果保持原背景色，只对有事件的日期生效 */
 .day-cell.has-event.event-submitted:hover {
   background: linear-gradient(135deg, #10b981, #059669);
 }
@@ -964,18 +963,31 @@ onMounted(() => {
 
 .day-cell.has-event.event-urgent:hover {
   background: linear-gradient(135deg, #ff6b35, #e55039);
-  box-shadow: 0 6px 16px rgba(255, 107, 53, 0.7);
+  animation: urgentPulse 1.5s infinite;
 }
 
 .day-cell.has-event.event-warning:hover {
   background: linear-gradient(135deg, #eab308, #ca8a04);
 }
 
-/* 移除默认事件样式，使用具体状态样式 */
-.day-cell.has-event {
-  background: transparent;
-  color: white;
-  box-shadow: none;
+.day-cell.has-event.event-pending:hover {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+}
+
+.day-cell.has-event.event-info:hover {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+}
+
+.day-cell.has-event.event-active:hover {
+  background: linear-gradient(135deg, #10b981, #059669);
+}
+
+.day-cell.has-event.event-draft:hover {
+  background: linear-gradient(135deg, #6b7280, #4b5563);
+}
+
+.day-cell.has-event.event-closed:hover {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
 }
 
 .event-indicator {
@@ -1090,8 +1102,6 @@ onMounted(() => {
   background: #eab308;
 }
 
-/* 移除normal状态，所有未分类的使用pending颜色 */
-
 .event-status-dot.status-active {
   background: #10b981;
 }
@@ -1195,6 +1205,7 @@ onMounted(() => {
     transform: translateY(0);
   }
 }
+
 
 .tooltip {
   animation: fadeIn 0.2s ease-out;
@@ -1308,12 +1319,12 @@ onMounted(() => {
 @keyframes urgentPulse {
   0%, 100% {
     opacity: 1;
-    transform: scale(1);
+    transform: scale(1.05);
     box-shadow: 0 4px 12px rgba(255, 107, 53, 0.6);
   }
   50% {
     opacity: 0.9;
-    transform: scale(1.02);
+    transform: scale(1.07);
     box-shadow: 0 6px 16px rgba(255, 107, 53, 0.8);
   }
 }

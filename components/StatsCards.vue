@@ -66,10 +66,18 @@
 </template>
 
 <script setup lang="ts">
+import {
+  AcademicCapIcon,
+  CheckCircleIcon,
+  ClockIcon,
+  ExclamationTriangleIcon,
+  ChartBarIcon
+} from '@heroicons/vue/24/outline'
+
 interface StatItem {
   label: string
   value: string | number
-  icon: any
+  icon: any | string // 支持组件或字符串
   bgColor: string
   iconColor: string
 }

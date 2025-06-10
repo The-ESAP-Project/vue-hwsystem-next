@@ -43,7 +43,7 @@
             'p-4 sm:p-6 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-all duration-200 group cursor-pointer touch-manipulation',
             getAssignmentRowClass(assignment)
           ]"
-          @click="$emit('assignment-click', assignment)"
+            @click="$emit('assignment-click', assignment)"
         >
           <div class="flex items-start justify-between">
             <div class="flex-1 min-w-0">
@@ -80,7 +80,7 @@
                   </span>
                 </div>
               </div>
-              
+
               <!-- 移动端垂直布局，桌面端网格布局 -->
               <div class="flex flex-col sm:grid gap-2 sm:gap-4 text-sm sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 <div class="flex items-center gap-2 text-gray-600 dark:text-gray-400">
@@ -129,14 +129,14 @@
               getAssignmentCardClass(assignment),
               getCardHoverClass(assignment)
             ]"
-            @click="$emit('assignment-click', assignment)"
+              @click="$emit('assignment-click', assignment)"
           >
             <div class="absolute top-3 sm:top-4 right-3 sm:right-4">
               <div :class="getStatusIndicatorClass(assignment)"></div>
-              <div v-if="isOverdue(assignment)" class="absolute top-0 left-0 w-3 h-3 bg-red-500 rounded-full animate-ping"></div>
-              <div v-else-if="isUrgent(assignment)" class="absolute top-0 left-0 w-3 h-3 bg-orange-500 rounded-full animate-ping"></div>
+              <!-- 紧急状态在hover时显示动画点 -->
+              <div v-if="isUrgent(assignment)" class="absolute top-0 left-0 w-3 h-3 bg-orange-500 rounded-full opacity-0 group-hover:opacity-100 group-hover:animate-ping transition-opacity duration-200"></div>
             </div>
-            
+
             <div class="mb-4">
               <h3 :class="[
                 'text-base sm:text-lg font-semibold mb-2 pr-6 sm:pr-8 break-words',
@@ -144,7 +144,7 @@
               ]">
                 {{ assignment.title }}
               </h3>
-              
+
               <div class="space-y-2 text-sm text-gray-600 dark:text-gray-400">
                 <div class="flex items-center gap-2">
                   <CalendarIcon class="h-4 w-4 flex-shrink-0" />
@@ -164,10 +164,9 @@
                 </div>
               </div>
             </div>
-            
+
             <div class="flex items-center justify-between">
               <div></div>
-              
               <div class="opacity-0 group-hover:opacity-100 sm:opacity-100 flex items-center gap-1 transition-all duration-200">
                 <slot name="grid-actions" :assignment="assignment">
                   <button class="inline-flex items-center gap-1 px-2 py-1.5 text-xs font-medium text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 rounded-lg transition-all duration-200 touch-manipulation">
@@ -185,9 +184,9 @@
 </template>
 
 <script setup lang="ts">
-import { 
-  CalendarIcon, 
-  ClockIcon, 
+import {
+  CalendarIcon,
+  ClockIcon,
   ArrowPathIcon,
   ChevronRightIcon,
   ChartBarIcon,
@@ -273,23 +272,23 @@ const gridCols = computed(() => {
 const isUrgent = (assignment: Assignment) => {
   // 检查是否为紧急状态
   if (assignment.status === 'submitted') return false
-  
+
   const now = new Date()
   now.setHours(0, 0, 0, 0) // 重置到当天00:00:00
-  
+
   const dueDate = new Date(assignment.dueDate + 'T00:00:00') // 确保使用本地时间
   const diffDays = Math.ceil((dueDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))
-  
+
   return diffDays <= 3 && diffDays >= 0
 }
 
 const isOverdue = (assignment: Assignment) => {
   // 检查是否已过期
   if (assignment.status === 'submitted' || assignment.status === 'closed') return false
-  
+
   const now = new Date()
   now.setHours(23, 59, 59, 999) // 设置到当天的最后一刻
-  
+
   const dueDate = new Date(assignment.dueDate + 'T23:59:59') // 设置到截止日的最后一刻
   return dueDate < now
 }
@@ -351,19 +350,19 @@ const filteredAndSortedAssignments = computed(() => {
     const bUrgent = isUrgent(b)
     const aCompleted = a.status === 'submitted' || a.status === 'closed'
     const bCompleted = b.status === 'submitted' || b.status === 'closed'
-    
+
     // 过期的排在最前面
     if (aOverdue && !bOverdue) return -1
     if (!aOverdue && bOverdue) return 1
-    
+
     // 紧急的排在第二位
     if (aUrgent && !bUrgent) return -1
     if (!aUrgent && bUrgent) return 1
-    
+
     // 已完成的排在最后面
     if (aCompleted && !bCompleted) return 1
     if (!aCompleted && bCompleted) return -1
-    
+
     // 同类型内按截止日期排序
     return new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime()
   })
@@ -371,7 +370,7 @@ const filteredAndSortedAssignments = computed(() => {
 
 const getAssignmentRowClass = (assignment: Assignment) => {
   if (isOverdue(assignment)) {
-    return 'bg-red-100/50 dark:bg-red-900/20'
+    return 'bg-gray-100/50 dark:bg-gray-700/30'
   }
   if (isUrgent(assignment)) {
     return 'bg-orange-50/50 dark:bg-orange-900/10'
@@ -381,7 +380,7 @@ const getAssignmentRowClass = (assignment: Assignment) => {
 
 const getAssignmentCardClass = (assignment: Assignment) => {
   if (isOverdue(assignment)) {
-    return 'border-red-400 dark:border-red-600 bg-gradient-to-br from-red-100 to-red-50 dark:from-red-900/30 dark:to-red-800/20 shadow-red-300 dark:shadow-red-900/30'
+    return 'border-gray-400 dark:border-gray-600 bg-gradient-to-br from-gray-100 to-gray-50 dark:from-gray-800/50 dark:to-gray-700/30 shadow-gray-300 dark:shadow-gray-900/30'
   }
   if (isUrgent(assignment)) {
     return 'border-orange-300 dark:border-orange-700 bg-gradient-to-br from-orange-50 to-yellow-50 dark:from-orange-900/20 dark:to-yellow-900/20 shadow-orange-200 dark:shadow-orange-900/20'
@@ -391,7 +390,7 @@ const getAssignmentCardClass = (assignment: Assignment) => {
 
 const getCardHoverClass = (assignment: Assignment) => {
   if (isOverdue(assignment)) {
-    return 'hover:border-red-500 dark:hover:border-red-400'
+    return 'hover:border-gray-500 dark:hover:border-gray-400'
   }
   if (isUrgent(assignment)) {
     return 'hover:border-orange-400 dark:hover:border-orange-300'
@@ -401,7 +400,7 @@ const getCardHoverClass = (assignment: Assignment) => {
 
 const getAssignmentTitleClass = (assignment: Assignment) => {
   if (isOverdue(assignment)) {
-    return 'text-red-900 dark:text-red-100'
+    return 'text-gray-600 dark:text-gray-400'
   }
   if (isUrgent(assignment)) {
     return 'text-orange-900 dark:text-orange-100'
@@ -412,30 +411,30 @@ const getAssignmentTitleClass = (assignment: Assignment) => {
 const getStatusIndicatorClass = (assignment: Assignment) => {
   const baseClasses = ['w-3 h-3 rounded-full']
   const statusColor = props.statusColors[assignment.status] || 'bg-gray-500'
-  
+
   if (isOverdue(assignment)) {
-    baseClasses.push('bg-red-500', 'animate-pulse', 'shadow-lg', 'shadow-red-500/50')
+    baseClasses.push('bg-gray-500 dark:bg-gray-400')
   } else if (isUrgent(assignment)) {
-    baseClasses.push('bg-orange-500', 'animate-pulse', 'shadow-lg', 'shadow-orange-500/50')
+    baseClasses.push('bg-orange-500', 'group-hover:animate-pulse', 'transition-all', 'duration-200')
   } else {
     baseClasses.push(statusColor)
   }
-  
+
   return baseClasses
 }
 
 const getStatusBadgeClass = (assignment: Assignment) => {
   const baseClasses = ['inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium transition-colors duration-200']
-  
+
   if (isOverdue(assignment)) {
-    baseClasses.push('bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-200 border border-red-300 dark:border-red-700')
+    baseClasses.push('bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300')
   } else if (isUrgent(assignment)) {
     baseClasses.push('bg-orange-100 dark:bg-orange-900/30 text-orange-800 dark:text-orange-200 border border-orange-300 dark:border-orange-700')
   } else {
     const statusBadgeColor = props.statusBadgeColors[assignment.status] || 'bg-gray-100 dark:bg-gray-900/30 text-gray-800 dark:text-gray-200'
     baseClasses.push(statusBadgeColor)
   }
-  
+
   return baseClasses
 }
 

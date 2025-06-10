@@ -84,6 +84,116 @@ ASSIGNMENTS = {
             'status': 'pending',
             'attempts': 0,
             'description': '化学方程式练习'
+        },
+        {
+            'id': 5,
+            'title': '生物实验记录',
+            'assignDate': '2025-06-05',
+            'dueDate': '2025-06-15',
+            'submitTime': '2025-06-10 16:45',
+            'status': 'submitted',
+            'attempts': 2,
+            'description': '细胞观察实验报告'
+        },
+        {
+            'id': 6,
+            'title': '地理课题研究',
+            'assignDate': '2025-06-08',
+            'dueDate': '2025-06-22',
+            'submitTime': None,
+            'status': 'pending',
+            'attempts': 0,
+            'description': '城市化进程调查报告'
+        },
+        {
+            'id': 7,
+            'title': '历史论文',
+            'assignDate': '2025-06-10',
+            'dueDate': '2025-06-30',
+            'submitTime': None,
+            'status': 'pending',
+            'attempts': 0,
+            'description': '近代史重要事件分析'
+        },
+        {
+            'id': 8,
+            'title': '计算机编程作业',
+            'assignDate': '2025-06-12',
+            'dueDate': '2025-06-19',
+            'submitTime': '2025-06-15 09:20',
+            'status': 'submitted',
+            'attempts': 1,
+            'description': 'Python基础程序设计'
+        },
+        {
+            'id': 9,
+            'title': '美术创作',
+            'assignDate': '2025-06-15',
+            'dueDate': '2025-06-25',
+            'submitTime': None,
+            'status': 'pending',
+            'attempts': 0,
+            'description': '水彩画创作与说明'
+        },
+        {
+            'id': 10,
+            'title': '音乐欣赏报告',
+            'assignDate': '2025-06-18',
+            'dueDate': '2025-07-02',
+            'submitTime': None,
+            'status': 'pending',
+            'attempts': 0,
+            'description': '古典音乐赏析与评论'
+        },
+        {
+            'id': 11,
+            'title': '体育技能测评',
+            'assignDate': '2025-06-20',
+            'dueDate': '2025-06-27',
+            'submitTime': None,
+            'status': 'pending',
+            'attempts': 0,
+            'description': '篮球运动技能视频记录'
+        },
+        {
+            'id': 12,
+            'title': '数学建模实践',
+            'assignDate': '2025-06-22',
+            'dueDate': '2025-07-06',
+            'submitTime': None,
+            'status': 'pending',
+            'attempts': 0,
+            'description': '生活中的数学建模案例'
+        },
+        {
+            'id': 13,
+            'title': '英语写作',
+            'assignDate': '2025-06-25',
+            'dueDate': '2025-07-09',
+            'submitTime': None,
+            'status': 'pending',
+            'attempts': 0,
+            'description': '议论文写作练习'
+        },
+        {
+            'id': 14,
+            'title': '物理竞赛题',
+            'assignDate': '2025-06-28',
+            'dueDate': '2025-07-12',
+            'submitTime': None,
+            'status': 'pending',
+            'attempts': 0,
+            'description': '力学难题集训'
+        },
+        {
+            'id': 15,
+            'title': '化学实验设计',
+            'assignDate': '2025-07-01',
+            'dueDate': '2025-07-15',
+            'submitTime': None,
+            'status': 'pending',
+            'attempts': 0,
+            'description': '设计一个验证实验'
         }
     ],
     'teacher': [
