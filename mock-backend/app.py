@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 from flask import Flask, request, jsonify, make_response
 from flask_cors import CORS
 from datetime import datetime, timedelta
@@ -560,4 +561,4 @@ if __name__ == '__main__':
     print("  GET  /api/teacher/* - 教师相关接口")
     print("  GET  /api/monitor/* - 课代表相关接口")
     
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run(debug=True, host='0.0.0.0', port=5500)

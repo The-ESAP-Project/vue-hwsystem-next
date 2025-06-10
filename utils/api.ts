@@ -2,7 +2,7 @@ import axios from 'axios'
 
 // 创建 axios 实例
 export const apiClient = axios.create({
-  baseURL: process.env.NUXT_PUBLIC_API_BASE_URL || 'http://localhost:5000/api',
+  baseURL: process.env.NUXT_PUBLIC_API_BASE_URL || 'http://localhost:5500/api',
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',

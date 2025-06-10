@@ -232,7 +232,7 @@ definePageMeta({
 })
 
 // 使用认证 composable
-const { login, loading, error, getRememberedUsername, getRoleRedirectPath } = useAuth()
+const { login, loading, error, getRememberedUsername, getRoleRedirectPath, isAuthenticated, user } = useAuth()
 
 // 响应式数据
 const form = reactive({
@@ -274,7 +274,7 @@ const demoUsers = [
   }
 ]
 
-// 登录处理
+// 登录处理 - 改进跳转逻辑
 const handleLogin = async () => {
   try {
     // 表单验证
@@ -285,6 +285,8 @@ const handleLogin = async () => {
       throw new Error(t('login.errors.passwordRequired'))
     }
 
+    console.log('Starting login process...')
+
     // 调用登录 API
     const response = await login({
       username: form.username,
@@ -292,13 +294,33 @@ const handleLogin = async () => {
       rememberMe: form.rememberMe
     })
 
+    console.log('Login successful, response:', response)
+
+    // 等待多个 tick 确保状态完全更新
+    await nextTick()
+    await nextTick()
+    
+    // 验证认证状态
+    console.log('Auth state after login:', {
+      isAuthenticated: isAuthenticated.value,
+      user: user.value,
+      userRole: user.value?.role
+    })
+
     // 根据角色跳转
     const redirectPath = getRoleRedirectPath(response.user.role)
-    await navigateTo(redirectPath)
+    console.log('Redirecting to:', redirectPath)
+    
+    // 使用 replace 避免返回到登录页
+    await navigateTo(redirectPath, { 
+      replace: true,
+      // 确保页面完全重新加载认证状态
+      external: false 
+    })
 
   } catch (err: unknown) {
-    // 错误已经在 useAuth 中处理了，这里不需要额外处理
     console.error('Login error:', err)
+    // 错误已经在 useAuth 中处理了
   }
 }
 

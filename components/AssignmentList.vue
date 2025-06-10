@@ -53,6 +53,7 @@
                   getAssignmentTitleClass(assignment)
                 ]">
                   {{ assignment.title }}
+                  <!-- 只在紧急或过期时显示额外的状态标签 -->
                   <span v-if="isOverdue(assignment)" class="ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-200 animate-pulse">
                     已过期
                   </span>
@@ -60,11 +61,13 @@
                     紧急
                   </span>
                 </h3>
+                <!-- 班级进度显示 -->
                 <div v-if="showClassProgress" class="flex items-center gap-2 px-2 py-1 rounded-lg bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200">
                   <UsersIcon class="h-3 w-3" />
                   <span class="text-xs font-medium">{{ assignment.classSubmitted || assignment.submitted }}/{{ assignment.classTotal || assignment.totalStudents }}</span>
                 </div>
-                <span v-if="showStatusBadge" :class="getStatusBadgeClass(assignment)">
+                <!-- 只在 showStatusBadge 为 true 且不是紧急/过期状态时显示普通状态标签 -->
+                <span v-if="showStatusBadge && !isOverdue(assignment) && !isUrgent(assignment)" :class="getStatusBadgeClass(assignment)">
                   {{ getStatusText(assignment) }}
                 </span>
               </div>
@@ -90,10 +93,7 @@
             </div>
             
             <div class="ml-4 flex flex-col items-end gap-2">
-              <span v-if="!showStatusBadge" :class="getStatusBadgeClass(assignment)">
-                {{ getStatusText(assignment) }}
-              </span>
-              
+              <!-- 删除右侧重复的状态标签，只保留操作按钮 -->
               <div class="flex items-center gap-1">
                 <slot name="assignment-actions" :assignment="assignment">
                   <button class="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 rounded-lg transition-all duration-200">
@@ -114,15 +114,16 @@
             v-for="assignment in filteredAndSortedAssignments"
             :key="assignment.id"
             :class="[
-              'relative group bg-gradient-to-br from-white to-gray-50 dark:from-gray-700 dark:to-gray-800 rounded-2xl p-6 border border-gray-200 dark:border-gray-600 hover:border-indigo-300 dark:hover:border-indigo-500 hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 cursor-pointer',
-              getAssignmentCardClass(assignment)
+              'relative group bg-gradient-to-br from-white to-gray-50 dark:from-gray-700 dark:to-gray-800 rounded-2xl p-6 border border-gray-200 dark:border-gray-600 hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 cursor-pointer',
+              getAssignmentCardClass(assignment),
+              getCardHoverClass(assignment)
             ]"
             @click="$emit('assignment-click', assignment)"
           >
             <div class="absolute top-4 right-4">
               <div :class="getStatusIndicatorClass(assignment)"></div>
-              <div v-if="isOverdue(assignment)" class="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full animate-ping"></div>
-              <div v-else-if="isUrgent(assignment)" class="absolute -top-1 -right-1 w-3 h-3 bg-orange-500 rounded-full animate-ping"></div>
+              <div v-if="isOverdue(assignment)" class="absolute top-0 left-0 w-3 h-3 bg-red-500 rounded-full animate-ping"></div>
+              <div v-else-if="isUrgent(assignment)" class="absolute top-0 left-0 w-3 h-3 bg-orange-500 rounded-full animate-ping"></div>
             </div>
             
             <div class="mb-4">
@@ -131,12 +132,7 @@
                 getAssignmentTitleClass(assignment)
               ]">
                 {{ assignment.title }}
-                <span v-if="isOverdue(assignment)" class="ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-200">
-                  已过期
-                </span>
-                <span v-else-if="isUrgent(assignment)" class="ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-orange-100 dark:bg-orange-900/30 text-orange-800 dark:text-orange-200">
-                  紧急
-                </span>
+                <!-- 网格视图中不在标题后显示状态标签，避免重复 -->
               </h3>
               
               <div class="space-y-2 text-sm text-gray-600 dark:text-gray-400">
@@ -160,9 +156,8 @@
             </div>
             
             <div class="flex items-center justify-between">
-              <span :class="getStatusBadgeClass(assignment)">
-                {{ getStatusText(assignment) }}
-              </span>
+              <!-- 删除网格视图底部重复的状态标签 -->
+              <div></div>
               
               <div class="opacity-0 group-hover:opacity-100 flex items-center gap-1 transition-all duration-200">
                 <slot name="grid-actions" :assignment="assignment">
@@ -385,6 +380,16 @@ const getAssignmentCardClass = (assignment: Assignment) => {
   return ''
 }
 
+const getCardHoverClass = (assignment: Assignment) => {
+  if (isOverdue(assignment)) {
+    return 'hover:border-red-500 dark:hover:border-red-400'
+  }
+  if (isUrgent(assignment)) {
+    return 'hover:border-orange-400 dark:hover:border-orange-300'
+  }
+  return 'hover:border-indigo-300 dark:hover:border-indigo-500'
+}
+
 const getAssignmentTitleClass = (assignment: Assignment) => {
   if (isOverdue(assignment)) {
     return 'text-red-900 dark:text-red-100'
@@ -426,12 +431,7 @@ const getStatusBadgeClass = (assignment: Assignment) => {
 }
 
 const getStatusText = (assignment: Assignment) => {
-  if (isOverdue(assignment)) {
-    return '已过期'
-  }
-  if (isUrgent(assignment)) {
-    return '紧急'
-  }
+  // 不在这里返回紧急/过期状态，这些在模板中单独处理
   return props.statusTexts[assignment.status] || assignment.status
 }
 

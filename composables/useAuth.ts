@@ -42,6 +42,7 @@ export const useAuth = () => {
         const savedUser = localStorage.getItem('auth-user')
         if (savedUser) {
           user.value = JSON.parse(savedUser)
+          console.log('Loaded user from localStorage:', user.value)
         }
         
         // 然后验证 cookie 中的 token 是否有效
@@ -64,10 +65,12 @@ export const useAuth = () => {
     }
   }
 
-  // 保存认证信息
+  // 保存认证信息 - 确保立即同步状态
   const saveAuth = (authData: AuthResponse, rememberMe: boolean = false) => {
     user.value = authData.user
     error.value = null
+    
+    console.log('Saving auth data:', authData.user)
     
     if (import.meta.client) {
       localStorage.setItem('auth-user', JSON.stringify(authData.user))
@@ -76,20 +79,35 @@ export const useAuth = () => {
         localStorage.setItem('remembered-username', authData.user.username)
       }
     }
+    
+    // 强制触发响应式更新
+    nextTick(() => {
+      console.log('Auth state after save - user:', user.value, 'isAuthenticated:', !!user.value)
+    })
   }
 
-  // 登录
+  // 登录 - 确保状态同步后再返回
   const login = async (credentials: LoginRequest) => {
     loading.value = true
     error.value = null
     
     try {
+      console.log('Attempting login with:', credentials.username)
       const response = await apiClient.post<AuthResponse>('/auth/login', credentials)
+      console.log('Login response:', response)
       
+      // 保存认证信息
       saveAuth(response, credentials.rememberMe)
+      
+      // 等待状态更新
+      await nextTick()
+      
+      // 验证状态是否正确设置
+      console.log('Login completed - user:', user.value, 'isAuthenticated:', !!user.value)
       
       return response
     } catch (err: any) {
+      console.error('Login error:', err)
       error.value = err.response?.data?.message || err.message || '登录失败'
       throw err
     } finally {
@@ -136,7 +154,7 @@ export const useAuth = () => {
     }
   }
 
-  // 验证 token 有效性（通过 cookie）
+  // 验证 token 有效性（通过 cookie）- 改进错误处理
   const validateToken = async () => {
     try {
       const response = await apiClient.get<{ user: User }>('/auth/me')
@@ -147,9 +165,17 @@ export const useAuth = () => {
         localStorage.setItem('auth-user', JSON.stringify(response.user))
       }
       
+      console.log('Token validation successful:', response.user)
       return true
-    } catch (err) {
-      clearAuth()
+    } catch (err: any) {
+      // 只有在真正的认证错误时才清除状态
+      if (err.response?.status === 401 || err.response?.status === 403) {
+        console.warn('Token validation failed - unauthorized:', err)
+        clearAuth()
+      } else {
+        console.warn('Token validation failed - network/other error:', err)
+        // 网络错误时不清除本地状态
+      }
       return false
     }
   }
@@ -188,8 +214,17 @@ export const useAuth = () => {
     }
   }
 
-  // 检查是否已登录
-  const isAuthenticated = computed(() => !!user.value)
+  // 检查是否已登录 - 添加更多调试信息
+  const isAuthenticated = computed(() => {
+    const authenticated = !!user.value
+    console.log('Is authenticated check:', {
+      authenticated,
+      user: user.value,
+      hasUser: !!user.value,
+      userRole: user.value?.role
+    })
+    return authenticated
+  })
 
   // 检查用户角色
   const hasRole = (role: string) => user.value?.role === role

@@ -5,26 +5,28 @@
 ## 安装和运行
 
 1. 安装依赖：
+
 ```bash
 cd mock-backend
 pip install -r requirements.txt
 ```
 
 2. 运行服务：
+
 ```bash
 python app.py
 # 或者
 python run.py
 ```
 
-服务将在 `http://localhost:5000` 启动。
+服务将在 `http://localhost:5500` 启动。
 
 ## API 接口
 
 ### 认证接口
 
 - `POST /api/auth/login` - 用户登录
-- `POST /api/auth/register` - 用户注册  
+- `POST /api/auth/register` - 用户注册
 - `POST /api/auth/logout` - 用户退出
 - `GET /api/auth/me` - 获取当前用户信息
 - `POST /api/auth/refresh` - 刷新认证令牌
@@ -47,10 +49,10 @@ python run.py
 
 ## 测试账户
 
-| 用户名 | 密码 | 角色 | 描述 |
-|--------|------|------|------|
-| student | 123456 | student | 学生账户 |
-| teacher | 123456 | teacher | 教师账户 |
+| 用户名  | 密码   | 角色    | 描述       |
+| ------- | ------ | ------- | ---------- |
+| student | 123456 | student | 学生账户   |
+| teacher | 123456 | teacher | 教师账户   |
 | monitor | 123456 | monitor | 课代表账户 |
 
 ## 特性
