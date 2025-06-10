@@ -31,9 +31,9 @@ export interface AuthResponse {
 
 export const useAuth = () => {
   // 使用 useState 保持在各组件间共享的响应式状态
-  const user = useState<User | null>('auth-user-state', () => null)
-  const loading = useState<boolean>('auth-loading-state', () => false)
-  const error = useState<string | null>('auth-error-state', () => null)
+  const user = useState<User | null>(AUTH_USER_STATE_KEY, () => null)
+  const loading = useState<boolean>(AUTH_LOADING_STATE_KEY, () => false)
+  const error = useState<string | null>(AUTH_ERROR_STATE_KEY, () => null)
 
   // 初始化认证状态
   const initAuth = async () => {
