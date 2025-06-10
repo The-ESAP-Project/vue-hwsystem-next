@@ -34,17 +34,17 @@
       <div class="weekdays">
         <div v-for="day in weekdays" :key="day" class="weekday">{{ day }}</div>
       </div>
-      
+
       <!-- 日期网格 -->
       <div class="days-grid">
-        <div 
-          v-for="date in calendarDates" 
-          :key="`${date.year}-${date.month}-${date.day}`"
-          v-show="date.isCurrentMonth"
-          :class="getDayClasses(date)"
-          @click="handleDateClick(date)"
-          @mouseenter="handleDateHover(date, true)"
-          @mouseleave="handleDateHover(date, false)"
+        <div
+            v-for="date in calendarDates"
+            :key="`${date.year}-${date.month}-${date.day}`"
+            v-show="date.isCurrentMonth"
+            :class="getDayClasses(date)"
+            @click="handleDateClick(date)"
+            @mouseenter="handleDateHover(date, true)"
+            @mouseleave="handleDateHover(date, false)"
         >
           <span class="day-number">{{ date.day }}</span>
           <div v-if="date.hasEvent" class="event-indicator">
@@ -55,10 +55,10 @@
     </div>
 
     <!-- 悬浮提示框 -->
-    <div 
-      v-if="showTooltip && hoveredDate"
-      :style="tooltipStyle"
-      class="tooltip"
+    <div
+        v-if="showTooltip && hoveredDate"
+        :style="tooltipStyle"
+        class="tooltip"
     >
       <div class="tooltip-arrow"></div>
       <div class="tooltip-content">
@@ -141,27 +141,27 @@ const weekdays = ['日', '一', '二', '三', '四', '五', '六']
 const calendarDates = computed(() => {
   const year = currentDate.value.getFullYear()
   const month = currentDate.value.getMonth()
-  
+
   // 获取当月第一天和最后一天
   const firstDay = new Date(year, month, 1)
   const lastDay = new Date(year, month + 1, 0)
-  
+
   // 获取日历网格开始日期（包含上月末尾）
   const startDate = new Date(firstDay)
   startDate.setDate(startDate.getDate() - firstDay.getDay())
-  
+
   // 生成42天的日历网格（6周）
   const dates: CalendarDate[] = []
   const today = new Date()
-  
+
   for (let i = 0; i < 42; i++) {
     const date = new Date(startDate)
     date.setDate(startDate.getDate() + i)
-    
+
     // 修复日期匹配问题：使用本地日期格式而不是ISO格式
     const dateStr = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
     const dayEvents = props.events.filter(event => event.start === dateStr)
-    
+
     dates.push({
       day: date.getDate(),
       month: date.getMonth(),
@@ -172,14 +172,14 @@ const calendarDates = computed(() => {
       events: dayEvents
     })
   }
-  
+
   return dates
 })
 
 // 新增计算属性
 const tooltipStyle = computed(() => {
   if (!tooltipPosition.value) return {}
-  
+
   return {
     left: `${tooltipPosition.value.x}px`,
     top: `${tooltipPosition.value.y}px`,
@@ -204,15 +204,15 @@ const nextMonth = () => {
 
 const getDayClasses = (date: CalendarDate) => {
   const classes = ['day-cell']
-  
+
   if (!date.isCurrentMonth) {
     classes.push('is-other-month')
   }
-  
+
   if (date.isToday) {
     classes.push('is-today')
   }
-  
+
   if (date.hasEvent) {
     classes.push('has-event')
     // 添加具体的事件状态类
@@ -220,21 +220,21 @@ const getDayClasses = (date: CalendarDate) => {
     const status = event.extendedProps?.status || event.className
     classes.push(`event-${status}`)
   }
-  
+
   if (hoveredDate.value === date) {
     classes.push('is-hovered')
   }
-  
+
   return classes
 }
 
 const getEventStatus = (date: CalendarDate) => {
   if (!date.hasEvent) return ''
-  
+
   // 根据事件状态返回样式类
   const event = date.events[0]
   const status = event.extendedProps?.status || event.className
-  
+
   switch (status) {
     case 'submitted': return 'event-success'
     case 'overdue': return 'event-danger'
@@ -249,10 +249,11 @@ const handleDateClick = (date: CalendarDate) => {
 }
 
 const handleDateHover = (date: CalendarDate, isHovered: boolean) => {
+  // 只有在有事件的日期才显示悬浮提示
   if (isHovered && date.hasEvent) {
     hoveredDate.value = date
     showTooltip.value = true
-    
+
     // 获取鼠标位置
     nextTick(() => {
       const event = window.event as MouseEvent
@@ -281,7 +282,7 @@ const getEventStatusClass = (event: CalendarEvent) => {
 
 const getEventStatusText = (event: CalendarEvent) => {
   const status = event.extendedProps?.status || event.className
-  
+
   const statusTexts = {
     'submitted': '已提交',
     'pending': '未提交',
@@ -292,7 +293,7 @@ const getEventStatusText = (event: CalendarEvent) => {
     'draft': '草稿',
     'closed': '已结束'
   }
-  
+
   return statusTexts[status] || '未提交' // 默认显示为未提交
 }
 
@@ -488,14 +489,8 @@ onUnmounted(() => {
   min-height: 36px;
 }
 
-.day-cell:hover {
-  background: rgba(99, 102, 241, 0.1);
-  transform: scale(1.05);
-}
-
-.dark .day-cell:hover {
-  background: rgba(129, 140, 248, 0.2);
-}
+/* 移除通用的hover效果 */
+/* .day-cell:hover 已移除 */
 
 .day-cell.is-other-month {
   opacity: 0.3;
@@ -512,21 +507,26 @@ onUnmounted(() => {
   font-weight: 700;
 }
 
-.day-cell.is-today:hover {
-  background: linear-gradient(135deg, #6366f1, #8b5cf6);
-  transform: scale(1.1);
-  box-shadow: 0 6px 16px rgba(99, 102, 241, 0.6);
-}
+/* 今日不显示hover效果 */
 
 .day-cell.has-event {
-  background: linear-gradient(135deg, #10b981, #059669);
+  background: transparent;
   color: white;
-  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+  box-shadow: none;
 }
 
 .day-cell.has-event .day-number {
   color: white !important;
   font-weight: 600;
+}
+
+/* 只对有事件的日期添加hover效果 */
+.day-cell.has-event:hover {
+  transform: scale(1.05);
+}
+
+.dark .day-cell.has-event:hover {
+  /* 保持原有的hover效果 */
 }
 
 /* 事件状态样式 */
@@ -541,7 +541,6 @@ onUnmounted(() => {
 
 .day-cell.has-event.event-urgent {
   background: linear-gradient(135deg, #ff6b35, #e55039);
-  animation: urgentPulse 1.5s infinite;
   box-shadow: 0 4px 12px rgba(255, 107, 53, 0.6);
 }
 
@@ -570,7 +569,7 @@ onUnmounted(() => {
   background: linear-gradient(135deg, #3b82f6, #2563eb);
 }
 
-/* hover效果保持原背景色 */
+/* hover效果保持原背景色，只对有事件的日期生效 */
 .day-cell.has-event.event-submitted:hover {
   background: linear-gradient(135deg, #10b981, #059669);
 }
@@ -581,18 +580,31 @@ onUnmounted(() => {
 
 .day-cell.has-event.event-urgent:hover {
   background: linear-gradient(135deg, #ff6b35, #e55039);
-  box-shadow: 0 6px 16px rgba(255, 107, 53, 0.7);
+  animation: urgentPulse 1.5s infinite;
 }
 
 .day-cell.has-event.event-warning:hover {
   background: linear-gradient(135deg, #eab308, #ca8a04);
 }
 
-/* 移除默认事件样式，使用具体状态样式 */
-.day-cell.has-event {
-  background: transparent;
-  color: white;
-  box-shadow: none;
+.day-cell.has-event.event-pending:hover {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+}
+
+.day-cell.has-event.event-info:hover {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+}
+
+.day-cell.has-event.event-active:hover {
+  background: linear-gradient(135deg, #10b981, #059669);
+}
+
+.day-cell.has-event.event-draft:hover {
+  background: linear-gradient(135deg, #6b7280, #4b5563);
+}
+
+.day-cell.has-event.event-closed:hover {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
 }
 
 .event-indicator {
@@ -704,8 +716,6 @@ onUnmounted(() => {
   background: #eab308;
 }
 
-/* 移除normal状态，所有未分类的使用pending颜色 */
-
 .event-status-dot.status-active {
   background: #10b981;
 }
@@ -745,6 +755,17 @@ onUnmounted(() => {
   color: #9ca3af;
 }
 
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @keyframes pulse {
   0%, 100% {
     opacity: 1;
@@ -757,12 +778,12 @@ onUnmounted(() => {
 @keyframes urgentPulse {
   0%, 100% {
     opacity: 1;
-    transform: scale(1);
+    transform: scale(1.05);
     box-shadow: 0 4px 12px rgba(255, 107, 53, 0.6);
   }
   50% {
     opacity: 0.9;
-    transform: scale(1.02);
+    transform: scale(1.07);
     box-shadow: 0 6px 16px rgba(255, 107, 53, 0.8);
   }
 }
@@ -772,43 +793,43 @@ onUnmounted(() => {
   .calendar-wrapper {
     padding: 16px;
   }
-  
+
   .current-date {
     font-size: 1.125rem;
   }
-  
+
   .nav-btn {
     width: 32px;
     height: 32px;
   }
-  
+
   .day-number {
     font-size: 0.8rem;
   }
-  
+
   .legend-section {
     flex-wrap: wrap;
     gap: 12px;
   }
-  
+
   .day-cell {
     min-height: 32px;
   }
-  
+
   .tooltip-content {
     min-width: 180px;
     max-width: 250px;
     padding: 10px 12px;
   }
-  
+
   .tooltip-event {
     gap: 6px;
   }
-  
+
   .event-title {
     font-size: 0.8rem;
   }
-  
+
   .event-meta {
     font-size: 0.7rem;
   }
