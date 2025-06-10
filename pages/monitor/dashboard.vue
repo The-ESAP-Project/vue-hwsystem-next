@@ -170,6 +170,7 @@ import {
 import Calendar from '@/components/Calendar.vue'
 import StatsCards from '@/components/StatsCards.vue'
 import AssignmentList from '@/components/AssignmentList.vue'
+import { useMonitorDashboard } from '~/composables/useDashboardData'
 
 // i18n
 const { t } = useI18n()
@@ -185,29 +186,29 @@ useHead({
   ]
 })
 
+// 页面配置 - 启用认证保护
 definePageMeta({
   layout: 'app',
-  auth: false,
+  middleware: 'auth',
   keepalive: false
 })
+
+// 使用课代表 Dashboard 数据
+const {
+  assignments,
+  stats,
+  calendarEvents,
+  classStudents,
+  loading,
+  error,
+  fetchMonitorData,
+  getSubmissionDetails
+} = useMonitorDashboard()
 
 // 视图模式切换
 const isListView = ref(true)
 const showSubmissionModal = ref(false)
 const selectedAssignment = ref(null)
-
-// 模拟数据
-const assignments = ref([
-  { id: 1, title: '数学习题集第一章', assignDate: '2025-05-29', dueDate: '2025-06-07', status: 'submitted', attempts: 1, classSubmitted: 28, classTotal: 35 },
-  { id: 2, title: '英语口语作业', assignDate: '2025-06-01', dueDate: '2025-06-28', status: 'pending', attempts: 0, classSubmitted: 15, classTotal: 35 },
-  { id: 3, title: '物理实验报告', assignDate: '2025-06-03', dueDate: '2025-06-12', status: 'pending', attempts: 0, classSubmitted: 8, classTotal: 35 }
-])
-
-const classStudents = ref([
-  { id: 1, name: '张三', submitted: true, submitTime: '2025-06-02 14:30' },
-  { id: 2, name: '李四', submitted: true, submitTime: '2025-06-02 15:45' },
-  { id: 3, name: '王五', submitted: false, submitTime: null }
-])
 
 // 计算属性
 const recentAssignments = computed(() => 
@@ -218,31 +219,12 @@ const recentAssignments = computed(() =>
   }))
 )
 
-const stats = computed(() => [
-  { label: '总作业数', value: assignments.value.length, icon: AcademicCapIcon, bgColor: 'bg-blue-100 dark:bg-blue-900/30', iconColor: 'text-blue-600 dark:text-blue-400' },
-  { label: '我已完成', value: assignments.value.filter(a => a.status === 'submitted').length, icon: CheckCircleIcon, bgColor: 'bg-green-100 dark:bg-green-900/30', iconColor: 'text-green-600 dark:text-green-400' },
-  { label: '班级平均进度', value: Math.round(assignments.value.reduce((acc, a) => acc + (a.classSubmitted / a.classTotal), 0) / assignments.value.length * 100) + '%', icon: ChartBarIcon, bgColor: 'bg-purple-100 dark:bg-purple-900/30', iconColor: 'text-purple-600 dark:text-purple-400' },
-  { label: '待提醒同学', value: assignments.value.reduce((acc, a) => acc + (a.classTotal - a.classSubmitted), 0), icon: ExclamationTriangleIcon, bgColor: 'bg-orange-100 dark:bg-orange-900/30', iconColor: 'text-orange-600 dark:text-orange-400' }
-])
-
 // 样式类方法
 const viewButtonClass = (isActive: boolean) => [
   'flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200',
   isActive 
     ? 'bg-white dark:bg-gray-800 text-indigo-600 dark:text-indigo-400 shadow-lg transform scale-105' 
     : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'
-]
-
-const statusIndicatorClass = (status: string) => [
-  'w-3 h-3 rounded-full',
-  status === 'submitted' ? 'bg-green-500' : 'bg-yellow-500'
-]
-
-const statusBadgeClass = (status: string) => [
-  'inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium transition-colors duration-200',
-  status === 'submitted'
-    ? 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200'
-    : 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-200'
 ]
 
 // 方法
@@ -255,24 +237,9 @@ const viewSubmissionDetails = (assignment) => {
   viewClassSubmissions(assignment)
 }
 
-const refreshSubmissionData = () => {
-  console.log('刷新提交数据...')
+const refreshSubmissionData = async () => {
+  await fetchMonitorData()
 }
-
-// 日历事件数据
-const calendarEvents = computed(() => 
-  assignments.value.map(assignment => ({
-    id: assignment.id,
-    title: assignment.title,
-    start: assignment.dueDate,
-    className: assignment.status === 'submitted' ? 'submitted' : 'pending',
-    extendedProps: {
-      status: assignment.status === 'submitted' ? 'submitted' : 'pending',
-      title: assignment.title,
-      dueDate: assignment.dueDate
-    }
-  }))
-)
 
 // 日历图例
 const calendarLegends = computed(() => [
@@ -289,6 +256,16 @@ const calendarLegends = computed(() => [
 const handleAssignmentClick = (assignment) => {
   console.log('点击作业:', assignment)
 }
+
+// 页面加载时获取数据
+await fetchMonitorData()
+
+// 监听错误
+watch(error, (newError) => {
+  if (newError) {
+    console.error('Monitor Dashboard Error:', newError)
+  }
+})
 </script>
 
 <style scoped>

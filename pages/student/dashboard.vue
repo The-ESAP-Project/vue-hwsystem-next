@@ -92,12 +92,13 @@ import {
 import Calendar from '@/components/Calendar.vue'
 import StatsCards from '@/components/StatsCards.vue'
 import AssignmentList from '@/components/AssignmentList.vue'
+import { useStudentDashboard } from '~/composables/useDashboardData'
 
 // i18n
 const { t } = useI18n()
 const localePath = useLocalePath()
 
-// 页面元信息 - 修复标题翻译问题
+// 页面元信息
 useHead({
   title: t('dashboard.title'),
   titleTemplate: '%s | ' + t('home.title'),
@@ -109,13 +110,22 @@ useHead({
   ]
 })
 
-// 页面配置
+// 页面配置 - 启用认证保护
 definePageMeta({
   layout: 'app',
-  auth: false,
+  middleware: 'auth',
   keepalive: false
 })
 
+// 使用学生 Dashboard 数据
+const {
+  assignments,
+  stats,
+  calendarEvents,
+  loading,
+  error,
+  fetchStudentData
+} = useStudentDashboard()
 
 // 视图模式切换
 const isListView = ref(true)
@@ -125,30 +135,15 @@ const getEventStatus = (assignment) => {
   if (assignment.status === 'submitted') return 'submitted' 
 
   const now = new Date()
-  now.setHours(0, 0, 0, 0) // 重置到当天00:00:00
+  now.setHours(0, 0, 0, 0)
   
-  const dueDate = new Date(assignment.dueDate + 'T00:00:00') // 确保使用本地时间
+  const dueDate = new Date(assignment.dueDate + 'T00:00:00')
   const diffDays = Math.ceil((dueDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))
 
   if (diffDays < 0) return 'overdue'
   if (diffDays <= 3) return 'urgent'
-  return 'pending' // 移除normal，统一为pending
+  return 'pending'
 }
-
-// 日历事件数据
-const calendarEvents = computed(() => 
-  assignments.value.map(assignment => ({
-    id: assignment.id,
-    title: assignment.title,
-    start: assignment.dueDate,
-    className: getEventStatus(assignment),
-    extendedProps: {
-      status: getEventStatus(assignment),
-      title: assignment.title,
-      dueDate: assignment.dueDate
-    }
-  }))
-)
 
 // 日历图例
 const calendarLegends = computed(() => [
@@ -162,84 +157,23 @@ const calendarLegends = computed(() => [
   }
 ])
 
-// 模拟作业数据
-const assignments = ref([
-  {
-    id: 1,
-    title: '数学习题集第一章',
-    assignDate: '2025-05-29',
-    dueDate: '2025-06-07',
-    submitTime: '2025-06-02 14:30',
-    status: 'submitted',
-    attempts: 1
-  },
-  {
-    id: 2,
-    title: '英语口语作业',
-    assignDate: '2025-06-01',
-    dueDate: '2025-06-28',
-    submitTime: null,
-    status: 'pending',
-    attempts: 0
-  },
-  {
-    id: 3,
-    title: '物理实验报告',
-    assignDate: '2025-06-03',
-    dueDate: '2025-06-12',
-    submitTime: null,
-    status: 'pending',
-    attempts: 0
-  },
-  {
-    id: 4,
-    title: '化学作业第二章',
-    assignDate: '2025-01-09',
-    dueDate: '2025-01-10',
-    submitTime: null,
-    status: 'pending',
-    attempts: 0
-  }
-])
-
-// 统计数据
-const stats = computed(() => [
-  {
-    label: t('dashboard.stats.total') || '总作业',
-    value: assignments.value.length,
-    icon: AcademicCapIcon,
-    bgColor: 'bg-blue-100 dark:bg-blue-900/30',
-    iconColor: 'text-blue-600 dark:text-blue-400'
-  },
-  {
-    label: t('dashboard.stats.completed') || '已完成',
-    value: assignments.value.filter(a => a.status === 'submitted').length,
-    icon: CheckCircleIcon,
-    bgColor: 'bg-green-100 dark:bg-green-900/30',
-    iconColor: 'text-green-600 dark:text-green-400'
-  },
-  {
-    label: t('dashboard.stats.pending') || '待完成',
-    value: assignments.value.filter(a => a.status === 'pending').length,
-    icon: ExclamationTriangleIcon,
-    bgColor: 'bg-yellow-100 dark:bg-yellow-900/30',
-    iconColor: 'text-yellow-600 dark:text-yellow-400'
-  },
-  {
-    label: t('dashboard.stats.progress') || '完成率',
-    value: Math.round((assignments.value.filter(a => a.status === 'submitted').length / assignments.value.length) * 100) + '%',
-    icon: ChartBarIcon,
-    bgColor: 'bg-purple-100 dark:bg-purple-900/30',
-    iconColor: 'text-purple-600 dark:text-purple-400'
-  }
-])
-
 // 添加主题管理
 const { isDark } = useTheme()
 
 const handleAssignmentClick = (assignment) => {
   console.log('点击作业:', assignment)
 }
+
+// 页面加载时获取数据
+await fetchStudentData()
+
+// 监听错误
+watch(error, (newError) => {
+  if (newError) {
+    // 可以在这里显示错误提示
+    console.error('Dashboard Error:', newError)
+  }
+})
 </script>
 
 <style scoped>

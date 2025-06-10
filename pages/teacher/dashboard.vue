@@ -131,6 +131,7 @@ import {
 import Calendar from '@/components/Calendar.vue'
 import StatsCards from '@/components/StatsCards.vue'
 import AssignmentList from '@/components/AssignmentList.vue'
+import { useTeacherDashboard } from '~/composables/useDashboardData'
 
 // i18n
 const { t } = useI18n()
@@ -148,160 +149,27 @@ useHead({
   ]
 })
 
-// 页面配置
+// 页面配置 - 启用认证保护
 definePageMeta({
   layout: 'app',
-  auth: false,
+  middleware: 'auth',
   keepalive: false
 })
+
+// 使用教师 Dashboard 数据
+const {
+  assignments,
+  stats,
+  calendarEvents,
+  loading,
+  error,
+  fetchTeacherData,
+  createAssignment
+} = useTeacherDashboard()
 
 // 视图模式切换
 const isListView = ref(true)
 const showCreateAssignment = ref(false)
-
-// 模拟作业数据
-const assignments = ref([
-  {
-    id: 1,
-    title: '数学习题集第一章',
-    assignDate: '2025-05-29',
-    dueDate: '2025-06-07',
-    status: 'active',
-    totalStudents: 35,
-    submitted: 28,
-    description: '完成课本第1-20页的习题'
-  },
-  {
-    id: 2,
-    title: '英语口语作业',
-    assignDate: '2025-06-01',
-    dueDate: '2025-06-28',
-    status: 'active',
-    totalStudents: 35,
-    submitted: 15,
-    description: '录制3分钟英语自我介绍视频'
-  },
-  {
-    id: 3,
-    title: '物理实验报告',
-    assignDate: '2025-06-03',
-    dueDate: '2025-06-12',
-    status: 'draft',
-    totalStudents: 35,
-    submitted: 0,
-    description: '完成光学实验报告'
-  },
-  {
-    id: 4,
-    title: '化学作业第二章',
-    assignDate: '2025-06-05',
-    dueDate: '2025-06-15',
-    status: 'closed',
-    totalStudents: 35,
-    submitted: 35,
-    description: '化学方程式练习'
-  }
-])
-
-// 统计数据
-const stats = computed(() => [
-  {
-    label: t('teacher.dashboard.stats.totalAssignments') || '总作业数',
-    value: assignments.value.length,
-    icon: AcademicCapIcon,
-    bgColor: 'bg-blue-100 dark:bg-blue-900/30',
-    iconColor: 'text-blue-600 dark:text-blue-400'
-  },
-  {
-    label: t('teacher.dashboard.stats.activeAssignments') || '进行中',
-    value: assignments.value.filter(a => a.status === 'active').length,
-    icon: CheckCircleIcon,
-    bgColor: 'bg-green-100 dark:bg-green-900/30',
-    iconColor: 'text-green-600 dark:text-green-400'
-  },
-  {
-    label: t('teacher.dashboard.stats.totalStudents') || '学生总数',
-    value: 35,
-    icon: UsersIcon,
-    bgColor: 'bg-purple-100 dark:bg-purple-900/30',
-    iconColor: 'text-purple-600 dark:text-purple-400'
-  },
-  {
-    label: t('teacher.dashboard.stats.avgSubmissionRate') || '平均提交率',
-    value: Math.round(assignments.value.reduce((acc, a) => acc + (a.submitted / a.totalStudents), 0) / assignments.value.length * 100) + '%',
-    icon: ChartBarIcon,
-    bgColor: 'bg-orange-100 dark:bg-orange-900/30',
-    iconColor: 'text-orange-600 dark:text-orange-400'
-  }
-])
-
-// 快速统计
-const quickStats = computed(() => [
-  {
-    label: t('teacher.dashboard.pendingReview') || '待批改',
-    value: assignments.value.reduce((acc, a) => acc + a.submitted, 0),
-    icon: ExclamationTriangleIcon,
-    bgColor: 'bg-gradient-to-r from-yellow-500 to-orange-500'
-  },
-  {
-    label: t('teacher.dashboard.dueToday') || '今日截止',
-    value: 2,
-    icon: ClockIcon,
-    bgColor: 'bg-gradient-to-r from-red-500 to-pink-500'
-  },
-  {
-    label: t('teacher.dashboard.completedThisWeek') || '本周已完成',
-    value: 15,
-    icon: CheckCircleIcon,
-    bgColor: 'bg-gradient-to-r from-green-500 to-emerald-500'
-  }
-])
-
-// 状态相关方法
-const getStatusColor = (status: string) => {
-  switch (status) {
-    case 'active': return 'bg-green-500'
-    case 'draft': return 'bg-gray-500'
-    case 'closed': return 'bg-blue-500'
-    default: return 'bg-gray-500'
-  }
-}
-
-const getStatusBadgeColor = (status: string) => {
-  switch (status) {
-    case 'active': return 'bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200'
-    case 'draft': return 'bg-gray-100 dark:bg-gray-900/30 text-gray-800 dark:text-gray-200'
-    case 'closed': return 'bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200'
-    default: return 'bg-gray-100 dark:bg-gray-900/30 text-gray-800 dark:text-gray-200'
-  }
-}
-
-const getStatusText = (status: string) => {
-  switch (status) {
-    case 'active': return t('teacher.dashboard.status.active') || '进行中'
-    case 'draft': return t('teacher.dashboard.status.draft') || '草稿'
-    case 'closed': return t('teacher.dashboard.status.closed') || '已结束'
-    default: return status
-  }
-}
-
-// 主题管理
-const { isDark } = useTheme()
-
-// 日历事件数据
-const calendarEvents = computed(() => 
-  assignments.value.map(assignment => ({
-    id: assignment.id,
-    title: assignment.title,
-    start: assignment.dueDate,
-    className: assignment.status,
-    extendedProps: {
-      status: assignment.status,
-      title: assignment.title,
-      dueDate: assignment.dueDate
-    }
-  }))
-)
 
 // 日历图例
 const calendarLegends = computed(() => [
@@ -337,6 +205,16 @@ const teacherStatusTexts = {
 const handleAssignmentClick = (assignment) => {
   console.log('点击作业:', assignment)
 }
+
+// 页面加载时获取数据
+await fetchTeacherData()
+
+// 监听错误
+watch(error, (newError) => {
+  if (newError) {
+    console.error('Teacher Dashboard Error:', newError)
+  }
+})
 </script>
 
 <style scoped>

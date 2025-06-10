@@ -1,0 +1,226 @@
+import { apiClient } from '~/utils/api'
+
+export interface User {
+  id: number
+  username: string
+  email?: string
+  name: string
+  role: 'student' | 'teacher' | 'monitor'
+  avatar?: string
+}
+
+export interface LoginRequest {
+  username: string
+  password: string
+  rememberMe?: boolean
+}
+
+export interface RegisterRequest {
+  username: string
+  email: string
+  name: string
+  role: 'student' | 'teacher'
+  password: string
+  confirmPassword: string
+}
+
+export interface AuthResponse {
+  user: User
+  message: string
+}
+
+export const useAuth = () => {
+  const user = ref<User | null>(null)
+  const loading = ref(false)
+  const error = ref<string | null>(null)
+
+  // 初始化认证状态
+  const initAuth = async () => {
+    if (import.meta.client) {
+      try {
+        // 先尝试从 localStorage 获取用户信息（如果存在）
+        const savedUser = localStorage.getItem('auth-user')
+        if (savedUser) {
+          user.value = JSON.parse(savedUser)
+        }
+        
+        // 然后验证 cookie 中的 token 是否有效
+        await validateToken()
+      } catch (err) {
+        console.warn('Auth initialization failed:', err)
+        clearAuth()
+      }
+    }
+  }
+
+  // 清除认证信息
+  const clearAuth = () => {
+    user.value = null
+    error.value = null
+    
+    if (import.meta.client) {
+      localStorage.removeItem('auth-user')
+      localStorage.removeItem('remembered-username')
+    }
+  }
+
+  // 保存认证信息
+  const saveAuth = (authData: AuthResponse, rememberMe: boolean = false) => {
+    user.value = authData.user
+    error.value = null
+    
+    if (import.meta.client) {
+      localStorage.setItem('auth-user', JSON.stringify(authData.user))
+      
+      if (rememberMe) {
+        localStorage.setItem('remembered-username', authData.user.username)
+      }
+    }
+  }
+
+  // 登录
+  const login = async (credentials: LoginRequest) => {
+    loading.value = true
+    error.value = null
+    
+    try {
+      const response = await apiClient.post<AuthResponse>('/auth/login', credentials)
+      
+      saveAuth(response, credentials.rememberMe)
+      
+      return response
+    } catch (err: any) {
+      error.value = err.response?.data?.message || err.message || '登录失败'
+      throw err
+    } finally {
+      loading.value = false
+    }
+  }
+
+  // 注册
+  const register = async (userData: RegisterRequest) => {
+    loading.value = true
+    error.value = null
+    
+    try {
+      const response = await apiClient.post<AuthResponse>('/auth/register', userData)
+      
+      saveAuth(response)
+      
+      return response
+    } catch (err: any) {
+      error.value = err.response?.data?.message || err.message || '注册失败'
+      throw err
+    } finally {
+      loading.value = false
+    }
+  }
+
+  // 退出登录
+  const logout = async () => {
+    loading.value = true
+    error.value = null
+    
+    try {
+      // 调用后端退出接口（会清除 httpOnly cookies）
+      await apiClient.post('/auth/logout')
+    } catch (err: any) {
+      // 即使后端退出失败，也要清除本地状态
+      console.warn('Logout API failed:', err.message)
+    } finally {
+      clearAuth()
+      loading.value = false
+      
+      // 跳转到登录页面
+      await navigateTo('/auth/login')
+    }
+  }
+
+  // 验证 token 有效性（通过 cookie）
+  const validateToken = async () => {
+    try {
+      const response = await apiClient.get<{ user: User }>('/auth/me')
+      user.value = response.user
+      
+      // 同步更新 localStorage 中的用户信息
+      if (import.meta.client) {
+        localStorage.setItem('auth-user', JSON.stringify(response.user))
+      }
+      
+      return true
+    } catch (err) {
+      clearAuth()
+      return false
+    }
+  }
+
+  // 刷新 token（通过 cookie）
+  const refreshToken = async () => {
+    try {
+      await apiClient.post('/auth/refresh')
+      // 刷新成功后重新验证用户信息
+      return await validateToken()
+    } catch (err: any) {
+      clearAuth()
+      throw err
+    }
+  }
+
+  // 获取记住的用户名
+  const getRememberedUsername = () => {
+    if (import.meta.client) {
+      return localStorage.getItem('remembered-username') || ''
+    }
+    return ''
+  }
+
+  // 根据角色获取重定向路径
+  const getRoleRedirectPath = (role: string) => {
+    switch (role) {
+      case 'monitor':
+        return '/monitor/dashboard'
+      case 'teacher':
+        return '/teacher/dashboard'
+      case 'student':
+        return '/student/dashboard'
+      default:
+        return '/'
+    }
+  }
+
+  // 检查是否已登录
+  const isAuthenticated = computed(() => !!user.value)
+
+  // 检查用户角色
+  const hasRole = (role: string) => user.value?.role === role
+
+  // 检查是否有权限
+  const hasPermission = (permission: string) => {
+    // 根据角色和权限进行判断
+    const rolePermissions: Record<string, string[]> = {
+      monitor: ['view_all', 'manage_assignments', 'view_class_progress'],
+      teacher: ['create_assignments', 'manage_assignments', 'view_submissions'],
+      student: ['view_assignments', 'submit_assignments']
+    }
+    
+    return rolePermissions[user.value?.role || '']?.includes(permission) || false
+  }
+
+  return {
+    user: readonly(user),
+    loading: readonly(loading),
+    error: readonly(error),
+    isAuthenticated,
+    initAuth,
+    login,
+    register,
+    logout,
+    validateToken,
+    refreshToken,
+    getRememberedUsername,
+    getRoleRedirectPath,
+    hasRole,
+    hasPermission,
+    clearAuth
+  }
+}

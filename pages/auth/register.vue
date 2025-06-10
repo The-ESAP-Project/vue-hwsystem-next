@@ -305,6 +305,7 @@
 
 <script setup lang="ts">
 import { EyeIcon, EyeSlashIcon, XCircleIcon, CheckCircleIcon } from '@heroicons/vue/24/outline'
+import { useAuth } from '~/composables/useAuth'
 
 // i18n
 const { t } = useI18n()
@@ -329,6 +330,9 @@ definePageMeta({
   keepalive: false
 })
 
+// 使用认证 composable  
+const { register, loading, error } = useAuth()
+
 // 响应式数据
 const form = reactive({
   username: '',
@@ -342,8 +346,6 @@ const form = reactive({
 
 const showPassword = ref(false)
 const showConfirmPassword = ref(false)
-const pending = ref(false)
-const error = ref('')
 const success = ref('')
 const errors = reactive({
   username: '',
@@ -353,6 +355,9 @@ const errors = reactive({
   password: '',
   confirmPassword: ''
 })
+
+// 使用 loading 作为 pending 状态
+const pending = computed(() => loading.value)
 
 // 表单验证
 const validateForm = () => {
@@ -434,7 +439,6 @@ const isFormValid = computed(() => {
 // 注册处理
 const handleRegister = async () => {
   try {
-    error.value = ''
     success.value = ''
 
     // 表单验证
@@ -443,22 +447,20 @@ const handleRegister = async () => {
     }
 
     if (!form.agreeTerms) {
-      error.value = t('register.errors.termsRequired')
-      return
+      throw new Error(t('register.errors.termsRequired'))
     }
 
-    pending.value = true
+    // 调用注册 API
+    await register({
+      username: form.username,
+      email: form.email,
+      name: form.name,
+      role: form.role as 'student' | 'teacher',
+      password: form.password,
+      confirmPassword: form.confirmPassword
+    })
 
-    // 模拟 API 延迟
-    await new Promise(resolve => setTimeout(resolve, 2000))
-
-    // 模拟检查用户名是否已存在
-    const existingUsers = ['admin', 'teacher', 'student']
-    if (existingUsers.includes(form.username)) {
-      throw new Error(t('register.errors.usernameExists'))
-    }
-
-    // 模拟注册成功
+    // 注册成功
     success.value = t('register.success.accountCreated')
 
     // 3秒后跳转到登录页面
@@ -467,18 +469,13 @@ const handleRegister = async () => {
     }, 3000)
 
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : String(err)
-    error.value = message || t('register.errors.registrationFailed')
-  } finally {
-    pending.value = false
+    // 错误已经在 useAuth 中处理了
+    console.error('Register error:', err)
   }
 }
 
 // 清除错误信息当用户输入时
 watch([() => form.username, () => form.email, () => form.name, () => form.role, () => form.password, () => form.confirmPassword], () => {
-  if (error.value) {
-    error.value = ''
-  }
   if (success.value) {
     success.value = ''
   }

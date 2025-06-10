@@ -206,12 +206,13 @@
 
 <script setup lang="ts">
 import { EyeIcon, EyeSlashIcon, XCircleIcon } from '@heroicons/vue/24/outline'
+import { useAuth } from '~/composables/useAuth'
 
 // i18n
 const { t } = useI18n()
 const localePath = useLocalePath()
 
-// 页面元信息 - 修复标题翻译问题
+// 页面元信息
 useHead({
   title: t('login.title'),
   titleTemplate: '%s | ' + t('home.title'),
@@ -230,6 +231,9 @@ definePageMeta({
   keepalive: false
 })
 
+// 使用认证 composable
+const { login, loading, error, getRememberedUsername, getRoleRedirectPath } = useAuth()
+
 // 响应式数据
 const form = reactive({
   username: '',
@@ -238,21 +242,15 @@ const form = reactive({
 })
 
 const showPassword = ref(false)
-const pending = ref(false)
-const error = ref('')
 
-// Mock 用户数据
-const mockUsers = [
-  { username: 'monitor', password: '123456', role: 'monitor', name: '系统管理员' },
-  { username: 'teacher', password: '123456', role: 'teacher', name: '张老师' },
-  { username: 'student', password: '123456', role: 'student', name: '小明同学' }
-]
+// 使用 loading 作为 pending 状态
+const pending = computed(() => loading.value)
 
 // 演示账户数据
 const demoUsers = [
   { 
     username: 'monitor', 
-    password: 'monitor', 
+    password: '123456', 
     role: 'monitor',
     name: '课代表',
     avatar: '管',
@@ -279,9 +277,6 @@ const demoUsers = [
 // 登录处理
 const handleLogin = async () => {
   try {
-    error.value = ''
-    pending.value = true
-
     // 表单验证
     if (!form.username.trim()) {
       throw new Error(t('login.errors.usernameRequired'))
@@ -290,72 +285,29 @@ const handleLogin = async () => {
       throw new Error(t('login.errors.passwordRequired'))
     }
 
-    // 模拟 API 延迟
-    await new Promise(resolve => setTimeout(resolve, 1000))
-
-    // 用户验证
-    const user = mockUsers.find(
-      u => u.username === form.username && u.password === form.password
-    )
-
-    if (!user) {
-      throw new Error(t('login.errors.invalidCredentials'))
-    }
-
-    // 存储用户信息
-    const token = `mock-token-${Date.now()}`
-    const userData = { ...user, token }
-    
-    if (import.meta.client) {
-      localStorage.setItem('token', token)
-      localStorage.setItem('user', JSON.stringify(userData))
-      
-      if (form.rememberMe) {
-        localStorage.setItem('rememberedUser', form.username)
-      }
-    }
+    // 调用登录 API
+    const response = await login({
+      username: form.username,
+      password: form.password,
+      rememberMe: form.rememberMe
+    })
 
     // 根据角色跳转
-    const redirectPath = getRoleRedirectPath(user.role)
+    const redirectPath = getRoleRedirectPath(response.user.role)
     await navigateTo(redirectPath)
 
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : String(err)
-    error.value = message || t('login.errors.loginFailed')
-  } finally {
-    pending.value = false
-  }
-}
-
-// 根据角色获取重定向路径
-const getRoleRedirectPath = (role: string) => {
-  switch (role) {
-    case 'monitor':
-      return '/monitor/dashboard'
-    case 'teacher':
-      return '/teacher/dashboard'
-    case 'student':
-      return '/student/dashboard'
-    default:
-      return '/'
+    // 错误已经在 useAuth 中处理了，这里不需要额外处理
+    console.error('Login error:', err)
   }
 }
 
 // 自动填充记住的用户名
 onMounted(() => {
-  if (import.meta.client) {
-    const rememberedUser = localStorage.getItem('rememberedUser')
-    if (rememberedUser) {
-      form.username = rememberedUser
-      form.rememberMe = true
-    }
-  }
-})
-
-// 清除错误信息当用户输入时
-watch([() => form.username, () => form.password], () => {
-  if (error.value) {
-    error.value = ''
+  const rememberedUsername = getRememberedUsername()
+  if (rememberedUsername) {
+    form.username = rememberedUsername
+    form.rememberMe = true
   }
 })
 
@@ -363,7 +315,6 @@ watch([() => form.username, () => form.password], () => {
 const fillDemoAccount = (user: any) => {
   form.username = user.username
   form.password = user.password
-  error.value = ''
 }
 </script>
 
