@@ -1,8 +1,8 @@
 <template>
   <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-lg border border-gray-200/50 dark:border-gray-700/50 overflow-hidden transition-all duration-200 hover:shadow-xl">
-    <div class="p-6 border-b border-gray-200 dark:border-gray-700">
-      <div class="flex items-center justify-between mb-4">
-        <h2 class="text-xl font-bold text-gray-900 dark:text-white">
+    <div class="p-4 sm:p-6 border-b border-gray-200 dark:border-gray-700">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-3 sm:gap-0">
+        <h2 class="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">
           {{ title || $t('dashboard.assignments') || '作业列表' }}
         </h2>
         <div class="flex items-center gap-2">
@@ -13,91 +13,102 @@
         </div>
       </div>
       
-      <!-- 筛选器 -->
+      <!-- 筛选器 - 移动端优化 -->
       <div class="flex items-center gap-2 flex-wrap">
         <button
           v-for="filter in filterOptions"
           :key="filter.value"
           @click="selectedFilter = filter.value"
           :class="[
-            'px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200',
+            'px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 touch-manipulation',
             selectedFilter === filter.value
               ? 'bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 border border-indigo-300 dark:border-indigo-600'
               : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
           ]"
         >
-          {{ filter.label }}
+          <span class="hidden sm:inline">{{ filter.label }}</span>
+          <span class="sm:hidden">{{ filter.label.slice(0, 2) }}</span>
           <span v-if="filter.count !== undefined" class="ml-1 opacity-75">({{ filter.count }})</span>
         </button>
       </div>
     </div>
 
-    <div class="max-h-[600px] overflow-y-auto">
+    <div class="max-h-[60vh] sm:max-h-[600px] overflow-y-auto">
       <div v-if="isListView" class="divide-y divide-gray-100 dark:divide-gray-700">
-        <!-- 列表视图 -->
+        <!-- 列表视图 - 移动端优化 -->
         <div
           v-for="assignment in filteredAndSortedAssignments"
           :key="assignment.id"
           :class="[
-            'p-6 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-all duration-200 group cursor-pointer',
+            'p-4 sm:p-6 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-all duration-200 group cursor-pointer touch-manipulation',
             getAssignmentRowClass(assignment)
           ]"
           @click="$emit('assignment-click', assignment)"
         >
           <div class="flex items-start justify-between">
-            <div class="flex-1">
-              <div class="flex items-center gap-3 mb-3">
-                <div :class="getStatusIndicatorClass(assignment)"></div>
-                <h3 :class="[
-                  'text-lg font-semibold group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors duration-200',
-                  getAssignmentTitleClass(assignment)
-                ]">
-                  {{ assignment.title }}
-                  <!-- 只在紧急或过期时显示额外的状态标签 -->
-                  <span v-if="isOverdue(assignment)" class="ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-200 animate-pulse">
+            <div class="flex-1 min-w-0">
+              <div class="flex items-start sm:items-center gap-2 sm:gap-3 mb-3 flex-col sm:flex-row">
+                <div class="flex items-center gap-2">
+                  <div :class="getStatusIndicatorClass(assignment)"></div>
+                  <h3 :class="[
+                    'text-base sm:text-lg font-semibold group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors duration-200 break-words',
+                    getAssignmentTitleClass(assignment)
+                  ]">
+                    {{ assignment.title }}
+                  </h3>
+                </div>
+                
+                <!-- 移动端状态标签 -->
+                <div class="flex items-center gap-2 flex-wrap">
+                  <!-- 紧急/过期状态 -->
+                  <span v-if="isOverdue(assignment)" class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-200 animate-pulse">
                     已过期
                   </span>
-                  <span v-else-if="isUrgent(assignment)" class="ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-orange-100 dark:bg-orange-900/30 text-orange-800 dark:text-orange-200 animate-pulse">
+                  <span v-else-if="isUrgent(assignment)" class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-orange-100 dark:bg-orange-900/30 text-orange-800 dark:text-orange-200 animate-pulse">
                     紧急
                   </span>
-                </h3>
-                <!-- 班级进度显示 -->
-                <div v-if="showClassProgress" class="flex items-center gap-2 px-2 py-1 rounded-lg bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200">
-                  <UsersIcon class="h-3 w-3" />
-                  <span class="text-xs font-medium">{{ assignment.classSubmitted || assignment.submitted }}/{{ assignment.classTotal || assignment.totalStudents }}</span>
+                  
+                  <!-- 班级进度显示 -->
+                  <div v-if="showClassProgress" class="flex items-center gap-1 px-2 py-1 rounded-lg bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200">
+                    <UsersIcon class="h-3 w-3" />
+                    <span class="text-xs font-medium">{{ assignment.classSubmitted || assignment.submitted }}/{{ assignment.classTotal || assignment.totalStudents }}</span>
+                  </div>
+                  
+                  <!-- 普通状态标签 -->
+                  <span v-if="showStatusBadge && !isOverdue(assignment) && !isUrgent(assignment)" :class="getStatusBadgeClass(assignment)">
+                    {{ getStatusText(assignment) }}
+                  </span>
                 </div>
-                <!-- 只在 showStatusBadge 为 true 且不是紧急/过期状态时显示普通状态标签 -->
-                <span v-if="showStatusBadge && !isOverdue(assignment) && !isUrgent(assignment)" :class="getStatusBadgeClass(assignment)">
-                  {{ getStatusText(assignment) }}
-                </span>
               </div>
               
-              <div :class="['grid gap-4 text-sm', gridCols]">
+              <!-- 移动端垂直布局，桌面端网格布局 -->
+              <div class="flex flex-col sm:grid gap-2 sm:gap-4 text-sm sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 <div class="flex items-center gap-2 text-gray-600 dark:text-gray-400">
-                  <CalendarIcon class="h-4 w-4" />
-                  {{ $t('dashboard.assigned') || '布置' }}: {{ assignment.assignDate }}
+                  <CalendarIcon class="h-4 w-4 flex-shrink-0" />
+                  <span class="truncate">{{ $t('dashboard.assigned') || '布置' }}: {{ assignment.assignDate }}</span>
                 </div>
                 <div class="flex items-center gap-2 text-gray-600 dark:text-gray-400">
-                  <ClockIcon class="h-4 w-4" />
-                  {{ $t('dashboard.due') || '截止' }}: {{ assignment.dueDate }}
+                  <ClockIcon class="h-4 w-4 flex-shrink-0" />
+                  <span class="truncate">{{ $t('dashboard.due') || '截止' }}: {{ assignment.dueDate }}</span>
                 </div>
                 <div v-if="showAttempts" class="flex items-center gap-2 text-gray-600 dark:text-gray-400">
-                  <ArrowPathIcon class="h-4 w-4" />
-                  {{ $t('dashboard.attempts') || '提交次数' }}: {{ assignment.attempts }}
+                  <ArrowPathIcon class="h-4 w-4 flex-shrink-0" />
+                  <span class="truncate">{{ $t('dashboard.attempts') || '提交次数' }}: {{ assignment.attempts }}</span>
                 </div>
                 <div v-if="showProgress" class="flex items-center gap-2 text-gray-600 dark:text-gray-400">
-                  <ChartBarIcon class="h-4 w-4" />
-                  {{ progressLabel }}: {{ getProgressPercentage(assignment) }}%
+                  <ChartBarIcon class="h-4 w-4 flex-shrink-0" />
+                  <span class="truncate">{{ progressLabel }}: {{ getProgressPercentage(assignment) }}%</span>
                 </div>
               </div>
             </div>
             
-            <div class="ml-4 flex flex-col items-end gap-2">
-              <!-- 删除右侧重复的状态标签，只保留操作按钮 -->
+            <!-- 右侧操作按钮 - 移动端优化 -->
+            <div class="ml-2 sm:ml-4 flex flex-col items-end gap-2">
               <div class="flex items-center gap-1">
                 <slot name="assignment-actions" :assignment="assignment">
-                  <button class="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 rounded-lg transition-all duration-200">
-                    {{ $t('dashboard.viewDetails') || '查看详情' }}
+                  <button class="inline-flex items-center gap-1 px-2 sm:px-3 py-1.5 text-xs font-medium text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 rounded-lg transition-all duration-200 touch-manipulation">
+                    <span class="hidden sm:inline">{{ $t('dashboard.viewDetails') || '查看详情' }}</span>
+                    <span class="sm:hidden">详情</span>
                     <ChevronRightIcon class="h-3 w-3" />
                   </button>
                 </slot>
@@ -107,20 +118,20 @@
         </div>
       </div>
       
-      <div v-else class="p-6">
-        <!-- 网格视图 -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div v-else class="p-4 sm:p-6">
+        <!-- 网格视图 - 移动端单列，平板双列，桌面端多列 -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
           <div
             v-for="assignment in filteredAndSortedAssignments"
             :key="assignment.id"
             :class="[
-              'relative group bg-gradient-to-br from-white to-gray-50 dark:from-gray-700 dark:to-gray-800 rounded-2xl p-6 border border-gray-200 dark:border-gray-600 hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 cursor-pointer',
+              'relative group bg-gradient-to-br from-white to-gray-50 dark:from-gray-700 dark:to-gray-800 rounded-2xl p-4 sm:p-6 border border-gray-200 dark:border-gray-600 hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 cursor-pointer touch-manipulation',
               getAssignmentCardClass(assignment),
               getCardHoverClass(assignment)
             ]"
             @click="$emit('assignment-click', assignment)"
           >
-            <div class="absolute top-4 right-4">
+            <div class="absolute top-3 sm:top-4 right-3 sm:right-4">
               <div :class="getStatusIndicatorClass(assignment)"></div>
               <div v-if="isOverdue(assignment)" class="absolute top-0 left-0 w-3 h-3 bg-red-500 rounded-full animate-ping"></div>
               <div v-else-if="isUrgent(assignment)" class="absolute top-0 left-0 w-3 h-3 bg-orange-500 rounded-full animate-ping"></div>
@@ -128,40 +139,38 @@
             
             <div class="mb-4">
               <h3 :class="[
-                'text-lg font-semibold mb-2 pr-8',
+                'text-base sm:text-lg font-semibold mb-2 pr-6 sm:pr-8 break-words',
                 getAssignmentTitleClass(assignment)
               ]">
                 {{ assignment.title }}
-                <!-- 网格视图中不在标题后显示状态标签，避免重复 -->
               </h3>
               
               <div class="space-y-2 text-sm text-gray-600 dark:text-gray-400">
                 <div class="flex items-center gap-2">
-                  <CalendarIcon class="h-4 w-4" />
-                  {{ assignment.assignDate }} - {{ assignment.dueDate }}
+                  <CalendarIcon class="h-4 w-4 flex-shrink-0" />
+                  <span class="truncate">{{ assignment.assignDate }} - {{ assignment.dueDate }}</span>
                 </div>
                 <div v-if="showAttempts" class="flex items-center gap-2">
-                  <ArrowPathIcon class="h-4 w-4" />
-                  {{ assignment.attempts }} 次提交
+                  <ArrowPathIcon class="h-4 w-4 flex-shrink-0" />
+                  <span class="truncate">{{ assignment.attempts }} 次提交</span>
                 </div>
                 <div v-if="showClassProgress" class="flex items-center gap-2">
-                  <UsersIcon class="h-4 w-4" />
-                  {{ classProgressLabel }}: {{ assignment.classSubmitted || assignment.submitted }}/{{ assignment.classTotal || assignment.totalStudents }} 已提交
+                  <UsersIcon class="h-4 w-4 flex-shrink-0" />
+                  <span class="truncate">{{ classProgressLabel }}: {{ assignment.classSubmitted || assignment.submitted }}/{{ assignment.classTotal || assignment.totalStudents }} 已提交</span>
                 </div>
                 <div v-if="showProgress" class="flex items-center gap-2">
-                  <ChartBarIcon class="h-4 w-4" />
-                  {{ getProgressPercentage(assignment) }}% 完成率
+                  <ChartBarIcon class="h-4 w-4 flex-shrink-0" />
+                  <span class="truncate">{{ getProgressPercentage(assignment) }}% 完成率</span>
                 </div>
               </div>
             </div>
             
             <div class="flex items-center justify-between">
-              <!-- 删除网格视图底部重复的状态标签 -->
               <div></div>
               
-              <div class="opacity-0 group-hover:opacity-100 flex items-center gap-1 transition-all duration-200">
+              <div class="opacity-0 group-hover:opacity-100 sm:opacity-100 flex items-center gap-1 transition-all duration-200">
                 <slot name="grid-actions" :assignment="assignment">
-                  <button class="inline-flex items-center gap-1 px-2 py-1.5 text-xs font-medium text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 rounded-lg transition-all duration-200">
+                  <button class="inline-flex items-center gap-1 px-2 py-1.5 text-xs font-medium text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 rounded-lg transition-all duration-200 touch-manipulation">
                     查看
                     <ChevronRightIcon class="h-3 w-3" />
                   </button>
@@ -444,20 +453,32 @@ const getProgressPercentage = (assignment: Assignment) => {
 
 <style scoped>
 /* 自定义滚动条 */
+.max-h-\[60vh\]::-webkit-scrollbar,
 .max-h-\[600px\]::-webkit-scrollbar {
   width: 6px;
 }
 
+.max-h-\[60vh\]::-webkit-scrollbar-track,
 .max-h-\[600px\]::-webkit-scrollbar-track {
   background: transparent;
 }
 
+.max-h-\[60vh\]::-webkit-scrollbar-thumb,
 .max-h-\[600px\]::-webkit-scrollbar-thumb {
   background: #d1d5db;
   border-radius: 3px;
 }
 
+.dark .max-h-\[60vh\]::-webkit-scrollbar-thumb,
 .dark .max-h-\[600px\]::-webkit-scrollbar-thumb {
   background: #4b5563;
+}
+
+/* 移动端触摸优化 */
+@media (max-width: 640px) {
+  .touch-manipulation {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
 }
 </style>

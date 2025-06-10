@@ -11,7 +11,7 @@ import json
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your-secret-key-here'
 
-# 配置 CORS，允许发送 cookies
+# 配置 CORS
 CORS(app, supports_credentials=True, origins=['http://localhost:3000'])
 
 # 模拟用户数据
@@ -167,7 +167,7 @@ def generate_token(user_id):
     """生成 JWT token"""
     payload = {
         'user_id': user_id,
-        'exp': datetime.utcnow() + timedelta(days=1)
+        'exp': datetime.utcnow() + timedelta(days=7)  # 7天过期
     }
     return jwt.encode(payload, app.config['SECRET_KEY'], algorithm='HS256')
 
@@ -189,7 +189,7 @@ def get_user_by_username(username):
     """根据用户名获取用户"""
     return next((user for user in USERS if user['username'] == username), None)
 
-# 认证装饰器
+# 认证装饰器 - 改回使用 Http-Only Cookie
 def token_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
@@ -249,7 +249,7 @@ def login():
         response = make_response(jsonify(response_data))
         
         # 设置 HttpOnly cookie
-        max_age = 30 * 24 * 60 * 60 if remember_me else 24 * 60 * 60  # 30天或1天
+        max_age = 30 * 24 * 60 * 60 if remember_me else 7 * 24 * 60 * 60  # 30天或7天
         response.set_cookie(
             'auth-token',
             token,
@@ -313,7 +313,7 @@ def register():
         response.set_cookie(
             'auth-token',
             token,
-            max_age=24 * 60 * 60,
+            max_age=7 * 24 * 60 * 60,
             httponly=True,
             secure=False,
             samesite='Lax'
@@ -355,7 +355,7 @@ def refresh_token(current_user):
     response.set_cookie(
         'auth-token',
         new_token,
-        max_age=24 * 60 * 60,
+        max_age=7 * 24 * 60 * 60,
         httponly=True,
         secure=False,
         samesite='Lax'
@@ -550,7 +550,8 @@ def internal_error(error):
 
 if __name__ == '__main__':
     print("Mock API Server 启动中...")
-    print("服务地址: http://localhost:5000")
+    print("服务地址: http://localhost:5500")
+    print("认证方式: Http-Only Cookie")
     print("API 文档:")
     print("  POST /api/auth/login - 用户登录")
     print("  POST /api/auth/register - 用户注册")

@@ -1,18 +1,18 @@
 <template>
   <div class="calendar-wrapper">
-    <!-- 头部控制区域 -->
+    <!-- 头部控制区域 - 移动端优化 -->
     <div class="calendar-header">
       <div class="header-left">
         <h2 class="calendar-title">{{ title || '日历' }}</h2>
         <div class="current-date">{{ currentMonth }}</div>
       </div>
       <div class="header-controls">
-        <button @click="prevMonth" class="nav-btn">
+        <button @click="prevMonth" class="nav-btn touch-manipulation">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <polyline points="15,18 9,12 15,6"></polyline>
           </svg>
         </button>
-        <button @click="nextMonth" class="nav-btn">
+        <button @click="nextMonth" class="nav-btn touch-manipulation">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <polyline points="9,18 15,12 9,6"></polyline>
           </svg>
@@ -20,11 +20,13 @@
       </div>
     </div>
 
-    <!-- 图例 -->
+    <!-- 图例 - 补充完整状态 -->
     <div class="legend-section" v-if="legends.length">
-      <div v-for="legend in legends" :key="legend.label" class="legend-item">
-        <div :class="['legend-dot', legend.color]"></div>
-        <span>{{ legend.label }}</span>
+      <div class="legend-items">
+        <div v-for="legend in legends" :key="legend.label" class="legend-item">
+          <div :class="['legend-dot', legend.color]"></div>
+          <span>{{ legend.label }}</span>
+        </div>
       </div>
     </div>
 
@@ -32,7 +34,10 @@
     <div class="calendar-grid">
       <!-- 星期标题 -->
       <div class="weekdays">
-        <div v-for="day in weekdays" :key="day" class="weekday">{{ day }}</div>
+        <div v-for="day in weekdays" :key="day" class="weekday">
+          <span class="hidden sm:inline">{{ day }}</span>
+          <span class="sm:hidden">{{ day.slice(0, 1) }}</span>
+        </div>
       </div>
       
       <!-- 日期网格 -->
@@ -43,27 +48,38 @@
           v-show="date.isCurrentMonth"
           :class="getDayClasses(date)"
           @click="handleDateClick(date)"
-          @mouseenter="handleDateHover(date, true)"
-          @mouseleave="handleDateHover(date, false)"
+          @touchstart="handleTouchStart(date, $event)"
+          @touchend="handleTouchEnd"
+          @mouseenter="!isMobile && handleDateHover(date, true)"
+          @mouseleave="!isMobile && handleDateHover(date, false)"
         >
           <span class="day-number">{{ date.day }}</span>
-          <div v-if="date.hasEvent" class="event-indicator">
-            <div :class="['event-dot', getEventStatus(date)]"></div>
+          <div v-if="date.hasEvent && date.events.length > 1" class="event-count">
+            {{ date.events.length }}
+          </div>
+          <!-- 添加过期和紧急指示器 -->
+          <div v-if="hasOverdueEvents(date)" class="status-indicator overdue-indicator">
+            <div class="pulse-dot"></div>
+          </div>
+          <div v-else-if="hasUrgentEvents(date)" class="status-indicator urgent-indicator">
+            <div class="pulse-dot"></div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- 悬浮提示框 -->
+    <!-- 悬浮提示框 - 移动端优化 -->
     <div 
       v-if="showTooltip && hoveredDate"
       :style="tooltipStyle"
-      class="tooltip"
+      :class="['tooltip', isMobile ? 'tooltip-mobile' : '']"
+      @click.stop
     >
-      <div class="tooltip-arrow"></div>
+      <div class="tooltip-arrow" v-if="!isMobile"></div>
       <div class="tooltip-content">
         <div class="tooltip-header">
           <span class="tooltip-date">{{ formatTooltipDate(hoveredDate) }}</span>
+          <!-- 移除关闭按钮，改为点击遮罩关闭 -->
         </div>
         <div class="tooltip-body">
           <div v-for="event in hoveredDate.events" :key="event.id" class="tooltip-event">
@@ -71,21 +87,40 @@
             <div class="event-info">
               <div class="event-title">{{ event.title }}</div>
               <div class="event-meta">{{ getEventStatusText(event) }}</div>
+              <div v-if="event.extendedProps?.dueTime" class="event-time">
+                {{ event.extendedProps.dueTime }}
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
+
+    <!-- 移动端遮罩 - 点击关闭 -->
+    <div 
+      v-if="isMobile && showTooltip" 
+      class="tooltip-overlay"
+      @click="closeTooltip"
+      @touchstart="closeTooltip"
+    ></div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { XMarkIcon } from '@heroicons/vue/24/outline'
+
 interface CalendarEvent {
   id: string | number
   title: string
   start: string
+  dueDate?: string // 添加截止日期字段
   className?: string
-  extendedProps?: Record<string, any>
+  extendedProps?: {
+    status?: string
+    dueTime?: string
+    priority?: 'low' | 'medium' | 'high'
+    [key: string]: any
+  }
 }
 
 interface CalendarLegend {
@@ -113,14 +148,19 @@ const props = withDefaults(defineProps<Props>(), {
   title: '',
   events: () => [],
   legends: () => [
-    { label: '作业', color: 'bg-blue-500' },
-    { label: '截止', color: 'bg-orange-500' }
+    { label: '已过期', color: 'bg-red-500' },
+    { label: '紧急', color: 'bg-orange-500' },
+    { label: '未完成', color: 'bg-yellow-500' },
+    { label: '已完成', color: 'bg-green-500' },
+    { label: '进行中', color: 'bg-blue-500' },
+    { label: '草稿', color: 'bg-gray-500' }
   ]
 })
 
 const emit = defineEmits<{
   dateClick: [date: CalendarDate]
   monthChange: [year: number, month: number]
+  eventClick: [event: CalendarEvent]
 }>()
 
 // 响应式数据
@@ -128,6 +168,8 @@ const currentDate = ref(new Date())
 const hoveredDate = ref<CalendarDate | null>(null)
 const showTooltip = ref(false)
 const tooltipPosition = ref({ x: 0, y: 0 })
+const isMobile = ref(false)
+const touchStartTime = ref(0)
 
 // 计算属性
 const currentMonth = computed(() => {
@@ -176,9 +218,19 @@ const calendarDates = computed(() => {
   return dates
 })
 
-// 新增计算属性
+// 修改tooltip样式计算
 const tooltipStyle = computed(() => {
   if (!tooltipPosition.value) return {}
+  
+  if (isMobile.value) {
+    return {
+      position: 'fixed' as const,
+      top: '50%',
+      left: '50%',
+      transform: 'translate(-50%, -50%)',
+      zIndex: 1001
+    }
+  }
   
   return {
     left: `${tooltipPosition.value.x}px`,
@@ -202,6 +254,43 @@ const nextMonth = () => {
   emit('monthChange', newDate.getFullYear(), newDate.getMonth() + 1)
 }
 
+// 新增过期和紧急状态判断方法
+const isOverdue = (event: CalendarEvent) => {
+  // 检查是否为过期状态
+  if (event.extendedProps?.status === 'submitted' || event.extendedProps?.status === 'closed') return false
+  
+  const now = new Date()
+  now.setHours(23, 59, 59, 999) // 设置到当天的最后一刻
+  
+  // 使用 dueDate 字段或 start 字段作为截止日期
+  const dueDateStr = event.dueDate || event.start
+  const dueDate = new Date(dueDateStr + 'T23:59:59') // 设置到截止日的最后一刻
+  return dueDate < now
+}
+
+const isUrgent = (event: CalendarEvent) => {
+  // 检查是否为紧急状态
+  if (event.extendedProps?.status === 'submitted') return false
+  
+  const now = new Date()
+  now.setHours(0, 0, 0, 0) // 重置到当天00:00:00
+  
+  // 使用 dueDate 字段或 start 字段作为截止日期
+  const dueDateStr = event.dueDate || event.start
+  const dueDate = new Date(dueDateStr + 'T00:00:00') // 确保使用本地时间
+  const diffDays = Math.ceil((dueDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))
+  
+  return diffDays <= 3 && diffDays >= 0
+}
+
+const hasOverdueEvents = (date: CalendarDate) => {
+  return date.hasEvent && date.events.some(event => isOverdue(event))
+}
+
+const hasUrgentEvents = (date: CalendarDate) => {
+  return date.hasEvent && date.events.some(event => isUrgent(event))
+}
+
 const getDayClasses = (date: CalendarDate) => {
   const classes = ['day-cell']
   
@@ -215,10 +304,26 @@ const getDayClasses = (date: CalendarDate) => {
   
   if (date.hasEvent) {
     classes.push('has-event')
-    // 添加具体的事件状态类
-    const event = date.events[0]
-    const status = event.extendedProps?.status || event.className
-    classes.push(`event-${status}`)
+    
+    // 检查过期和紧急状态
+    if (hasOverdueEvents(date)) {
+      classes.push('has-overdue-events')
+    } else if (hasUrgentEvents(date)) {
+      classes.push('has-urgent-events')
+    }
+    
+    // 根据优先级或状态添加样式
+    const primaryEvent = getPrimaryEvent(date.events)
+    const status = primaryEvent.extendedProps?.status || primaryEvent.className
+    const priority = primaryEvent.extendedProps?.priority
+    
+    if (priority) {
+      classes.push(`priority-${priority}`)
+    }
+    
+    if (status) {
+      classes.push(`event-${status}`)
+    }
   }
   
   if (hoveredDate.value === date) {
@@ -228,23 +333,65 @@ const getDayClasses = (date: CalendarDate) => {
   return classes
 }
 
+const getPrimaryEvent = (events: CalendarEvent[]) => {
+  // 按优先级排序，返回最重要的事件，过期和紧急优先级最高
+  const priorityOrder = { high: 3, medium: 2, low: 1 }
+  const statusPriority = { 
+    overdue: 10,  // 过期最高优先级
+    urgent: 9,    // 紧急次之
+    pending: 3, 
+    active: 2, 
+    submitted: 1, 
+    closed: 0 
+  }
+  
+  return events.sort((a, b) => {
+    // 首先按过期和紧急状态排序
+    const aOverdue = isOverdue(a) ? 10 : 0
+    const bOverdue = isOverdue(b) ? 10 : 0
+    const aUrgent = isUrgent(a) ? 9 : 0
+    const bUrgent = isUrgent(b) ? 9 : 0
+    
+    const aPriority = priorityOrder[a.extendedProps?.priority as keyof typeof priorityOrder] || 0
+    const bPriority = priorityOrder[b.extendedProps?.priority as keyof typeof priorityOrder] || 0
+    
+    const aStatus = statusPriority[a.extendedProps?.status as keyof typeof statusPriority] || 0
+    const bStatus = statusPriority[b.extendedProps?.status as keyof typeof statusPriority] || 0
+    
+    const aTotal = aOverdue + aUrgent + aPriority + aStatus
+    const bTotal = bOverdue + bUrgent + bPriority + bStatus
+    
+    return bTotal - aTotal
+  })[0]
+}
+
 const getEventStatus = (date: CalendarDate) => {
   if (!date.hasEvent) return ''
   
-  // 根据事件状态返回样式类
-  const event = date.events[0]
-  const status = event.extendedProps?.status || event.className
+  const primaryEvent = getPrimaryEvent(date.events)
+  const status = primaryEvent.extendedProps?.status || primaryEvent.className
   
   switch (status) {
     case 'submitted': return 'event-success'
     case 'overdue': return 'event-danger'
     case 'urgent': return 'event-warning'
     case 'pending': return 'event-info'
-    default: return 'event-info' // 默认也改为pending样式
+    case 'active': return 'event-primary'
+    case 'draft': return 'event-secondary'
+    case 'closed': return 'event-muted'
+    default: return 'event-info'
   }
 }
 
 const handleDateClick = (date: CalendarDate) => {
+  if (isMobile.value) {
+    // 移动端已在touchstart处理
+    return
+  }
+  
+  if (date.hasEvent && date.events.length === 1) {
+    emit('eventClick', date.events[0])
+  }
   emit('dateClick', date)
 }
 
@@ -269,9 +416,11 @@ const handleDateHover = (date: CalendarDate, isHovered: boolean) => {
   }
 }
 
-// 新增方法
 const formatTooltipDate = (date: CalendarDate) => {
-  return `${date.year}年${date.month + 1}月${date.day}日`
+  const weekDays = ['周日', '周一', '周二', '周三', '周四', '周五', '周六']
+  const dateObj = new Date(date.year, date.month, date.day)
+  const weekDay = weekDays[dateObj.getDay()]
+  return `${date.year}年${date.month + 1}月${date.day}日 ${weekDay}`
 }
 
 const getEventStatusClass = (event: CalendarEvent) => {
@@ -280,6 +429,14 @@ const getEventStatusClass = (event: CalendarEvent) => {
 }
 
 const getEventStatusText = (event: CalendarEvent) => {
+  // 优先显示过期和紧急状态
+  if (isOverdue(event)) {
+    return '已过期'
+  }
+  if (isUrgent(event)) {
+    return '紧急'
+  }
+  
   const status = event.extendedProps?.status || event.className
   
   const statusTexts = {
@@ -293,12 +450,18 @@ const getEventStatusText = (event: CalendarEvent) => {
     'closed': '已结束'
   }
   
-  return statusTexts[status] || '未提交' // 默认显示为未提交
+  return statusTexts[status as keyof typeof statusTexts] || '未知状态'
+}
+
+// 关闭tooltip的方法
+const closeTooltip = () => {
+  showTooltip.value = false
+  hoveredDate.value = null
 }
 
 // 监听鼠标移动更新tooltip位置
 const updateTooltipPosition = (event: MouseEvent) => {
-  if (showTooltip.value) {
+  if (showTooltip.value && !isMobile.value) {
     tooltipPosition.value = {
       x: event.clientX,
       y: event.clientY - 10
@@ -306,12 +469,86 @@ const updateTooltipPosition = (event: MouseEvent) => {
   }
 }
 
+// 触摸事件处理
+const handleTouchStart = (date: CalendarDate, event: TouchEvent) => {
+  event.preventDefault() // 防止默认的触摸行为
+  touchStartTime.value = Date.now()
+  
+  if (date.hasEvent) {
+    // 短按直接显示tooltip（移除长按延迟）
+    hoveredDate.value = date
+    showTooltip.value = true
+    
+    tooltipPosition.value = {
+      x: window.innerWidth / 2,
+      y: window.innerHeight / 2
+    }
+  }
+}
+
+const handleTouchEnd = (event: TouchEvent) => {
+  event.preventDefault()
+  const touchDuration = Date.now() - touchStartTime.value
+  
+  // 如果是短按且没有事件，执行点击处理
+  if (touchDuration < 300 && hoveredDate.value && !showTooltip.value) {
+    const date = hoveredDate.value
+    if (date.hasEvent && date.events.length === 1) {
+      emit('eventClick', date.events[0])
+    }
+    emit('dateClick', date)
+  }
+}
+
+// 生命周期
 onMounted(() => {
+  const checkMobile = () => {
+    isMobile.value = window.innerWidth < 768 || 'ontouchstart' in window
+  }
+  
+  checkMobile()
+  window.addEventListener('resize', checkMobile)
   document.addEventListener('mousemove', updateTooltipPosition)
+  
+  // 添加全局点击事件监听，用于关闭tooltip
+  const handleGlobalClick = (event: Event) => {
+    if (isMobile.value && showTooltip.value) {
+      const target = event.target as Element
+      const tooltip = document.querySelector('.tooltip-mobile')
+      const overlay = document.querySelector('.tooltip-overlay')
+      
+      // 如果点击的不是tooltip内容或遮罩，则关闭tooltip
+      if (tooltip && !tooltip.contains(target) && target !== overlay) {
+        closeTooltip()
+      }
+    }
+  }
+  
+  document.addEventListener('click', handleGlobalClick)
+  document.addEventListener('touchstart', handleGlobalClick)
+  
+  onUnmounted(() => {
+    window.removeEventListener('resize', checkMobile)
+    document.removeEventListener('mousemove', updateTooltipPosition)
+    document.removeEventListener('click', handleGlobalClick)
+    document.removeEventListener('touchstart', handleGlobalClick)
+  })
 })
 
-onUnmounted(() => {
-  document.removeEventListener('mousemove', updateTooltipPosition)
+// 键盘导航支持
+const handleKeydown = (event: KeyboardEvent) => {
+  if (event.key === 'ArrowLeft') {
+    prevMonth()
+  } else if (event.key === 'ArrowRight') {
+    nextMonth()
+  }
+}
+
+onMounted(() => {
+  document.addEventListener('keydown', handleKeydown)
+  onUnmounted(() => {
+    document.removeEventListener('keydown', handleKeydown)
+  })
 })
 </script>
 
@@ -413,12 +650,22 @@ onUnmounted(() => {
   height: 16px;
 }
 
-/* 图例样式 */
+/* 图例样式 - 增强 */
 .legend-section {
-  display: flex;
-  gap: 16px;
   margin-bottom: 20px;
-  padding: 10px 0;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(229, 231, 235, 0.3);
+}
+
+.dark .legend-section {
+  border-bottom-color: rgba(75, 85, 99, 0.3);
+}
+
+.legend-items {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .legend-item {
@@ -428,16 +675,55 @@ onUnmounted(() => {
   font-size: 0.75rem;
   color: #6b7280;
   font-weight: 500;
+  padding: 4px 8px;
+  border-radius: 6px;
+  background: rgba(243, 244, 246, 0.5);
+  transition: all 0.2s ease;
 }
 
 .dark .legend-item {
   color: #9ca3af;
+  background: rgba(55, 65, 81, 0.5);
+}
+
+.legend-item:hover {
+  background: rgba(243, 244, 246, 0.8);
+  transform: translateY(-1px);
+}
+
+.dark .legend-item:hover {
+  background: rgba(55, 65, 81, 0.8);
 }
 
 .legend-dot {
-  width: 8px;
-  height: 8px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
+  flex-shrink: 0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* 移动端图例优化 */
+@media (max-width: 640px) {
+  .legend-section {
+    padding: 10px 0;
+  }
+  
+  .legend-items {
+    gap: 8px;
+    justify-content: flex-start;
+  }
+  
+  .legend-item {
+    font-size: 0.7rem;
+    padding: 3px 6px;
+    gap: 4px;
+  }
+  
+  .legend-dot {
+    width: 8px;
+    height: 8px;
+  }
 }
 
 /* 日历网格样式 */
@@ -644,6 +930,9 @@ onUnmounted(() => {
 }
 
 .tooltip-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   margin-bottom: 8px;
   padding-bottom: 8px;
   border-bottom: 1px solid rgba(229, 231, 235, 0.5);
@@ -745,6 +1034,171 @@ onUnmounted(() => {
   color: #9ca3af;
 }
 
+/* 事件计数器样式 */
+.event-count {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  background: rgba(255, 255, 255, 0.9);
+  color: #374151;
+  font-size: 0.6rem;
+  font-weight: 600;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.dark .event-count {
+  background: rgba(31, 41, 55, 0.9);
+  color: #f3f4f6;
+}
+
+/* 优先级样式 */
+.day-cell.priority-high {
+  border: 2px solid #ef4444;
+}
+
+.day-cell.priority-medium {
+  border: 2px solid #f59e0b;
+}
+
+.day-cell.priority-low {
+  border: 2px solid #10b981;
+}
+
+/* 事件时间样式 */
+.event-time {
+  font-size: 0.7rem;
+  color: #9ca3af;
+  font-style: italic;
+  margin-top: 2px;
+}
+
+.dark .event-time {
+  color: #6b7280;
+}
+
+/* 键盘导航提示 */
+.calendar-wrapper:focus-within .nav-btn {
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.3);
+}
+
+/* 动画优化 */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.tooltip {
+  animation: fadeIn 0.2s ease-out;
+}
+
+/* 无障碍支持 */
+.day-cell:focus {
+  outline: 2px solid #6366f1;
+  outline-offset: 2px;
+}
+
+.nav-btn:focus {
+  outline: 2px solid #6366f1;
+  outline-offset: 2px;
+}
+
+/* 高对比度模式支持 */
+@media (prefers-contrast: high) {
+  .day-cell.has-event {
+    border: 2px solid currentColor;
+  }
+  
+  .tooltip-content {
+    border: 2px solid #000;
+  }
+  
+  .dark .tooltip-content {
+    border: 2px solid #fff;
+  }
+}
+
+/* 减少动画模式支持 */
+@media (prefers-reduced-motion: reduce) {
+  .day-cell,
+  .nav-btn,
+  .tooltip {
+    transition: none;
+    animation: none;
+  }
+}
+
+/* 过期和紧急状态样式 */
+.day-cell.has-overdue-events {
+  background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+  animation: pulse 2s infinite;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.6) !important;
+}
+
+.day-cell.has-urgent-events {
+  background: linear-gradient(135deg, #ff6b35, #e55039) !important;
+  animation: urgentPulse 1.5s infinite;
+  box-shadow: 0 4px 12px rgba(255, 107, 53, 0.6) !important;
+}
+
+.day-cell.has-overdue-events:hover {
+  background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+  box-shadow: 0 6px 16px rgba(239, 68, 68, 0.8) !important;
+}
+
+.day-cell.has-urgent-events:hover {
+  background: linear-gradient(135deg, #ff6b35, #e55039) !important;
+  box-shadow: 0 6px 16px rgba(255, 107, 53, 0.8) !important;
+}
+
+/* 状态指示器样式 */
+.status-indicator {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 8px;
+  height: 8px;
+}
+
+.pulse-dot {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  animation: statusPulse 1.5s infinite;
+}
+
+.overdue-indicator .pulse-dot {
+  background: #fca5a5;
+  box-shadow: 0 0 6px rgba(239, 68, 68, 0.8);
+}
+
+.urgent-indicator .pulse-dot {
+  background: #fed7aa;
+  box-shadow: 0 0 6px rgba(255, 107, 53, 0.8);
+}
+
+@keyframes statusPulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.2);
+  }
+}
+
 @keyframes pulse {
   0%, 100% {
     opacity: 1;
@@ -767,50 +1221,51 @@ onUnmounted(() => {
   }
 }
 
-/* 响应式设计 */
+/* 事件状态点样式更新 */
+.event-status-dot.status-overdue,
+.event-status-dot.status-urgent {
+  animation: statusPulse 1.5s infinite;
+}
+
+/* 移动端状态指示器优化 */
 @media (max-width: 640px) {
-  .calendar-wrapper {
-    padding: 16px;
+  .status-indicator {
+    top: 2px;
+    left: 2px;
+    width: 6px;
+    height: 6px;
+  }
+}
+
+/* 无障碍支持 - 高对比度模式 */
+@media (prefers-contrast: high) {
+  .day-cell.has-overdue-events {
+    border: 3px solid #dc2626 !important;
+    background: #fca5a5 !important;
+    color: #000 !important;
   }
   
-  .current-date {
-    font-size: 1.125rem;
+  .day-cell.has-urgent-events {
+    border: 3px solid #ea580c !important;
+    background: #fed7aa !important;
+    color: #000 !important;
+  }
+}
+
+/* 减少动画模式支持 */
+@media (prefers-reduced-motion: reduce) {
+  .day-cell.has-overdue-events,
+  .day-cell.has-urgent-events,
+  .pulse-dot {
+    animation: none;
   }
   
-  .nav-btn {
-    width: 32px;
-    height: 32px;
+  .overdue-indicator .pulse-dot {
+    background: #dc2626;
   }
   
-  .day-number {
-    font-size: 0.8rem;
-  }
-  
-  .legend-section {
-    flex-wrap: wrap;
-    gap: 12px;
-  }
-  
-  .day-cell {
-    min-height: 32px;
-  }
-  
-  .tooltip-content {
-    min-width: 180px;
-    max-width: 250px;
-    padding: 10px 12px;
-  }
-  
-  .tooltip-event {
-    gap: 6px;
-  }
-  
-  .event-title {
-    font-size: 0.8rem;
-  }
-  
-  .event-meta {
-    font-size: 0.7rem;
+  .urgent-indicator .pulse-dot {
+    background: #ea580c;
   }
 }
 </style>

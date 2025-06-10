@@ -123,7 +123,7 @@
               </div>
               
               <NuxtLink
-                :to="localePath('/forgot-password')"
+                :to="localePath('/auth/forgot-password')"
                 class="text-sm font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300 transition-colors duration-200"
               >
                 {{ $t('login.forgotPassword') }}
@@ -228,6 +228,7 @@ useHead({
 definePageMeta({
   layout: 'app',
   auth: false,
+  middleware: 'guest', // 添加 guest 中间件
   keepalive: false
 })
 

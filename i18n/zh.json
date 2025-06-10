@@ -318,7 +318,8 @@
     "tryNow": "立即体验",
     "viewSource": "查看源码",
     "watchDemo": "观看演示",
-    "welcome": "欢迎使用作业管理系统"
+    "welcome": "欢迎使用作业管理系统",
+    "goToDashboard": "前往仪表盘"
   },
   "language": {
     "chinese": "中文",
@@ -491,7 +492,11 @@
     "userManagementFetch": "用户管理获取成功"
   },
   "theme": {
-    "lightMode": "浅色模式"
+    "switchTheme": "切换主题",
+    "darkMode": "深色模式",
+    "lightMode": "浅色模式",
+    "switchToLight": "浅色模式",
+    "switchToDark": "切换到深色模式"
   },
   "user": {
     "profile": {

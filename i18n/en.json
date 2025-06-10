@@ -108,7 +108,7 @@
   },
   "default": {
     "404": {
-      "description": ""
+      "description": "The page you are looking for does not exist."
     }
   },
   "demo": {
@@ -323,7 +323,8 @@
     "tryNow": "Try Now",
     "viewSource": "View Source",
     "watchDemo": "Watch Demo",
-    "welcome": "Welcome to the Homework Management System"
+    "welcome": "Welcome to the Homework Management System",
+    "goToDashboard": "Go to Dashboard"
   },
   "language": {
     "chinese": "中文",
@@ -496,7 +497,8 @@
     "userManagementFetch": "User Management Fetched Successfully"
   },
   "theme": {
-    "lightMode": "Light Mode"
+    "switchToLight": "Switch to Light Mode",
+    "switchToDark": "Switch to Dark Mode"
   },
   "user": {
     "profile": {

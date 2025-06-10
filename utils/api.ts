@@ -10,6 +10,19 @@ export const apiClient = axios.create({
   withCredentials: true, // 重要：允许发送 cookies
 })
 
+// 创建用于 SSR 的 axios 实例
+export const createSSRApiClient = (cookieHeader?: string) => {
+  return axios.create({
+    baseURL: process.env.NUXT_PUBLIC_API_BASE_URL || 'http://localhost:5500/api',
+    timeout: 10000,
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      ...(cookieHeader && { 'Cookie': cookieHeader })
+    }
+  })
+}
+
 // 请求拦截器
 apiClient.interceptors.request.use(
   (config) => {
@@ -52,112 +65,3 @@ apiClient.interceptors.response.use(
     return Promise.reject(error)
   }
 )
-
-// Mock API 响应（用于开发环境）
-export const mockApiResponses = {
-  // 登录 Mock
-  '/auth/login': (data: any) => {
-    const mockUsers = [
-      { username: 'monitor', password: '123456', role: 'monitor', name: '课代表', email: 'monitor@example.com' },
-      { username: 'teacher', password: '123456', role: 'teacher', name: '张老师', email: 'teacher@example.com' },
-      { username: 'student', password: '123456', role: 'student', name: '小明同学', email: 'student@example.com' }
-    ]
-    
-    const user = mockUsers.find(u => u.username === data.username && u.password === data.password)
-    if (!user) {
-      throw new Error('用户名或密码错误')
-    }
-    
-    // 模拟设置 httpOnly cookie
-    if (import.meta.client) {
-      // 在实际环境中，这些 cookie 会由后端设置
-      // 这里只是模拟存储用户信息到 localStorage
-      const userData = {
-        id: Date.now(),
-        username: user.username,
-        email: user.email,
-        name: user.name,
-        role: user.role
-      }
-      localStorage.setItem('auth-user', JSON.stringify(userData))
-      
-      if (data.rememberMe) {
-        localStorage.setItem('remembered-username', user.username)
-      }
-    }
-    
-    return {
-      user: {
-        id: Date.now(),
-        username: user.username,
-        email: user.email,
-        name: user.name,
-        role: user.role
-      },
-      message: '登录成功'
-    }
-  },
-  
-  // 注册 Mock
-  '/auth/register': (data: any) => {
-    // 模拟检查用户名是否已存在
-    const existingUsers = ['admin', 'monitor', 'teacher', 'student']
-    if (existingUsers.includes(data.username)) {
-      throw new Error('用户名已存在')
-    }
-    
-    const userData = {
-      id: Date.now(),
-      username: data.username,
-      email: data.email,
-      name: data.name,
-      role: data.role
-    }
-    
-    // 模拟设置 cookie 和用户数据
-    if (import.meta.client) {
-      localStorage.setItem('auth-user', JSON.stringify(userData))
-    }
-    
-    return {
-      user: userData,
-      message: '注册成功'
-    }
-  },
-  
-  // 退出登录 Mock
-  '/auth/logout': () => {
-    // 模拟清除 cookie
-    if (import.meta.client) {
-      localStorage.removeItem('auth-user')
-      localStorage.removeItem('remembered-username')
-    }
-    return { message: '退出成功' }
-  },
-  
-  // 验证用户 Mock
-  '/auth/me': () => {
-    // 从 localStorage 获取用户信息（模拟从 cookie 验证）
-    if (import.meta.client) {
-      const userData = localStorage.getItem('auth-user')
-      if (userData) {
-        return { user: JSON.parse(userData) }
-      }
-    }
-    throw new Error('未登录')
-  },
-  
-  // 刷新 token Mock
-  '/auth/refresh': () => {
-    // 模拟刷新 token（实际中会更新 httpOnly cookie）
-    if (import.meta.client) {
-      const userData = localStorage.getItem('auth-user')
-      if (userData) {
-        return { message: '刷新成功' }
-      }
-    }
-    throw new Error('刷新失败')
-  }
-}
-
-// 移除开发环境的 Mock 数据拦截器，因为现在使用真实的后端

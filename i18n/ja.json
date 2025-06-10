@@ -108,7 +108,7 @@
   },
   "default": {
     "404": {
-      "description": ""
+      "description": "申し訳ございません。お探しのページは存在しません。"
     }
   },
   "demo": {
@@ -323,7 +323,8 @@
     "tryNow": "今すぐ体験",
     "viewSource": "ソースコードを見る",
     "watchDemo": "デモを見る",
-    "welcome": "宿題管理システムへようこそ"
+    "welcome": "宿題管理システムへようこそ",
+    "goToDashboard": "ダッシュボードに移動"
   },
   "language": {
     "chinese": "中文",
@@ -496,7 +497,8 @@
     "userManagementFetch": "ユーザー管理を取得しました"
   },
   "theme": {
-    "lightMode": "明るい色のモード"
+    "switchToLight": "ライトテーマに切り替え",
+    "switchToDark": "ダークテーマに切り替え"
   },
   "user": {
     "profile": {
