@@ -80,42 +80,11 @@
       <div class="grid grid-cols-1 xl:grid-cols-3 gap-6 lg:gap-8">
         <!-- 日历区域 -->
         <div class="xl:col-span-1">
-          <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-lg border border-gray-200/50 dark:border-gray-700/50 p-6 transition-all duration-200 hover:shadow-xl mb-6">
-            <div class="flex items-center justify-between mb-6">
-              <h2 class="text-xl font-bold text-gray-900 dark:text-white">
-                {{ $t('dashboard.calendar') || '日历' }}
-              </h2>
-              <div class="flex items-center gap-4 text-xs text-gray-500 dark:text-gray-400">
-                <div class="flex items-center gap-1">
-                  <div class="w-2 h-2 bg-blue-500 rounded-full"></div>
-                  {{ $t('teacher.dashboard.assignments') || '作业' }}
-                </div>
-                <div class="flex items-center gap-1">
-                  <div class="w-2 h-2 bg-orange-500 rounded-full"></div>
-                  {{ $t('teacher.dashboard.deadlines') || '截止' }}
-                </div>
-              </div>
-            </div>
-            <div id="calendar" class="calendar-container"></div>
-          </div>
-
-          <!-- 快速统计 -->
-          <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-lg border border-gray-200/50 dark:border-gray-700/50 p-6 transition-all duration-200 hover:shadow-xl">
-            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">
-              {{ $t('teacher.dashboard.quickStats') || '快速统计' }}
-            </h3>
-            <div class="space-y-3">
-              <div v-for="item in quickStats" :key="item.label" class="flex items-center justify-between p-3 rounded-xl bg-gray-50 dark:bg-gray-700/50 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200">
-                <div class="flex items-center gap-3">
-                  <div :class="['w-8 h-8 rounded-lg flex items-center justify-center', item.bgColor]">
-                    <component :is="item.icon" class="h-4 w-4 text-white" />
-                  </div>
-                  <span class="text-sm font-medium text-gray-900 dark:text-white">{{ item.label }}</span>
-                </div>
-                <span class="text-lg font-bold text-gray-900 dark:text-white">{{ item.value }}</span>
-              </div>
-            </div>
-          </div>
+          <Calendar 
+            :events="calendarEvents"
+            :legends="calendarLegends"
+            class="mb-6"
+          />
         </div>
 
         <!-- 作业管理区域 -->
@@ -274,9 +243,7 @@ import {
   PencilIcon,
   PlusIcon
 } from '@heroicons/vue/24/outline'
-import { Calendar } from '@fullcalendar/core'
-import dayGridPlugin from '@fullcalendar/daygrid'
-import interactionPlugin from '@fullcalendar/interaction'
+import Calendar from '@/components/Calendar.vue'
 
 // i18n
 const { t } = useI18n()
@@ -434,202 +401,35 @@ const getStatusText = (status: string) => {
 // 主题管理
 const { isDark } = useTheme()
 
-// 初始化日历
-onMounted(() => {
-  const calendarEl = document.getElementById('calendar')
-  if (calendarEl) {
-    const calendar = new Calendar(calendarEl, {
-      plugins: [dayGridPlugin, interactionPlugin],
-      initialView: 'dayGridMonth',
-      locale: 'zh-cn',
-      height: 'auto',
-      events: assignments.value.map(assignment => ({
-        title: assignment.title,
-        start: assignment.dueDate,
-        className: `assignment-${assignment.status}`,
-        display: 'background',
-        extendedProps: {
-          status: assignment.status,
-          title: assignment.title,
-          dueDate: assignment.dueDate
-        }
-      })),
-      headerToolbar: {
-        left: 'prev,next',
-        center: 'title',
-        right: ''
-      },
-      buttonText: {
-        today: '今'
-      },
-      eventDidMount: function(info) {
-        const dayNumber = info.el.closest('.fc-daygrid-day').querySelector('.fc-daygrid-day-number')
-        if (dayNumber) {
-          dayNumber.classList.add('has-assignment', `assignment-${info.event.extendedProps.status}`)
-          dayNumber.title = `${info.event.extendedProps.title} - 截止日期：${info.event.extendedProps.dueDate}`
-        }
-      }
-    })
-    calendar.render()
+// 日历事件数据
+const calendarEvents = computed(() => 
+  assignments.value.map(assignment => ({
+    id: assignment.id,
+    title: assignment.title,
+    start: assignment.dueDate,
+    className: `assignment-${assignment.status}`,
+    extendedProps: {
+      status: assignment.status,
+      title: assignment.title,
+      dueDate: assignment.dueDate
+    }
+  }))
+)
+
+// 日历图例
+const calendarLegends = computed(() => [
+  {
+    label: t('teacher.dashboard.assignments') || '作业',
+    color: 'bg-blue-500'
+  },
+  {
+    label: t('teacher.dashboard.deadlines') || '截止',
+    color: 'bg-orange-500'
   }
-})
+])
 </script>
 
 <style scoped>
-/* 日历样式 */
-.calendar-container {
-  width: 100%;
-  font-family: system-ui, -apple-system, sans-serif;
-  background: transparent;
-  border-radius: 16px;
-  overflow: hidden;
-}
-
-:deep(.fc) {
-  background: transparent;
-  border: none;
-  color: #374151;
-  transition: all 0.2s;
-}
-
-.dark :deep(.fc) {
-  color: #f3f4f6;
-}
-
-:deep(.fc-toolbar) {
-  margin-bottom: 1rem;
-  padding: 0;
-  background: transparent;
-}
-
-:deep(.fc-toolbar-title) {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #1f2937;
-  transition: color 0.2s;
-}
-
-.dark :deep(.fc-toolbar-title) {
-  color: #f3f4f6;
-}
-
-:deep(.fc-button-primary) {
-  background: #f3f4f6;
-  border: 1px solid #e5e7eb;
-  padding: 0;
-  font-size: 0;
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
-  transition: all 0.2s ease;
-  position: relative;
-  box-shadow: none;
-}
-
-.dark :deep(.fc-button-primary) {
-  background: #4b5563;
-  border-color: #6b7280;
-}
-
-:deep(.fc-button-primary:hover) {
-  background: #e5e7eb;
-  border-color: #d1d5db;
-}
-
-.dark :deep(.fc-button-primary:hover) {
-  background: #6b7280;
-  border-color: #9ca3af;
-}
-
-:deep(.fc-prev-button::after) {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-30%, -50%);
-  width: 0;
-  height: 0;
-  border-top: 5px solid transparent;
-  border-bottom: 5px solid transparent;
-  border-right: 7px solid #6b7280;
-  transition: border-color 0.2s;
-}
-
-.dark :deep(.fc-prev-button::after) {
-  border-right-color: #d1d5db;
-}
-
-:deep(.fc-next-button::after) {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-70%, -50%);
-  width: 0;
-  height: 0;
-  border-top: 5px solid transparent;
-  border-bottom: 5px solid transparent;
-  border-left: 7px solid #6b7280;
-  transition: border-color 0.2s;
-}
-
-.dark :deep(.fc-next-button::after) {
-  border-left-color: #d1d5db;
-}
-
-:deep(.fc-daygrid-day) {
-  border: none;
-  min-height: 2.5rem;
-  background: transparent;
-}
-
-:deep(.fc-daygrid-day-number) {
-  padding: 0;
-  font-size: 0.875rem;
-  color: #374151;
-  font-weight: 500;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  margin: 0 auto;
-  transition: all 0.2s ease;
-  border-radius: 8px;
-}
-
-.dark :deep(.fc-daygrid-day-number) {
-  color: #f3f4f6;
-}
-
-:deep(.fc-daygrid-day-number.has-assignment) {
-  background: #3b82f6;
-  color: white;
-  font-weight: 600;
-  cursor: pointer;
-  box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3);
-}
-
-:deep(.fc-daygrid-day-number.assignment-active) {
-  background: #10b981;
-  box-shadow: 0 2px 4px rgba(16, 185, 129, 0.3);
-}
-
-:deep(.fc-daygrid-day-number.assignment-draft) {
-  background: #6b7280;
-  box-shadow: 0 2px 4px rgba(107, 114, 128, 0.3);
-}
-
-:deep(.fc-daygrid-day-number.assignment-closed) {
-  background: #3b82f6;
-  box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3);
-}
-
-/* 隐藏背景事件 */
-:deep(.fc-bg-event) {
-  display: none;
-}
-
 /* 自定义滚动条 */
 .max-h-\[600px\]::-webkit-scrollbar {
   width: 6px;

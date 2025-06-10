@@ -61,24 +61,10 @@
         <!-- 左侧：日历和提交情况概览 -->
         <div class="xl:col-span-1 space-y-6">
           <!-- 日历 -->
-          <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-lg border border-gray-200/50 dark:border-gray-700/50 p-6 transition-all duration-200 hover:shadow-xl">
-            <div class="flex items-center justify-between mb-6">
-              <h2 class="text-xl font-bold text-gray-900 dark:text-white">
-                {{ $t('dashboard.calendar') || '日历' }}
-              </h2>
-              <div class="flex items-center gap-4 text-xs text-gray-500 dark:text-gray-400">
-                <div class="flex items-center gap-1">
-                  <div class="w-2 h-2 bg-green-500 rounded-full"></div>
-                  {{ $t('dashboard.submitted') || '已提交' }}
-                </div>
-                <div class="flex items-center gap-1">
-                  <div class="w-2 h-2 bg-yellow-500 rounded-full"></div>
-                  {{ $t('dashboard.pending') || '待提交' }}
-                </div>
-              </div>
-            </div>
-            <div id="calendar" class="calendar-container"></div>
-          </div>
+          <Calendar 
+            :events="calendarEvents"
+            :legends="calendarLegends"
+          />
 
           <!-- 提交情况概览 -->
           <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-lg border border-gray-200/50 dark:border-gray-700/50 p-6 transition-all duration-200 hover:shadow-xl">
@@ -293,9 +279,7 @@ import {
   ChartBarIcon,
   UsersIcon
 } from '@heroicons/vue/24/outline'
-import { Calendar } from '@fullcalendar/core'
-import dayGridPlugin from '@fullcalendar/daygrid'
-import interactionPlugin from '@fullcalendar/interaction'
+import Calendar from '@/components/Calendar.vue'
 
 // i18n
 const { t } = useI18n()
@@ -385,196 +369,34 @@ const refreshSubmissionData = () => {
   console.log('刷新提交数据...')
 }
 
-// 初始化日历
-onMounted(() => {
-  const calendarEl = document.getElementById('calendar')
-  if (calendarEl) {
-    const calendar = new Calendar(calendarEl, {
-      plugins: [dayGridPlugin, interactionPlugin],
-      initialView: 'dayGridMonth',
-      locale: 'zh-cn',
-      height: 'auto',
-      events: assignments.value.map(assignment => ({
-        title: assignment.title,
-        start: assignment.dueDate,
-        className: assignment.status === 'submitted' ? 'submitted' : 'pending',
-        display: 'background',
-        extendedProps: { status: assignment.status, title: assignment.title, dueDate: assignment.dueDate }
-      })),
-      headerToolbar: { left: 'prev,next', center: 'title', right: '' },
-      buttonText: { today: '今' },
-      eventDidMount: function(info) {
-        const dayNumber = info.el.closest('.fc-daygrid-day').querySelector('.fc-daygrid-day-number')
-        if (dayNumber) {
-          dayNumber.classList.add('has-assignment', info.event.extendedProps.status)
-          dayNumber.title = `${info.event.extendedProps.title} - 截止日期：${info.event.extendedProps.dueDate}`
-        }
-      }
-    })
-    calendar.render()
+// 日历事件数据
+const calendarEvents = computed(() => 
+  assignments.value.map(assignment => ({
+    id: assignment.id,
+    title: assignment.title,
+    start: assignment.dueDate,
+    className: assignment.status === 'submitted' ? 'submitted' : 'pending',
+    extendedProps: {
+      status: assignment.status === 'submitted' ? 'submitted' : 'pending',
+      title: assignment.title,
+      dueDate: assignment.dueDate
+    }
+  }))
+)
+
+// 日历图例
+const calendarLegends = computed(() => [
+  {
+    label: t('dashboard.submitted') || '已提交',
+    color: 'bg-green-500'
+  },
+  {
+    label: t('dashboard.pending') || '待提交',
+    color: 'bg-yellow-500'
   }
-})
+])
 </script>
 
 <style scoped>
-.calendar-container {
-  width: 100%;
-  font-family: system-ui, -apple-system, sans-serif;
-  background: transparent;
-  border-radius: 16px;
-  overflow: hidden;
-}
-
-:deep(.fc) {
-  background: transparent;
-  border: none;
-  color: #374151;
-  transition: all 0.2s;
-}
-
-.dark :deep(.fc) {
-  color: #f3f4f6;
-}
-
-:deep(.fc-toolbar) {
-  margin-bottom: 1rem;
-  padding: 0;
-  background: transparent;
-}
-
-:deep(.fc-toolbar-title) {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #1f2937;
-  transition: color 0.2s;
-}
-
-.dark :deep(.fc-toolbar-title) {
-  color: #f3f4f6;
-}
-
-:deep(.fc-button-primary) {
-  background: #f3f4f6;
-  border: 1px solid #e5e7eb;
-  padding: 0;
-  font-size: 0;
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
-  transition: all 0.2s ease;
-  position: relative;
-  box-shadow: none;
-}
-
-.dark :deep(.fc-button-primary) {
-  background: #4b5563;
-  border-color: #6b7280;
-}
-
-:deep(.fc-button-primary:hover) {
-  background: #e5e7eb;
-  border-color: #d1d5db;
-  transform: none;
-  box-shadow: none;
-}
-
-.dark :deep(.fc-button-primary:hover) {
-  background: #6b7280;
-  border-color: #9ca3af;
-}
-
-:deep(.fc-prev-button::after) {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-30%, -50%);
-  width: 0;
-  height: 0;
-  border-top: 5px solid transparent;
-  border-bottom: 5px solid transparent;
-  border-right: 7px solid #6b7280;
-  transition: border-color 0.2s;
-}
-
-:deep(.fc-next-button::after) {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-70%, -50%);
-  width: 0;
-  height: 0;
-  border-top: 5px solid transparent;
-  border-bottom: 5px solid transparent;
-  border-left: 7px solid #6b7280;
-  transition: border-color 0.2s;
-}
-
-:deep(.fc-col-header-cell-cushion) {
-  color: #6b7280;
-  font-weight: 500;
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-:deep(.fc-daygrid-day-number) {
-  padding: 0;
-  font-size: 0.875rem;
-  color: #374151;
-  font-weight: 500;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  margin: 0 auto;
-  transition: all 0.2s ease;
-  border-radius: 8px;
-}
-
-.dark :deep(.fc-daygrid-day-number) {
-  color: #f3f4f6;
-}
-
-:deep(.fc-daygrid-day-number.has-assignment) {
-  background: #3b82f6;
-  color: white;
-  font-weight: 600;
-  cursor: pointer;
-  box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3);
-}
-
-:deep(.fc-daygrid-day-number.has-assignment:hover) {
-  transform: scale(1.05);
-  box-shadow: 0 4px 8px rgba(59, 130, 246, 0.4);
-}
-
-:deep(.fc-daygrid-day-number.submitted) {
-  background: #10b981;
-  box-shadow: 0 2px 4px rgba(16, 185, 129, 0.3);
-}
-
-:deep(.fc-daygrid-day-number.pending) {
-  background: #f59e0b;
-  box-shadow: 0 2px 4px rgba(245, 158, 11, 0.3);
-}
-
-.max-h-\[600px\]::-webkit-scrollbar {
-  width: 6px;
-}
-
-.max-h-\[600px\]::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.max-h-\[600px\]::-webkit-scrollbar-thumb {
-  background: #d1d5db;
-  border-radius: 3px;
-}
-
-.dark .max-h-\[600px\]::-webkit-scrollbar-thumb {
-  background: #4b5563;
-}
+/* 删除所有日历相关的样式 */
 </style>
