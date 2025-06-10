@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "username": "monitor",
+    "password": "123456",
+    "email": "monitor@example.com",
+    "name": "课代表",
+    "role": "monitor"
+  },
+  {
+    "id": 2,
+    "username": "teacher",
+    "password": "123456",
+    "email": "teacher@example.com",
+    "name": "张老师",
+    "role": "teacher"
+  },
+  {
+    "id": 3,
+    "username": "student",
+    "password": "123456",
+    "email": "student@example.com",
+    "name": "小明同学",
+    "role": "student"
+  }
+]

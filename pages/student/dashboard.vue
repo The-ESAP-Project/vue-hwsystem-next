@@ -55,9 +55,10 @@
         <!-- 现代化日历区域 -->
         <div class="xl:col-span-1">
           <Calendar
-              :events="calendarEvents"
-              :legends="calendarLegends"
-              @date-click="handleDateClick"
+            :key="`calendar-${calendarForceUpdateKey}`"
+            :events="calendarEvents"
+            :legends="calendarLegends"
+            @date-click="handleDateClick"
           />
         </div>
 
@@ -131,6 +132,9 @@ const {
 // 视图模式切换
 const isListView = ref(true)
 
+// 添加强制更新键
+const calendarForceUpdateKey = ref(0)
+
 // 计算作业紧急程度
 const getEventStatus = (assignment) => {
   if (assignment.status === 'submitted') return 'submitted'
@@ -168,7 +172,7 @@ const handleAssignmentClick = (assignment) => {
   // 检查作业是否有ID字段
   if (assignment.id) {
     // 跳转到作业详情页面
-    navigateTo(localePath(`/student/view/${assignment.id}`))
+    navigateTo(localePath(`/student/homework/${assignment.id}`))
   } else {
     console.error('作业数据缺少ID字段:', assignment)
     // 可以显示错误提示
@@ -191,23 +195,47 @@ const handleDateClick = (date) => {
 // 页面加载时获取数据
 await fetchStudentData()
 
-// 监听错误
-watch(error, (newError) => {
-  if (newError) {
-    console.error('Dashboard Error:', newError)
+// 监听 calendarEvents 变化，强制更新日历
+watch(calendarEvents, (newEvents, oldEvents) => {
+  if (newEvents && newEvents.length >= 0) {
+    console.log('Dashboard: Calendar events changed', {
+      newCount: newEvents.length,
+      oldCount: oldEvents?.length || 0
+    })
+    
+    // 强制更新日历组件
+    nextTick(() => {
+      calendarForceUpdateKey.value++
+    })
   }
+}, { 
+  deep: true, 
+  immediate: true 
 })
 
 // 监听作业数据变化，用于调试
 watch(assignments, (newAssignments) => {
-  console.log('作业数据更新:', newAssignments)
+  console.log('作业数据更新:', newAssignments.length)
+  
   // 检查每个作业是否有ID字段
   newAssignments.forEach((assignment, index) => {
     if (!assignment.id) {
       console.warn(`作业 ${index} 缺少ID字段:`, assignment)
     }
   })
+  
+  // 触发日历更新
+  nextTick(() => {
+    calendarForceUpdateKey.value++
+  })
 }, { immediate: true })
+
+// 监听错误
+watch(error, (newError) => {
+  if (newError) {
+    console.error('Dashboard Error:', newError)
+  }
+})
 </script>
 
 <style scoped>

@@ -1,22 +1,4 @@
 {
-  "404": {
-    "backToHome": "ホームに戻る",
-    "contactSupport": "サポートに連絡",
-    "description": "申し訳ございません。お探しのページは存在しません。",
-    "goHome": "ホームに戻る",
-    "reportIssue": "問題を報告",
-    "search": "検索",
-    "title": "ページが見つかりません"
-  },
-  "500": {
-    "backToHome": "ホームに戻る",
-    "contactSupport": "サポートに連絡",
-    "description": "申し訳ございません。サーバーでエラーが発生しました。しばらくしてから再度お試しください。",
-    "goHome": "ホームに戻る",
-    "reportIssue": "問題を報告",
-    "search": "検索",
-    "title": "サーバーエラー"
-  },
   "common": {
     "accept": "承認",
     "admin": "管理者",
@@ -223,6 +205,31 @@
     "userManagementFetchFailed": "ユーザー管理取得に失敗しました",
     "usernameAlreadyExists": "ユーザー名が既に存在します",
     "verificationRequired": "確認が必要です"
+  },
+  "error": {
+    "404": {
+      "title": "ページが見つかりません",
+      "message": "お探しのページは存在しません。削除されたか移動された可能性があります。"
+    },
+    "403": {
+      "title": "アクセス拒否",
+      "message": "このページへのアクセス権限がありません。"
+    },
+    "401": {
+      "title": "未認証アクセス",
+      "message": "このページにアクセスするには、まずログインしてください。"
+    },
+    "500": {
+      "title": "サーバーエラー",
+      "message": "サーバーで問題が発生しました。しばらくしてから再度お試しください。"
+    },
+    "default": {
+      "title": "エラーが発生しました",
+      "message": "不明なエラーが発生しました。"
+    },
+    "goHome": "ホームに戻る",
+    "goBack": "前のページに戻る",
+    "technicalDetails": "技術詳細"
   },
   "footer": {
     "about": "私たちについて",
@@ -733,5 +740,37 @@
         "successMessage": "メッセージありがとうございます。できるだけ早くご返信いたします！"
       }
     }
+  },
+  "homework": {
+    "assignedDate": "配布日",
+    "dueDate": "締切日",
+    "editable": "編集可能",
+    "description": "課題説明",
+    "mySubmission": "私の提出",
+    "textAnswer": "テキスト回答",
+    "textPlaceholder": "こちらに回答を入力してください...",
+    "attachments": "ファイル添付",
+    "uploadHint": "ファイルをここにドラッグするかクリックしてアップロード",
+    "selectFiles": "ファイル選択",
+    "saveDraft": "下書き保存",
+    "submit": "課題提出",
+    "submittedContent": "提出済み内容",
+    "submittedFiles": "提出済みファイル",
+    "download": "ダウンロード",
+    "submitTime": "提出時間",
+    "noSubmission": "未提出",
+    "autoSaving": "自動保存中...",
+    "autoSaved": "自動保存済み",
+    "saving": "保存中...",
+    "submitting": "提出中...",
+    "graded": "採点済み",
+    "title": "課題詳細",
+    "loadFailed": "読み込み失敗",
+    "retry": "再試行",
+    "saveFailed": "保存失敗",
+    "submitFailed": "提出失敗",
+    "fileTypeNotSupported": "サポートされていないファイル形式",
+    "fileSizeExceeded": "ファイルサイズが上限を超えています",
+    "maxFileSize": "最大ファイルサイズ：{size}MB"
   }
 }

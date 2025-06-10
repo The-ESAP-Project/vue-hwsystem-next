@@ -83,13 +83,13 @@
 
             <!-- 主题切换 -->
             <div class="flex items-center justify-between px-3 py-3 touch-manipulation">
-              <span class="text-sm font-medium text-gray-700 dark:text-gray-300">主题</span>
+              <span class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ $t('theme.switchTheme') || '主题' }}</span>
               <ThemeSwitcher />
             </div>
             
             <!-- 语言切换 -->
             <div class="flex items-center justify-between px-3 py-3 touch-manipulation">
-              <span class="text-sm font-medium text-gray-700 dark:text-gray-300">语言</span>
+              <span class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ $t('language.switchLanguage') || '语言' }}</span>
               <LanguageSwitcher />
             </div>
             
@@ -102,7 +102,7 @@
                 class="flex items-center gap-3 px-3 py-3 text-base font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-50 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-700 rounded-md transition-colors duration-200 touch-manipulation"
               >
                 <UserIcon class="h-5 w-5" />
-                {{ $t('common.profile') || '个人资料' }}
+                {{ $t('user.profile.title') || '个人资料' }}
               </NuxtLink>
 
               <NuxtLink 
@@ -111,7 +111,7 @@
                 class="flex items-center gap-3 px-3 py-3 text-base font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-50 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-700 rounded-md transition-colors duration-200 touch-manipulation"
               >
                 <CogIcon class="h-5 w-5" />
-                {{ $t('common.settings') || '设置' }}
+                {{ $t('user.settings.title') || '设置' }}
               </NuxtLink>
 
               <NuxtLink 
@@ -120,7 +120,7 @@
                 class="flex items-center gap-3 px-3 py-3 text-base font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-50 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-700 rounded-md transition-colors duration-200 touch-manipulation"
               >
                 <HomeIcon class="h-5 w-5" />
-                {{ $t('common.dashboard') || '控制台' }}
+                {{ $t('dashboard.title') || '控制台' }}
               </NuxtLink>
 
               <div class="border-t border-gray-200 dark:border-gray-700 my-2"></div>

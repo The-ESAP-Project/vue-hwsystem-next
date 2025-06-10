@@ -46,6 +46,7 @@
         <div class="xl:col-span-1 space-y-6">
           <!-- 日历 -->
           <Calendar 
+            :key="`calendar-${calendarForceUpdateKey}`"
             :events="calendarEvents"
             :legends="calendarLegends"
           />
@@ -210,6 +211,9 @@ const isListView = ref(true)
 const showSubmissionModal = ref(false)
 const selectedAssignment = ref(null)
 
+// 添加强制更新键
+const calendarForceUpdateKey = ref(0)
+
 // 计算属性
 const recentAssignments = computed(() => 
   assignments.value.slice(0, 3).map(a => ({
@@ -259,6 +263,16 @@ const handleAssignmentClick = (assignment) => {
 
 // 页面加载时获取数据
 await fetchMonitorData()
+
+// 监听 calendarEvents 变化
+watch(calendarEvents, (newEvents) => {
+  if (newEvents && newEvents.length >= 0) {
+    console.log('Monitor Dashboard: Calendar events changed', newEvents.length)
+    nextTick(() => {
+      calendarForceUpdateKey.value++
+    })
+  }
+}, { deep: true, immediate: true })
 
 // 监听错误
 watch(error, (newError) => {

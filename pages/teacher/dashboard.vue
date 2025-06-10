@@ -65,6 +65,7 @@
         <!-- 日历区域 -->
         <div class="xl:col-span-1">
           <Calendar 
+            :key="`calendar-${calendarForceUpdateKey}`"
             :events="calendarEvents"
             :legends="calendarLegends"
             class="mb-6"
@@ -171,6 +172,9 @@ const {
 const isListView = ref(true)
 const showCreateAssignment = ref(false)
 
+// 添加强制更新键
+const calendarForceUpdateKey = ref(0)
+
 // 日历图例
 const calendarLegends = computed(() => [
   {
@@ -208,6 +212,16 @@ const handleAssignmentClick = (assignment) => {
 
 // 页面加载时获取数据
 await fetchTeacherData()
+
+// 监听 calendarEvents 变化
+watch(calendarEvents, (newEvents) => {
+  if (newEvents && newEvents.length >= 0) {
+    console.log('Teacher Dashboard: Calendar events changed', newEvents.length)
+    nextTick(() => {
+      calendarForceUpdateKey.value++
+    })
+  }
+}, { deep: true, immediate: true })
 
 // 监听错误
 watch(error, (newError) => {

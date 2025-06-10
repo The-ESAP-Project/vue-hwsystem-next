@@ -44,7 +44,7 @@
       <div class="days-grid">
         <div 
           v-for="date in calendarDates" 
-          :key="`${date.year}-${date.month}-${date.day}`"
+          :key="`${date.year}-${date.month}-${date.day}-${calendarUpdateKey}`"
           v-show="date.isCurrentMonth"
           :class="getDayClasses(date)"
           @click="handleDateClick(date)"
@@ -106,7 +106,6 @@
 </template>
 
 <script setup lang="ts">
-import { XMarkIcon } from '@heroicons/vue/24/outline'
 import { useI18n } from 'vue-i18n'
 
 interface CalendarEvent {
@@ -170,6 +169,7 @@ const showTooltip = ref(false)
 const tooltipPosition = ref({ x: 0, y: 0 })
 const isMobile = ref(false)
 const touchStartTime = ref(0)
+const calendarUpdateKey = ref(0)
 
 // 计算属性
 const { t, locale } = useI18n()
@@ -248,7 +248,12 @@ const calendarDates = computed(() => {
 
     // 修复日期匹配问题：使用本地日期格式而不是ISO格式
     const dateStr = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
-    const dayEvents = props.events.filter(event => event.start === dateStr)
+    
+    // 强制重新过滤事件，确保响应式更新
+    const dayEvents = props.events.filter(event => {
+      const eventDateStr = event.start
+      return eventDateStr === dateStr
+    })
 
     dates.push({
       day: date.getDate(),
@@ -608,6 +613,11 @@ onMounted(() => {
   window.addEventListener('resize', checkMobile)
   document.addEventListener('mousemove', updateTooltipPosition)
   
+  // 初始化后强制更新一次
+  nextTick(() => {
+    calendarUpdateKey.value++
+  })
+  
   // 添加全局点击事件监听，用于关闭tooltip
   const handleGlobalClick = (event: Event) => {
     if (isMobile.value && showTooltip.value) {
@@ -648,6 +658,30 @@ onMounted(() => {
     document.removeEventListener('keydown', handleKeydown)
   })
 })
+
+// 监听 events 变化并强制更新
+watch(() => props.events, (newEvents, oldEvents) => {
+  // 检查事件是否真的发生了变化
+  if (JSON.stringify(newEvents) !== JSON.stringify(oldEvents)) {
+    console.log('Calendar events updated:', newEvents?.length || 0, 'events')
+    calendarUpdateKey.value++
+    
+    // 强制重新计算日历日期
+    nextTick(() => {
+      // 触发响应式更新
+      const temp = currentDate.value
+      currentDate.value = new Date(temp)
+    })
+  }
+}, { 
+  deep: true, 
+  immediate: true 
+})
+
+// 监听当前日期变化
+watch(currentDate, () => {
+  calendarUpdateKey.value++
+}, { deep: true })
 </script>
 
 <style scoped>
