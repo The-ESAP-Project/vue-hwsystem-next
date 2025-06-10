@@ -1,11 +1,11 @@
 <template>
   <button
     @click="toggleTheme"
-    class="flex items-center justify-center p-2 rounded-lg transition-colors duration-200 hover:bg-gray-100 dark:hover:bg-gray-800"
+    class="flex items-center justify-center p-3 sm:p-2 rounded-lg transition-colors duration-200 hover:bg-gray-100 dark:hover:bg-gray-800 touch-manipulation"
     :title="isDark ? $t('theme.switchToLight') : $t('theme.switchToDark')"
   >
-    <SunIcon v-if="isDark" class="h-5 w-5 text-gray-600 dark:text-gray-300" />
-    <MoonIcon v-else class="h-5 w-5 text-gray-600 dark:text-gray-300" />
+    <SunIcon v-if="isDark" class="h-6 w-6 sm:h-5 sm:w-5 text-gray-600 dark:text-gray-300" />
+    <MoonIcon v-else class="h-6 w-6 sm:h-5 sm:w-5 text-gray-600 dark:text-gray-300" />
   </button>
 </template>
 

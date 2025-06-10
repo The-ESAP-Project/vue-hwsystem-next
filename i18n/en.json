@@ -67,7 +67,24 @@
     "teacher": "Teacher",
     "upload": "Upload",
     "username": "Username",
-    "view": "View"
+    "view": "View",
+    "all": "All",
+    "urgent": "Urgent",
+    "overdue": "Overdue",
+    "pending": "Pending",
+    "completed": "Completed",
+    "active": "Active",
+    "draft": "Draft",
+    "closed": "Closed",
+    "submitted": "Submitted",
+    "attempts": "attempts",
+    "completion": "completion rate",
+    "calendar": "Calendar",
+    "prevMonth": "Previous Month",
+    "nextMonth": "Next Month",
+    "warning": "Warning",
+    "unknown": "Unknown",
+    "openUserMenu": "Open user menu"
   },
   "dashboard": {
     "about": "About Us",
@@ -108,7 +125,7 @@
   },
   "default": {
     "404": {
-      "description": ""
+      "description": "The page you are looking for does not exist."
     }
   },
   "demo": {
@@ -323,7 +340,8 @@
     "tryNow": "Try Now",
     "viewSource": "View Source",
     "watchDemo": "Watch Demo",
-    "welcome": "Welcome to the Homework Management System"
+    "welcome": "Welcome to the Homework Management System",
+    "goToDashboard": "Go to Dashboard"
   },
   "language": {
     "chinese": "中文",
@@ -496,7 +514,8 @@
     "userManagementFetch": "User Management Fetched Successfully"
   },
   "theme": {
-    "lightMode": "Light Mode"
+    "switchToLight": "Switch to Light Mode",
+    "switchToDark": "Switch to Dark Mode"
   },
   "user": {
     "profile": {
@@ -569,6 +588,149 @@
         "active": "Active",
         "draft": "Draft",
         "closed": "Closed"
+      }
+    }
+  },
+  "pages": {
+    "about": {
+      "title": "About Us",
+      "companyIntro": "Company Introduction",
+      "companyDescription1": "We are a technology company specializing in hardware system development, committed to providing high-quality hardware solutions to our clients. With years of industry experience and a professional technical team, we provide customized services for enterprises of all sizes.",
+      "companyDescription2": "Our mission is to help clients achieve their business goals and enhance competitiveness through innovative hardware technology.",
+      "ourAdvantages": "Our Advantages",
+      "advantages": {
+        "professionalTeam": {
+          "title": "Professional Team",
+          "description": "Technical experts with rich experience"
+        },
+        "qualityAssurance": {
+          "title": "Quality Assurance",
+          "description": "Strict quality control system"
+        },
+        "customerService": {
+          "title": "Customer Service",
+          "description": "7x24 hours technical support"
+        }
+      }
+    },
+    "terms": {
+      "title": "Terms of Service",
+      "lastUpdated": "Last updated",
+      "sections": {
+        "acceptance": {
+          "title": "Acceptance of Terms",
+          "content": "Welcome to our hardware system services. By accessing or using our services, you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use our services."
+        },
+        "serviceDescription": {
+          "title": "Service Description",
+          "content": "We provide hardware system development, maintenance, and technical support services. Specific service content may vary according to customer needs and contractual agreements."
+        },
+        "userResponsibilities": {
+          "title": "User Responsibilities",
+          "items": [
+            "You must provide accurate and complete information",
+            "You are responsible for protecting your account security",
+            "You must not abuse our services or violate applicable laws and regulations"
+          ]
+        },
+        "intellectualProperty": {
+          "title": "Intellectual Property",
+          "content": "We retain intellectual property rights to all service content. Without written permission, you may not copy, modify, or distribute our proprietary technology."
+        },
+        "disclaimer": {
+          "title": "Disclaimer",
+          "content": "Our services are provided \"as is\" without any express or implied warranties. To the maximum extent permitted by law, we are not liable for any direct or indirect damages."
+        },
+        "modification": {
+          "title": "Terms Modification",
+          "content": "We reserve the right to modify these terms at any time. Modified terms will be published on the website, and continued use of the service indicates your acceptance of the modified terms."
+        }
+      }
+    },
+    "privacy": {
+      "title": "Privacy Policy",
+      "effectiveDate": "Effective date",
+      "sections": {
+        "informationCollection": {
+          "title": "Information Collection",
+          "description": "We may collect the following types of information:",
+          "items": [
+            "Personal identification information (name, email address, phone number, etc.)",
+            "Technical information (IP address, browser type, device information, etc.)",
+            "Usage data (access time, page browsing records, etc.)"
+          ]
+        },
+        "informationUse": {
+          "title": "Information Use",
+          "description": "We use the collected information for:",
+          "items": [
+            "Providing and improving our services",
+            "Communicating with you about service-related matters",
+            "Analyzing website usage to optimize user experience",
+            "Complying with applicable laws and regulations"
+          ]
+        },
+        "informationSharing": {
+          "title": "Information Sharing",
+          "content": "Unless we have your explicit consent or are required by law, we will not sell, trade, or transfer your personal information to third parties. We may share information with trusted third-party service providers, but only to the extent necessary to provide services."
+        },
+        "dataSecurity": {
+          "title": "Data Security",
+          "content": "We adopt appropriate technical and organizational measures to protect your personal information and prevent unauthorized access, use, disclosure, modification, or destruction."
+        },
+        "cookies": {
+          "title": "Cookie Usage",
+          "content": "Our website uses cookies to improve user experience. You can control cookie usage through browser settings, but disabling cookies may affect certain website functions."
+        },
+        "userRights": {
+          "title": "Your Rights",
+          "description": "You have the right to:",
+          "items": [
+            "Access and correct your personal information",
+            "Request deletion of your personal information",
+            "Withdraw consent for data processing",
+            "File complaints about data processing activities"
+          ]
+        },
+        "contactUs": {
+          "title": "Contact Us",
+          "content": "If you have any questions or concerns about this privacy policy, please contact us through the contact page."
+        }
+      }
+    },
+    "contact": {
+      "title": "Contact Us",
+      "contactInfo": "Contact Information",
+      "address": {
+        "title": "Address",
+        "value": "Zhangjiang Hi-Tech Park, Pudong New Area, Shanghai, China"
+      },
+      "phone": {
+        "title": "Phone",
+        "value": "+86 21 1234 5678"
+      },
+      "email": {
+        "title": "Email",
+        "value": "mailto:contact{'@'}hwsystem.com"
+      },
+      "workingHours": {
+        "title": "Working Hours",
+        "weekdays": "Monday to Friday: 9:00 - 18:00",
+        "saturday": "Saturday: 9:00 - 12:00"
+      },
+      "sendMessage": "Send Message",
+      "form": {
+        "name": "Name",
+        "nameRequired": "Please enter your name",
+        "email": "Email",
+        "emailRequired": "Please enter your email",
+        "phone": "Phone",
+        "subject": "Subject",
+        "subjectRequired": "Please enter subject",
+        "message": "Message",
+        "messageRequired": "Please enter message",
+        "submit": "Send Message",
+        "successMessage": "Thank you for your message, we will reply as soon as possible!"
       }
     }
   }

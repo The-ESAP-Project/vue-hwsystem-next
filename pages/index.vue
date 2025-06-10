@@ -25,12 +25,24 @@
             {{ $t('home.subtitle') }}
           </p>
           <div class="mt-10 flex items-center justify-center gap-x-6">
-            <NuxtLink
-              :to="localePath('/auth/login')"
-              class="rounded-md bg-indigo-600 dark:bg-indigo-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 dark:hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:focus-visible:outline-indigo-500 transition-colors duration-200"
-            >
-              {{ $t('home.loginNow') }}
-            </NuxtLink>
+            <template v-if="isAuthenticated">
+              <!-- 已登录：显示前往控制台 -->
+              <NuxtLink
+                :to="getDashboardPath()"
+                class="rounded-md bg-indigo-600 dark:bg-indigo-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 dark:hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:focus-visible:outline-indigo-500 transition-colors duration-200"
+              >
+                {{ $t('home.goToDashboard') || '前往控制台' }}
+              </NuxtLink>
+            </template>
+            <template v-else>
+              <!-- 未登录：显示立即登录 -->
+              <NuxtLink
+                :to="localePath('/auth/login')"
+                class="rounded-md bg-indigo-600 dark:bg-indigo-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 dark:hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:focus-visible:outline-indigo-500 transition-colors duration-200"
+              >
+                {{ $t('home.loginNow') }}
+              </NuxtLink>
+            </template>
             <a href="#roles" class="text-sm/6 font-semibold text-gray-900 dark:text-white transition-colors duration-200">
               {{ $t('home.learnRoles') }} <span aria-hidden="true">→</span>
             </a>
@@ -106,12 +118,24 @@
                 </ul>
               </div>
             </div>
-            <NuxtLink
-              :to="localePath('/auth/login')"
-              class="mt-6 w-full rounded-md bg-indigo-50 dark:bg-indigo-900/50 px-3 py-2 text-sm font-semibold text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100 dark:hover:bg-indigo-900/75 text-center transition-colors duration-200"
-            >
-              {{ $t('home.loginAs', { role: $t(role.name) }) }}
-            </NuxtLink>
+            <template v-if="isAuthenticated && user?.role === role.roleKey">
+              <!-- 用户已登录且角色匹配：显示前往控制台 -->
+              <NuxtLink
+                :to="getDashboardPath()"
+                class="mt-6 w-full rounded-md bg-green-50 dark:bg-green-900/50 px-3 py-2 text-sm font-semibold text-green-600 dark:text-green-400 hover:bg-green-100 dark:hover:bg-green-900/75 text-center transition-colors duration-200"
+              >
+                {{ $t('home.goToDashboard') || '前往控制台' }}
+              </NuxtLink>
+            </template>
+            <template v-else>
+              <!-- 未登录或角色不匹配：显示登录链接 -->
+              <NuxtLink
+                :to="localePath('/auth/login')"
+                class="mt-6 w-full rounded-md bg-indigo-50 dark:bg-indigo-900/50 px-3 py-2 text-sm font-semibold text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100 dark:hover:bg-indigo-900/75 text-center transition-colors duration-200"
+              >
+                {{ $t('home.loginAs', { role: $t(role.name) }) }}
+              </NuxtLink>
+            </template>
           </div>
         </div>
       </div>
@@ -128,12 +152,24 @@
             {{ $t('home.joinDescription') }}
           </p>
           <div class="mt-10 flex items-center justify-center gap-x-6">
-            <NuxtLink
-              :to="localePath('/auth/login')"
-              class="rounded-md bg-white dark:bg-gray-100 px-3.5 py-2.5 text-sm font-semibold text-indigo-600 dark:text-indigo-700 shadow-sm hover:bg-gray-50 dark:hover:bg-gray-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white transition-colors duration-200"
-            >
-              {{ $t('home.tryNow') }}
-            </NuxtLink>
+            <template v-if="isAuthenticated">
+              <!-- 已登录：显示前往控制台 -->
+              <NuxtLink
+                :to="getDashboardPath()"
+                class="rounded-md bg-white dark:bg-gray-100 px-3.5 py-2.5 text-sm font-semibold text-indigo-600 dark:text-indigo-700 shadow-sm hover:bg-gray-50 dark:hover:bg-gray-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white transition-colors duration-200"
+              >
+                {{ $t('home.goToDashboard') || '前往控制台' }}
+              </NuxtLink>
+            </template>
+            <template v-else>
+              <!-- 未登录：显示立即体验 -->
+              <NuxtLink
+                :to="localePath('/auth/login')"
+                class="rounded-md bg-white dark:bg-gray-100 px-3.5 py-2.5 text-sm font-semibold text-indigo-600 dark:text-indigo-700 shadow-sm hover:bg-gray-50 dark:hover:bg-gray-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white transition-colors duration-200"
+              >
+                {{ $t('home.tryNow') }}
+              </NuxtLink>
+            </template>
             <a href="https://github.com/The-ESAP-Project/vue-hwsystem-next" class="text-sm/6 font-semibold text-white">
               {{ $t('home.viewSource') }} <span aria-hidden="true">→</span>
             </a>
@@ -159,6 +195,9 @@ import {
 
 const { t } = useI18n()
 const localePath = useLocalePath()
+
+// 使用认证 composable
+const { user, isAuthenticated, getRoleRedirectPath } = useAuth()
 
 const features = [
   {
@@ -198,6 +237,7 @@ const roles = [
     name: 'home.roles.student.name',
     description: 'home.roles.student.description',
     icon: AcademicCapIcon,
+    roleKey: 'student',
     features: [
       'home.roles.student.features.homework',
       'home.roles.student.features.grades',
@@ -210,6 +250,7 @@ const roles = [
     name: 'home.roles.monitor.name',
     description: 'home.roles.monitor.description',
     icon: UserGroupIcon,
+    roleKey: 'monitor',
     features: [
       'home.roles.monitor.features.statistics',
       'home.roles.monitor.features.monitoring',
@@ -222,6 +263,7 @@ const roles = [
     name: 'home.roles.teacher.name',
     description: 'home.roles.teacher.description',
     icon: PresentationChartBarIcon,
+    roleKey: 'teacher',
     features: [
       'home.roles.teacher.features.assignment',
       'home.roles.teacher.features.grading',
@@ -231,6 +273,12 @@ const roles = [
     ]
   }
 ]
+
+// 获取用户对应的控制台路径
+const getDashboardPath = () => {
+  if (!user.value) return '/'
+  return getRoleRedirectPath(user.value.role)
+}
 
 // SEO Meta - 修复标题翻译问题
 useHead({

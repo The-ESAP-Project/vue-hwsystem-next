@@ -327,6 +327,7 @@ useHead({
 definePageMeta({
   layout: 'app',
   auth: false,
+  middleware: 'guest', // 添加 guest 中间件
   keepalive: false
 })
 
@@ -451,7 +452,7 @@ const handleRegister = async () => {
     }
 
     // 调用注册 API
-    await register({
+    const response = await register({
       username: form.username,
       email: form.email,
       name: form.name,
@@ -460,17 +461,39 @@ const handleRegister = async () => {
       confirmPassword: form.confirmPassword
     })
 
-    // 注册成功
+    // 注册成功，显示消息
     success.value = t('register.success.accountCreated')
-
-    // 3秒后跳转到登录页面
+    
+    console.log('Registration successful, response:', response)
+    
+    // 等待状态更新
+    await nextTick()
+    await nextTick()
+    
+    // 2秒后跳转到对应的面板
     setTimeout(() => {
-      navigateTo('/auth/login')
-    }, 3000)
+      const redirectPath = getRoleRedirectPath(response.user.role)
+      console.log('Redirecting to:', redirectPath)
+      navigateTo(redirectPath, { replace: true })
+    }, 2000)
 
   } catch (err: unknown) {
     // 错误已经在 useAuth 中处理了
     console.error('Register error:', err)
+  }
+}
+
+// 获取角色重定向路径
+const getRoleRedirectPath = (role: string) => {
+  switch (role) {
+    case 'monitor':
+      return '/monitor/dashboard'
+    case 'teacher':
+      return '/teacher/dashboard'
+    case 'student':
+      return '/student/dashboard'
+    default:
+      return '/'
   }
 }
 
@@ -479,7 +502,13 @@ watch([() => form.username, () => form.email, () => form.name, () => form.role, 
   if (success.value) {
     success.value = ''
   }
-})
+  // 清除对应字段的错误信息
+  Object.keys(errors).forEach(key => {
+    if (errors[key]) {
+      errors[key] = ''
+    }
+  })
+}, { deep: true })
 </script>
 
 <style scoped>
@@ -492,5 +521,25 @@ watch([() => form.username, () => form.email, () => form.name, () => form.role, 
 .fade-leave-to {
   opacity: 0;
   transform: translateY(-8px) scale(0.95);
+}
+
+/* 自定义选择框样式 */
+select {
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3E%3C/svg%3E");
+  background-position: right 0.5rem center;
+  background-repeat: no-repeat;
+  background-size: 1.5em 1.5em;
+  padding-right: 2.5rem;
+}
+
+.dark select {
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%239ca3af' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3E%3C/svg%3E");
+}
+
+/* 确保移动端有足够的触摸目标 */
+@media (max-width: 640px) {
+  .touch-manipulation {
+    min-height: 44px;
+  }
 }
 </style>

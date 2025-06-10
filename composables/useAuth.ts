@@ -1,4 +1,9 @@
-import { apiClient } from '~/utils/api'
+import { apiClient, createSSRApiClient } from '~/utils/api'
+
+// 定义状态键常量
+const AUTH_USER_STATE_KEY = 'auth.user'
+const AUTH_LOADING_STATE_KEY = 'auth.loading'
+const AUTH_ERROR_STATE_KEY = 'auth.error'
 
 export interface User {
   id: number
@@ -39,26 +44,6 @@ export const useAuth = () => {
   const loading = useState<boolean>(AUTH_LOADING_STATE_KEY, () => false)
   const error = useState<string | null>(AUTH_ERROR_STATE_KEY, () => null)
 
-  // 初始化认证状态
-  const initAuth = async () => {
-    if (import.meta.client) {
-      try {
-        // 先尝试从 localStorage 获取用户信息（如果存在）
-        const savedUser = localStorage.getItem('auth-user')
-        if (savedUser) {
-          user.value = JSON.parse(savedUser)
-          console.log('Loaded user from localStorage:', user.value)
-        }
-        
-        // 然后验证 cookie 中的 token 是否有效
-        await validateToken()
-      } catch (err) {
-        console.warn('Auth initialization failed:', err)
-        clearAuth()
-      }
-    }
-  }
-
   // 清除认证信息
   const clearAuth = () => {
     user.value = null
@@ -70,12 +55,13 @@ export const useAuth = () => {
     }
   }
 
-  // 保存认证信息 - 确保立即同步状态
+  // 保存认证信息 - 只保存用户信息，token 在 Cookie 中
   const saveAuth = (authData: AuthResponse, rememberMe: boolean = false) => {
+    console.log('Saving auth data:', authData.user)
+    
+    // 立即设置用户状态
     user.value = authData.user
     error.value = null
-    
-    console.log('Saving auth data:', authData.user)
     
     if (import.meta.client) {
       localStorage.setItem('auth-user', JSON.stringify(authData.user))
@@ -91,6 +77,39 @@ export const useAuth = () => {
     })
   }
 
+  // 初始化认证状态
+  const initAuth = async () => {
+    // 只在客户端执行
+    if (!import.meta.client) {
+      return false
+    }
+
+    try {
+      console.log('Auth: Starting client-side initialization...')
+      
+      // 先尝试从 localStorage 获取用户信息（如果存在）
+      const savedUser = localStorage.getItem('auth-user')
+      if (savedUser) {
+        const userData = JSON.parse(savedUser)
+        user.value = userData
+        console.log('Auth: Loaded user from localStorage:', userData)
+        
+        // 立即触发认证状态更新，避免中间件检查时状态不一致
+        await nextTick()
+      }
+      
+      // 然后验证 cookie 中的 token 是否有效
+      const isValid = await validateToken()
+      console.log('Auth: Token validation result:', isValid)
+      
+      return isValid
+    } catch (err) {
+      console.warn('Auth initialization failed:', err)
+      clearAuth()
+      return false
+    }
+  }
+
   // 登录 - 确保状态同步后再返回
   const login = async (credentials: LoginRequest) => {
     loading.value = true
@@ -104,8 +123,9 @@ export const useAuth = () => {
       // 保存认证信息
       saveAuth(response, credentials.rememberMe)
       
-      // 等待状态更新
+      // 等待状态更新并确保完成
       await nextTick()
+      await new Promise(resolve => setTimeout(resolve, 50)) // 额外短暂延迟确保状态同步
       
       // 验证状态是否正确设置
       console.log('Login completed - user:', user.value, 'isAuthenticated:', !!user.value)
@@ -120,7 +140,7 @@ export const useAuth = () => {
     }
   }
 
-  // 注册
+  // 注册 - 添加自动重定向
   const register = async (userData: RegisterRequest) => {
     loading.value = true
     error.value = null
@@ -129,6 +149,12 @@ export const useAuth = () => {
       const response = await apiClient.post<AuthResponse>('/auth/register', userData)
       
       saveAuth(response)
+      
+      // 等待状态更新
+      await nextTick()
+      await new Promise(resolve => setTimeout(resolve, 50))
+      
+      console.log('Register completed - user:', user.value, 'isAuthenticated:', !!user.value)
       
       return response
     } catch (err: any) {
@@ -159,10 +185,12 @@ export const useAuth = () => {
     }
   }
 
-  // 验证 token 有效性（通过 cookie）- 改进错误处理
+  // 验证 token 有效性 - 改进
   const validateToken = async () => {
     try {
       const response = await apiClient.get<{ user: User }>('/auth/me')
+      
+      // 更新用户状态
       user.value = response.user
       
       // 同步更新 localStorage 中的用户信息
@@ -176,11 +204,30 @@ export const useAuth = () => {
       // 只有在真正的认证错误时才清除状态
       if (err.response?.status === 401 || err.response?.status === 403) {
         console.warn('Token validation failed - unauthorized:', err)
-        clearAuth()
+        if (import.meta.client) {
+          clearAuth()
+        }
       } else {
         console.warn('Token validation failed - network/other error:', err)
-        // 网络错误时不清除本地状态
+        // 网络错误时不清除本地状态，但返回 false
       }
+      return false
+    }
+  }
+
+  // 服务器端验证 token（用于 SSR）
+  const validateTokenSSR = async (cookieHeader: string) => {
+    try {
+      // 使用专门的 SSR axios 实例
+      const ssrApiClient = createSSRApiClient(cookieHeader)
+      const response = await ssrApiClient.get('/auth/me')
+      
+      // 在服务器端设置用户状态
+      user.value = response.data.user
+      console.log('SSR Token validation successful:', response.data.user)
+      return true
+    } catch (err: any) {
+      console.warn('SSR Token validation failed:', err.response?.data || err.message)
       return false
     }
   }
@@ -219,15 +266,20 @@ export const useAuth = () => {
     }
   }
 
-  // 检查是否已登录 - 添加更多调试信息
+  // 检查是否已登录 - 改进 SSR 兼容性
   const isAuthenticated = computed(() => {
     const authenticated = !!user.value
-    console.log('Is authenticated check:', {
-      authenticated,
-      user: user.value,
-      hasUser: !!user.value,
-      userRole: user.value?.role
-    })
+    // 只在客户端且开发环境下输出调试信息
+    if (import.meta.client && process.env.NODE_ENV === 'development') {
+      // 使用 setTimeout 避免过于频繁的日志输出
+      if (typeof window !== 'undefined' && !window.__authDebugTimer) {
+        window.__authDebugTimer = true
+        setTimeout(() => {
+          console.log('Auth: isAuthenticated computed:', authenticated)
+          window.__authDebugTimer = false
+        }, 100)
+      }
+    }
     return authenticated
   })
 
@@ -256,6 +308,7 @@ export const useAuth = () => {
     register,
     logout,
     validateToken,
+    validateTokenSSR,
     refreshToken,
     getRememberedUsername,
     getRoleRedirectPath,
