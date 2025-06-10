@@ -37,23 +37,7 @@
         </div>
 
         <!-- 统计卡片 -->
-        <div class="relative mt-8 grid grid-cols-2 lg:grid-cols-4 gap-4">
-          <div 
-            v-for="stat in stats" 
-            :key="stat.label"
-            class="bg-white/60 dark:bg-gray-700/60 backdrop-blur-sm rounded-2xl p-4 border border-gray-200/50 dark:border-gray-600/50 transition-all duration-200 hover:scale-105 hover:shadow-lg"
-          >
-            <div class="flex items-center justify-between">
-              <div>
-                <p class="text-sm font-medium text-gray-600 dark:text-gray-400">{{ stat.label }}</p>
-                <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ stat.value }}</p>
-              </div>
-              <div :class="['p-3 rounded-xl', stat.bgColor]">
-                <component :is="stat.icon" :class="['h-6 w-6', stat.iconColor]" />
-              </div>
-            </div>
-          </div>
-        </div>
+        <StatsCards :stats="stats" />
       </div>
 
       <!-- 主体区域 -->
@@ -118,139 +102,43 @@
 
         <!-- 右侧：作业列表 -->
         <div class="xl:col-span-2">
-          <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-lg border border-gray-200/50 dark:border-gray-700/50 overflow-hidden transition-all duration-200 hover:shadow-xl">
-            <div class="p-6 border-b border-gray-200 dark:border-gray-700">
-              <div class="flex items-center justify-between">
-                <h2 class="text-xl font-bold text-gray-900 dark:text-white">
-                  {{ $t('dashboard.assignments') || '作业列表' }}
-                </h2>
-                <span class="text-sm text-gray-500 dark:text-gray-400">
-                  {{ assignments.length }} {{ $t('dashboard.total') || '项' }}
-                </span>
-              </div>
-            </div>
-
-            <div class="max-h-[600px] overflow-y-auto">
-              <!-- 列表视图 -->
-              <div v-if="isListView" class="divide-y divide-gray-100 dark:divide-gray-700">
-                <div
-                  v-for="assignment in assignments"
-                  :key="assignment.id"
-                  class="p-6 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-all duration-200 group cursor-pointer"
-                >
-                  <div class="flex items-start justify-between">
-                    <div class="flex-1">
-                      <div class="flex items-center gap-3 mb-3">
-                        <div :class="statusIndicatorClass(assignment.status)"></div>
-                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors duration-200">
-                          {{ assignment.title }}
-                        </h3>
-                        <div class="flex items-center gap-2 px-2 py-1 rounded-lg bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200">
-                          <UsersIcon class="h-3 w-3" />
-                          <span class="text-xs font-medium">{{ assignment.classSubmitted }}/{{ assignment.classTotal }}</span>
-                        </div>
-                      </div>
-                      
-                      <div class="grid grid-cols-1 sm:grid-cols-4 gap-4 text-sm">
-                        <div class="flex items-center gap-2 text-gray-600 dark:text-gray-400">
-                          <CalendarIcon class="h-4 w-4" />
-                          {{ $t('dashboard.assigned') || '布置' }}: {{ assignment.assignDate }}
-                        </div>
-                        <div class="flex items-center gap-2 text-gray-600 dark:text-gray-400">
-                          <ClockIcon class="h-4 w-4" />
-                          {{ $t('dashboard.due') || '截止' }}: {{ assignment.dueDate }}
-                        </div>
-                        <div class="flex items-center gap-2 text-gray-600 dark:text-gray-400">
-                          <ArrowPathIcon class="h-4 w-4" />
-                          {{ $t('dashboard.attempts') || '提交次数' }}: {{ assignment.attempts }}
-                        </div>
-                        <div class="flex items-center gap-2 text-gray-600 dark:text-gray-400">
-                          <ChartBarIcon class="h-4 w-4" />
-                          班级进度: {{ Math.round((assignment.classSubmitted / assignment.classTotal) * 100) }}%
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div class="ml-4 flex flex-col items-end gap-2">
-                      <span :class="statusBadgeClass(assignment.status)">
-                        {{ assignment.status === 'submitted' ? '已提交' : '未提交' }}
-                      </span>
-                      
-                      <div class="flex items-center gap-1">
-                        <button 
-                          @click="viewClassSubmissions(assignment)"
-                          class="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-all duration-200"
-                        >
-                          <UsersIcon class="h-3 w-3" />
-                          班级情况
-                        </button>
-                        
-                        <button class="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 rounded-lg transition-all duration-200">
-                          {{ $t('dashboard.viewDetails') || '查看详情' }}
-                          <ChevronRightIcon class="h-3 w-3" />
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+          <AssignmentList
+            :assignments="assignments"
+            :is-list-view="isListView"
+            :show-attempts="true"
+            :show-progress="true"
+            :show-class-progress="true"
+            progress-label="班级进度"
+            @assignment-click="handleAssignmentClick"
+          >
+            <template #assignment-actions="{ assignment }">
+              <button 
+                @click.stop="viewClassSubmissions(assignment)"
+                class="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-all duration-200"
+              >
+                <UsersIcon class="h-3 w-3" />
+                班级情况
+              </button>
               
-              <!-- 网格视图 -->
-              <div v-else class="p-6">
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                  <div
-                    v-for="assignment in assignments"
-                    :key="assignment.id"
-                    class="relative group bg-gradient-to-br from-white to-gray-50 dark:from-gray-700 dark:to-gray-800 rounded-2xl p-6 border border-gray-200 dark:border-gray-600 hover:border-indigo-300 dark:hover:border-indigo-500 hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 cursor-pointer"
-                  >
-                    <div class="absolute top-4 right-4">
-                      <div :class="statusIndicatorClass(assignment.status)"></div>
-                    </div>
-                    
-                    <div class="mb-4">
-                      <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2 pr-8">
-                        {{ assignment.title }}
-                      </h3>
-                      
-                      <div class="space-y-2 text-sm text-gray-600 dark:text-gray-400">
-                        <div class="flex items-center gap-2">
-                          <CalendarIcon class="h-4 w-4" />
-                          {{ assignment.assignDate }} - {{ assignment.dueDate }}
-                        </div>
-                        <div class="flex items-center gap-2">
-                          <ArrowPathIcon class="h-4 w-4" />
-                          {{ assignment.attempts }} 次提交
-                        </div>
-                        <div class="flex items-center gap-2">
-                          <UsersIcon class="h-4 w-4" />
-                          班级: {{ assignment.classSubmitted }}/{{ assignment.classTotal }} 已提交
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div class="flex items-center justify-between">
-                      <span :class="statusBadgeClass(assignment.status)">
-                        {{ assignment.status === 'submitted' ? '已提交' : '未提交' }}
-                      </span>
-                      
-                      <div class="opacity-0 group-hover:opacity-100 flex items-center gap-1 transition-all duration-200">
-                        <button 
-                          @click="viewClassSubmissions(assignment)"
-                          class="inline-flex items-center gap-1 px-2 py-1.5 text-xs font-medium text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-all duration-200"
-                        >
-                          <UsersIcon class="h-3 w-3" />
-                        </button>
-                        <button class="inline-flex items-center gap-1 px-2 py-1.5 text-xs font-medium text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 rounded-lg transition-all duration-200">
-                          查看
-                          <ChevronRightIcon class="h-3 w-3" />
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+              <button class="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 rounded-lg transition-all duration-200">
+                {{ $t('dashboard.viewDetails') || '查看详情' }}
+                <ChevronRightIcon class="h-3 w-3" />
+              </button>
+            </template>
+            
+            <template #grid-actions="{ assignment }">
+              <button 
+                @click.stop="viewClassSubmissions(assignment)"
+                class="inline-flex items-center gap-1 px-2 py-1.5 text-xs font-medium text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-all duration-200"
+              >
+                <UsersIcon class="h-3 w-3" />
+              </button>
+              <button class="inline-flex items-center gap-1 px-2 py-1.5 text-xs font-medium text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 rounded-lg transition-all duration-200">
+                查看
+                <ChevronRightIcon class="h-3 w-3" />
+              </button>
+            </template>
+          </AssignmentList>
         </div>
       </div>
     </div>
@@ -280,6 +168,8 @@ import {
   UsersIcon
 } from '@heroicons/vue/24/outline'
 import Calendar from '@/components/Calendar.vue'
+import StatsCards from '@/components/StatsCards.vue'
+import AssignmentList from '@/components/AssignmentList.vue'
 
 // i18n
 const { t } = useI18n()
@@ -395,6 +285,10 @@ const calendarLegends = computed(() => [
     color: 'bg-yellow-500'
   }
 ])
+
+const handleAssignmentClick = (assignment) => {
+  console.log('点击作业:', assignment)
+}
 </script>
 
 <style scoped>

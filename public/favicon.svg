@@ -1,0 +1,148 @@
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- 定义渐变和滤镜 -->
+  <defs>
+    <!-- 主要渐变 -->
+    <linearGradient id="primaryGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#6366f1;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#8b5cf6;stop-opacity:1" />
+    </linearGradient>
+    
+    <!-- 次要渐变 -->
+    <linearGradient id="secondaryGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#06b6d4;stop-opacity:1" />
+    </linearGradient>
+    
+    <!-- 成功状态渐变 -->
+    <linearGradient id="successGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#10b981;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#059669;stop-opacity:1" />
+    </linearGradient>
+    
+    <!-- 警告状态渐变 -->
+    <linearGradient id="warningGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f59e0b;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#d97706;stop-opacity:1" />
+    </linearGradient>
+    
+    <!-- 背景渐变 -->
+    <radialGradient id="backgroundGradient" cx="50%" cy="30%" r="80%">
+      <stop offset="0%" style="stop-color:#f8fafc;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#e2e8f0;stop-opacity:1" />
+    </radialGradient>
+    
+    <!-- 阴影滤镜 -->
+    <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="3"/>
+      <feOffset dx="0" dy="2" result="offset"/>
+      <feFlood flood-color="#000" flood-opacity="0.15"/>
+      <feComposite in2="offset" operator="in"/>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    
+    <!-- 发光效果 -->
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- 背景圆形 -->
+  <circle cx="100" cy="100" r="95" fill="url(#backgroundGradient)" stroke="#cbd5e1" stroke-width="2"/>
+  
+  <!-- 主要文档背景 -->
+  <rect x="50" y="40" width="100" height="120" rx="12" ry="12" 
+        fill="white" stroke="#e2e8f0" stroke-width="2" filter="url(#shadow)"/>
+  
+  <!-- 文档标题栏 -->
+  <rect x="50" y="40" width="100" height="25" rx="12" ry="12" 
+        fill="url(#primaryGradient)"/>
+  <rect x="50" y="52" width="100" height="13" fill="url(#primaryGradient)"/>
+  
+  <!-- 标题栏图标 -->
+  <circle cx="62" cy="52" r="3" fill="white" opacity="0.9"/>
+  <circle cx="72" cy="52" r="3" fill="white" opacity="0.7"/>
+  <circle cx="82" cy="52" r="3" fill="white" opacity="0.5"/>
+  
+  <!-- 文档内容线条 -->
+  <line x1="60" y1="80" x2="120" y2="80" stroke="#cbd5e1" stroke-width="2" stroke-linecap="round"/>
+  <line x1="60" y1="90" x2="135" y2="90" stroke="#cbd5e1" stroke-width="2" stroke-linecap="round"/>
+  <line x1="60" y1="100" x2="110" y2="100" stroke="#cbd5e1" stroke-width="2" stroke-linecap="round"/>
+  
+  <!-- 复选框和状态 -->
+  <!-- 已完成任务 -->
+  <rect x="60" y="115" width="12" height="12" rx="3" ry="3" 
+        fill="url(#successGradient)" filter="url(#glow)"/>
+  <path d="M63 121 l3 3 l6 -6" stroke="white" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <line x1="78" y1="121" x2="115" y2="121" stroke="#10b981" stroke-width="2" stroke-linecap="round"/>
+  
+  <!-- 进行中任务 -->
+  <rect x="60" y="135" width="12" height="12" rx="3" ry="3" 
+        fill="url(#warningGradient)" filter="url(#glow)"/>
+  <circle cx="66" cy="141" r="2" fill="white"/>
+  <line x1="78" y1="141" x2="120" y2="141" stroke="#f59e0b" stroke-width="2" stroke-linecap="round"/>
+  
+  <!-- 待办任务 -->
+  <rect x="60" y="155" width="12" height="12" rx="3" ry="3" 
+        fill="none" stroke="#cbd5e1" stroke-width="2"/>
+  <line x1="78" y1="161" x2="105" y2="161" stroke="#cbd5e1" stroke-width="2" stroke-linecap="round"/>
+  
+  <!-- 日历图标 -->
+  <rect x="120" y="25" width="35" height="30" rx="4" ry="4" 
+        fill="white" stroke="#e2e8f0" stroke-width="2" filter="url(#shadow)"/>
+  <rect x="120" y="25" width="35" height="8" rx="4" ry="4" 
+        fill="url(#secondaryGradient)"/>
+  <rect x="120" y="29" width="35" height="4" fill="url(#secondaryGradient)"/>
+  
+  <!-- 日历钉子 -->
+  <rect x="127" y="20" width="2" height="10" rx="1" fill="#94a3b8"/>
+  <rect x="145" y="20" width="2" height="10" rx="1" fill="#94a3b8"/>
+  
+  <!-- 日历日期 -->
+  <text x="137.5" y="47" text-anchor="middle" fill="#6366f1" font-family="Arial, sans-serif" 
+        font-size="10" font-weight="bold">15</text>
+  
+  <!-- 统计图表 -->
+  <g transform="translate(25, 120)">
+    <!-- 进度环 -->
+    <circle cx="15" cy="15" r="12" fill="none" stroke="#e2e8f0" stroke-width="3"/>
+    <circle cx="15" cy="15" r="12" fill="none" stroke="url(#primaryGradient)" 
+            stroke-width="3" stroke-dasharray="45 75" stroke-linecap="round" 
+            transform="rotate(-90 15 15)" filter="url(#glow)"/>
+    <!-- 百分比 -->
+    <text x="15" y="19" text-anchor="middle" fill="#6366f1" font-family="Arial, sans-serif" 
+          font-size="8" font-weight="bold">60%</text>
+  </g>
+  
+  <!-- 通知铃铛 -->
+  <g transform="translate(160, 120)">
+    <path d="M15 5 C15 2 12 0 8 0 C4 0 1 2 1 5 C1 8 0 10 0 12 L16 12 C16 10 15 8 15 5 Z" 
+          fill="url(#warningGradient)" filter="url(#glow)"/>
+    <rect x="6" y="12" width="4" height="2" rx="2" fill="url(#warningGradient)"/>
+    <circle cx="12" cy="3" r="2" fill="#ef4444"/>
+  </g>
+  
+  <!-- 装饰性元素 -->
+  <!-- 浮动的小圆点 -->
+  <circle cx="175" cy="60" r="3" fill="url(#primaryGradient)" opacity="0.6">
+    <animate attributeName="cy" values="60;55;60" dur="3s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="30" cy="80" r="2" fill="url(#secondaryGradient)" opacity="0.8">
+    <animate attributeName="cy" values="80;75;80" dur="4s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="170" cy="140" r="2.5" fill="url(#successGradient)" opacity="0.7">
+    <animate attributeName="cy" values="140;135;140" dur="3.5s" repeatCount="indefinite"/>
+  </circle>
+  
+  <!-- 连接线装饰 -->
+  <path d="M45 50 Q50 45 55 50" stroke="url(#primaryGradient)" stroke-width="2" 
+        fill="none" opacity="0.3" stroke-linecap="round"/>
+  <path d="M145 85 Q150 80 155 85" stroke="url(#secondaryGradient)" stroke-width="2" 
+        fill="none" opacity="0.3" stroke-linecap="round"/>
+</svg>

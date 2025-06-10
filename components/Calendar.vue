@@ -40,7 +40,7 @@
         <div 
           v-for="date in calendarDates" 
           :key="`${date.year}-${date.month}-${date.day}`"
-          v-show="date.isCurrentMonth || date.hasEvent"
+          v-show="date.isCurrentMonth"
           :class="getDayClasses(date)"
           @click="handleDateClick(date)"
           @mouseenter="handleDateHover(date, true)"
@@ -49,6 +49,29 @@
           <span class="day-number">{{ date.day }}</span>
           <div v-if="date.hasEvent" class="event-indicator">
             <div :class="['event-dot', getEventStatus(date)]"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 悬浮提示框 -->
+    <div 
+      v-if="showTooltip && hoveredDate"
+      :style="tooltipStyle"
+      class="tooltip"
+    >
+      <div class="tooltip-arrow"></div>
+      <div class="tooltip-content">
+        <div class="tooltip-header">
+          <span class="tooltip-date">{{ formatTooltipDate(hoveredDate) }}</span>
+        </div>
+        <div class="tooltip-body">
+          <div v-for="event in hoveredDate.events" :key="event.id" class="tooltip-event">
+            <div :class="['event-status-dot', getEventStatusClass(event)]"></div>
+            <div class="event-info">
+              <div class="event-title">{{ event.title }}</div>
+              <div class="event-meta">{{ getEventStatusText(event) }}</div>
+            </div>
           </div>
         </div>
       </div>
@@ -103,6 +126,8 @@ const emit = defineEmits<{
 // 响应式数据
 const currentDate = ref(new Date())
 const hoveredDate = ref<CalendarDate | null>(null)
+const showTooltip = ref(false)
+const tooltipPosition = ref({ x: 0, y: 0 })
 
 // 计算属性
 const currentMonth = computed(() => {
@@ -133,7 +158,8 @@ const calendarDates = computed(() => {
     const date = new Date(startDate)
     date.setDate(startDate.getDate() + i)
     
-    const dateStr = date.toISOString().split('T')[0]
+    // 修复日期匹配问题：使用本地日期格式而不是ISO格式
+    const dateStr = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
     const dayEvents = props.events.filter(event => event.start === dateStr)
     
     dates.push({
@@ -148,6 +174,17 @@ const calendarDates = computed(() => {
   }
   
   return dates
+})
+
+// 新增计算属性
+const tooltipStyle = computed(() => {
+  if (!tooltipPosition.value) return {}
+  
+  return {
+    left: `${tooltipPosition.value.x}px`,
+    top: `${tooltipPosition.value.y}px`,
+    transform: 'translate(-50%, -100%)'
+  }
 })
 
 // 方法
@@ -166,15 +203,29 @@ const nextMonth = () => {
 }
 
 const getDayClasses = (date: CalendarDate) => {
-  return [
-    'day-cell',
-    {
-      'is-other-month': !date.isCurrentMonth,
-      'is-today': date.isToday,
-      'has-event': date.hasEvent,
-      'is-hovered': hoveredDate.value === date
-    }
-  ]
+  const classes = ['day-cell']
+  
+  if (!date.isCurrentMonth) {
+    classes.push('is-other-month')
+  }
+  
+  if (date.isToday) {
+    classes.push('is-today')
+  }
+  
+  if (date.hasEvent) {
+    classes.push('has-event')
+    // 添加具体的事件状态类
+    const event = date.events[0]
+    const status = event.extendedProps?.status || event.className
+    classes.push(`event-${status}`)
+  }
+  
+  if (hoveredDate.value === date) {
+    classes.push('is-hovered')
+  }
+  
+  return classes
 }
 
 const getEventStatus = (date: CalendarDate) => {
@@ -189,7 +240,7 @@ const getEventStatus = (date: CalendarDate) => {
     case 'overdue': return 'event-danger'
     case 'urgent': return 'event-warning'
     case 'pending': return 'event-info'
-    default: return 'event-primary'
+    default: return 'event-info' // 默认也改为pending样式
   }
 }
 
@@ -198,37 +249,88 @@ const handleDateClick = (date: CalendarDate) => {
 }
 
 const handleDateHover = (date: CalendarDate, isHovered: boolean) => {
-  hoveredDate.value = isHovered ? date : null
+  if (isHovered && date.hasEvent) {
+    hoveredDate.value = date
+    showTooltip.value = true
+    
+    // 获取鼠标位置
+    nextTick(() => {
+      const event = window.event as MouseEvent
+      if (event) {
+        tooltipPosition.value = {
+          x: event.clientX,
+          y: event.clientY - 10
+        }
+      }
+    })
+  } else {
+    hoveredDate.value = null
+    showTooltip.value = false
+  }
 }
+
+// 新增方法
+const formatTooltipDate = (date: CalendarDate) => {
+  return `${date.year}年${date.month + 1}月${date.day}日`
+}
+
+const getEventStatusClass = (event: CalendarEvent) => {
+  const status = event.extendedProps?.status || event.className
+  return `status-${status}`
+}
+
+const getEventStatusText = (event: CalendarEvent) => {
+  const status = event.extendedProps?.status || event.className
+  
+  const statusTexts = {
+    'submitted': '已提交',
+    'pending': '未提交',
+    'overdue': '已逾期',
+    'urgent': '紧急',
+    'warning': '即将到期',
+    'active': '进行中',
+    'draft': '草稿',
+    'closed': '已结束'
+  }
+  
+  return statusTexts[status] || '未提交' // 默认显示为未提交
+}
+
+// 监听鼠标移动更新tooltip位置
+const updateTooltipPosition = (event: MouseEvent) => {
+  if (showTooltip.value) {
+    tooltipPosition.value = {
+      x: event.clientX,
+      y: event.clientY - 10
+    }
+  }
+}
+
+onMounted(() => {
+  document.addEventListener('mousemove', updateTooltipPosition)
+})
+
+onUnmounted(() => {
+  document.removeEventListener('mousemove', updateTooltipPosition)
+})
 </script>
 
 <style scoped>
 .calendar-wrapper {
-  background: linear-gradient(145deg, #f8fafc 0%, #f1f5f9 100%);
-  border-radius: 24px;
-  padding: 24px;
-  box-shadow: 
-    0 20px 25px -5px rgba(0, 0, 0, 0.1),
-    0 10px 10px -5px rgba(0, 0, 0, 0.04),
-    inset 0 1px 0 rgba(255, 255, 255, 0.8);
-  border: 1px solid rgba(148, 163, 184, 0.2);
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(229, 231, 235, 0.6);
   position: relative;
   overflow: hidden;
+  transition: all 0.3s ease;
 }
 
 .dark .calendar-wrapper {
-  background: linear-gradient(145deg, #1e293b 0%, #334155 100%);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
-}
-
-.calendar-wrapper::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  background: #1f2937;
+  border: 1px solid rgba(75, 85, 99, 0.6);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
 }
 
 /* 头部样式 */
@@ -236,137 +338,140 @@ const handleDateHover = (date: CalendarDate, isHovered: boolean) => {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 
 .header-left {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 2px;
 }
 
 .calendar-title {
   font-size: 1.125rem;
-  font-weight: 700;
+  font-weight: 600;
   color: #1f2937;
   margin: 0;
   letter-spacing: -0.025em;
 }
 
 .dark .calendar-title {
-  color: #f8fafc;
+  color: #f9fafb;
 }
 
 .current-date {
-  font-size: 1.5rem;
-  font-weight: 600;
+  font-size: 1.25rem;
+  font-weight: 700;
   color: #374151;
   letter-spacing: -0.025em;
   line-height: 1;
 }
 
 .dark .current-date {
-  color: #e2e8f0;
+  color: #e5e7eb;
 }
 
 .header-controls {
   display: flex;
-  gap: 8px;
+  gap: 6px;
 }
 
 .nav-btn {
-  width: 40px;
-  height: 40px;
-  border-radius: 12px;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
   border: none;
-  background: rgba(59, 130, 246, 0.1);
-  color: #3b82f6;
+  background: #f3f4f6;
+  color: #6b7280;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  backdrop-filter: blur(4px);
+}
+
+.dark .nav-btn {
+  background: #374151;
+  color: #9ca3af;
 }
 
 .nav-btn:hover {
-  background: rgba(59, 130, 246, 0.2);
+  background: #e5e7eb;
+  color: #374151;
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.dark .nav-btn:hover {
+  background: #4b5563;
+  color: #e5e7eb;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 .nav-btn svg {
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
 }
 
 /* 图例样式 */
 .legend-section {
   display: flex;
   gap: 16px;
-  margin-bottom: 24px;
-  padding: 12px;
-  background: rgba(0, 0, 0, 0.05);
-  border-radius: 12px;
-  backdrop-filter: blur(8px);
-}
-
-.dark .legend-section {
-  background: rgba(0, 0, 0, 0.2);
+  margin-bottom: 20px;
+  padding: 10px 0;
 }
 
 .legend-item {
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 0.875rem;
+  font-size: 0.75rem;
   color: #6b7280;
   font-weight: 500;
 }
 
 .dark .legend-item {
-  color: #cbd5e1;
+  color: #9ca3af;
 }
 
 .legend-dot {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
 }
 
 /* 日历网格样式 */
 .calendar-grid {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 1px;
 }
 
 .weekdays {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 2px;
+  gap: 1px;
   margin-bottom: 8px;
 }
 
 .weekday {
   text-align: center;
   font-size: 0.75rem;
-  font-weight: 600;
+  font-weight: 500;
   color: #6b7280;
   padding: 8px 4px;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.05em;
 }
 
 .dark .weekday {
-  color: #94a3b8;
+  color: #9ca3af;
 }
 
 .days-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 2px;
+  gap: 1px;
 }
 
 .day-cell {
@@ -376,28 +481,20 @@ const handleDateHover = (date: CalendarDate, isHovered: boolean) => {
   align-items: center;
   justify-content: center;
   position: relative;
-  border-radius: 12px;
+  border-radius: 8px;
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  background: rgba(0, 0, 0, 0.03);
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  backdrop-filter: blur(4px);
-}
-
-.dark .day-cell {
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: transparent;
+  min-height: 36px;
 }
 
 .day-cell:hover {
-  background: rgba(59, 130, 246, 0.15);
-  border-color: rgba(59, 130, 246, 0.3);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  background: rgba(99, 102, 241, 0.1);
+  transform: scale(1.05);
 }
 
 .dark .day-cell:hover {
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  background: rgba(129, 140, 248, 0.2);
 }
 
 .day-cell.is-other-month {
@@ -405,9 +502,9 @@ const handleDateHover = (date: CalendarDate, isHovered: boolean) => {
 }
 
 .day-cell.is-today {
-  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: white;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
 }
 
 .day-cell.is-today .day-number {
@@ -415,70 +512,258 @@ const handleDateHover = (date: CalendarDate, isHovered: boolean) => {
   font-weight: 700;
 }
 
+.day-cell.is-today:hover {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  transform: scale(1.1);
+  box-shadow: 0 6px 16px rgba(99, 102, 241, 0.6);
+}
+
 .day-cell.has-event {
-  background: rgba(16, 185, 129, 0.1);
-  border-color: rgba(16, 185, 129, 0.3);
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
 }
 
-.day-number {
-  font-size: 0.875rem;
+.day-cell.has-event .day-number {
+  color: white !important;
   font-weight: 600;
-  color: #374151;
-  line-height: 1;
-  z-index: 2;
 }
 
-.dark .day-number {
-  color: #e2e8f0;
+/* 事件状态样式 */
+.day-cell.has-event.event-submitted {
+  background: linear-gradient(135deg, #10b981, #059669);
 }
 
-.event-indicator {
-  position: absolute;
-  top: 4px;
-  right: 4px;
-  z-index: 3;
-}
-
-.event-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
+.day-cell.has-event.event-overdue {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
   animation: pulse 2s infinite;
 }
 
-.event-success {
+.day-cell.has-event.event-urgent {
+  background: linear-gradient(135deg, #ff6b35, #e55039);
+  animation: urgentPulse 1.5s infinite;
+  box-shadow: 0 4px 12px rgba(255, 107, 53, 0.6);
+}
+
+.day-cell.has-event.event-warning {
+  background: linear-gradient(135deg, #eab308, #ca8a04);
+}
+
+.day-cell.has-event.event-pending {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+}
+
+/* 移除normal样式，所有未分类的都使用pending样式 */
+.day-cell.has-event.event-info {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+}
+
+.day-cell.has-event.event-active {
+  background: linear-gradient(135deg, #10b981, #059669);
+}
+
+.day-cell.has-event.event-draft {
+  background: linear-gradient(135deg, #6b7280, #4b5563);
+}
+
+.day-cell.has-event.event-closed {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+}
+
+/* hover效果保持原背景色 */
+.day-cell.has-event.event-submitted:hover {
+  background: linear-gradient(135deg, #10b981, #059669);
+}
+
+.day-cell.has-event.event-overdue:hover {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+}
+
+.day-cell.has-event.event-urgent:hover {
+  background: linear-gradient(135deg, #ff6b35, #e55039);
+  box-shadow: 0 6px 16px rgba(255, 107, 53, 0.7);
+}
+
+.day-cell.has-event.event-warning:hover {
+  background: linear-gradient(135deg, #eab308, #ca8a04);
+}
+
+/* 移除默认事件样式，使用具体状态样式 */
+.day-cell.has-event {
+  background: transparent;
+  color: white;
+  box-shadow: none;
+}
+
+.event-indicator {
+  display: none;
+}
+
+/* 悬浮提示框样式 */
+.tooltip {
+  position: fixed;
+  z-index: 1000;
+  pointer-events: none;
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+.tooltip-content {
+  background: #ffffff;
+  border: 1px solid rgba(229, 231, 235, 0.8);
+  border-radius: 12px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  padding: 12px 16px;
+  min-width: 200px;
+  max-width: 300px;
+  backdrop-filter: blur(10px);
+}
+
+.dark .tooltip-content {
+  background: #374151;
+  border-color: rgba(75, 85, 99, 0.8);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
+}
+
+.tooltip-arrow {
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 12px;
+  height: 12px;
+  background: #ffffff;
+  border: 1px solid rgba(229, 231, 235, 0.8);
+  border-top: none;
+  border-left: none;
+  transform: translateX(-50%) rotate(45deg);
+}
+
+.dark .tooltip-arrow {
+  background: #374151;
+  border-color: rgba(75, 85, 99, 0.8);
+}
+
+.tooltip-header {
+  margin-bottom: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(229, 231, 235, 0.5);
+}
+
+.dark .tooltip-header {
+  border-bottom-color: rgba(75, 85, 99, 0.5);
+}
+
+.tooltip-date {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #374151;
+}
+
+.dark .tooltip-date {
+  color: #f3f4f6;
+}
+
+.tooltip-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tooltip-event {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.event-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-top: 4px;
+  flex-shrink: 0;
+}
+
+.event-status-dot.status-submitted {
   background: #10b981;
-  box-shadow: 0 0 4px rgba(16, 185, 129, 0.6);
 }
 
-.event-danger {
-  background: #ef4444;
-  box-shadow: 0 0 4px rgba(239, 68, 68, 0.6);
-}
-
-.event-warning {
+.event-status-dot.status-pending {
   background: #f59e0b;
-  box-shadow: 0 0 4px rgba(245, 158, 11, 0.6);
+}
+
+.event-status-dot.status-overdue {
+  background: #ef4444;
+}
+
+.event-status-dot.status-urgent {
+  background: #ff6b35;
+  box-shadow: 0 0 6px rgba(255, 107, 53, 0.6);
+}
+
+.event-status-dot.status-warning {
+  background: #eab308;
+}
+
+/* 移除normal状态，所有未分类的使用pending颜色 */
+
+.event-status-dot.status-active {
+  background: #10b981;
+}
+
+.event-status-dot.status-draft {
+  background: #6b7280;
+}
+
+.event-status-dot.status-closed {
+  background: #3b82f6;
 }
 
 .event-info {
-  background: #3b82f6;
-  box-shadow: 0 0 4px rgba(59, 130, 246, 0.6);
+  flex: 1;
+  min-width: 0;
 }
 
-.event-primary {
-  background: #8b5cf6;
-  box-shadow: 0 0 4px rgba(139, 92, 246, 0.6);
+.event-title {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+  line-height: 1.2;
+  margin-bottom: 2px;
+}
+
+.dark .event-title {
+  color: #f3f4f6;
+}
+
+.event-meta {
+  font-size: 0.75rem;
+  color: #6b7280;
+  line-height: 1;
+}
+
+.dark .event-meta {
+  color: #9ca3af;
 }
 
 @keyframes pulse {
   0%, 100% {
     opacity: 1;
-    transform: scale(1);
   }
   50% {
-    opacity: 0.7;
-    transform: scale(1.2);
+    opacity: 0.8;
+  }
+}
+
+@keyframes urgentPulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+    box-shadow: 0 4px 12px rgba(255, 107, 53, 0.6);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scale(1.02);
+    box-shadow: 0 6px 16px rgba(255, 107, 53, 0.8);
   }
 }
 
@@ -489,12 +774,12 @@ const handleDateHover = (date: CalendarDate, isHovered: boolean) => {
   }
   
   .current-date {
-    font-size: 1.25rem;
+    font-size: 1.125rem;
   }
   
   .nav-btn {
-    width: 36px;
-    height: 36px;
+    width: 32px;
+    height: 32px;
   }
   
   .day-number {
@@ -505,14 +790,27 @@ const handleDateHover = (date: CalendarDate, isHovered: boolean) => {
     flex-wrap: wrap;
     gap: 12px;
   }
-}
-
-/* 暗色主题适配 */
-.dark .calendar-wrapper::before {
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-}
-
-.calendar-wrapper::before {
-  background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.1), transparent);
+  
+  .day-cell {
+    min-height: 32px;
+  }
+  
+  .tooltip-content {
+    min-width: 180px;
+    max-width: 250px;
+    padding: 10px 12px;
+  }
+  
+  .tooltip-event {
+    gap: 6px;
+  }
+  
+  .event-title {
+    font-size: 0.8rem;
+  }
+  
+  .event-meta {
+    font-size: 0.7rem;
+  }
 }
 </style>
