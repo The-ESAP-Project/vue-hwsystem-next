@@ -33,7 +33,7 @@ export interface CalendarEvent {
   }
 }
 
-// 学生 Dashboard 数据获取 - 适配你的Mock数据
+// 学生 Dashboard 数据获取
 export const useStudentDashboard = () => {
   const assignments = ref<Assignment[]>([])
   const stats = ref<DashboardStats[]>([])
@@ -64,62 +64,10 @@ export const useStudentDashboard = () => {
     error.value = null
 
     try {
-      // 首先尝试调用真实API
+      // 调用真实API
       const response = await apiClient.get('/student/assignments')
       assignments.value = response.assignments || response || []
 
-    } catch (err: any) {
-      console.log('API调用失败，使用Mock数据:', err.message)
-
-      // 使用你提供的Mock数据
-      const mockData: Assignment[] = [
-        {
-          id: 1,
-          title: '数学习题集第一章',
-          assignDate: '2025-05-29',
-          dueDate: '2025-06-07',
-          submitTime: '2025-06-02 14:30',
-          status: 'submitted',
-          attempts: 1,
-          description: '完成课本第1-20页的习题'
-        },
-        {
-          id: 2,
-          title: '英语口语作业',
-          assignDate: '2025-06-01',
-          dueDate: '2025-06-28',
-          submitTime: null,
-          status: 'pending',
-          attempts: 0,
-          description: '录制3分钟英语自我介绍视频'
-        },
-        {
-          id: 3,
-          title: '物理实验报告',
-          assignDate: '2025-06-03',
-          dueDate: '2025-06-12',
-          submitTime: null,
-          status: 'pending',
-          attempts: 0,
-          description: '完成光学实验报告'
-        },
-        {
-          id: 4,
-          title: '化学作业第二章',
-          assignDate: '2025-01-09',
-          dueDate: '2025-01-10',
-          submitTime: null,
-          status: 'pending',
-          attempts: 0,
-          description: '化学方程式练习'
-        }
-      ]
-
-      assignments.value = mockData
-      error.value = null // 清除错误，使用Mock数据
-    }
-
-    try {
       // 生成统计数据
       const total = assignments.value.length
       const submitted = assignments.value.filter(a => a.status === 'submitted').length
@@ -181,6 +129,9 @@ export const useStudentDashboard = () => {
         calendarEvents: calendarEvents.value
       })
 
+    } catch (err: any) {
+      error.value = err.message || '获取学生数据失败'
+      console.error('Student dashboard error:', err)
     } finally {
       loading.value = false
     }
