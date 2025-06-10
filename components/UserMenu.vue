@@ -31,7 +31,7 @@
             :class="[active ? 'bg-gray-100 dark:bg-gray-700' : '', 'flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 transition-colors duration-200']"
           >
             <UserIcon class="mr-3 h-4 w-4" />
-            {{ $t('common.profile') || '个人资料' }}
+            {{ $t('navbar.profile') }}
           </NuxtLink>
         </MenuItem>
 
@@ -41,7 +41,7 @@
             :class="[active ? 'bg-gray-100 dark:bg-gray-700' : '', 'flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 transition-colors duration-200']"
           >
             <CogIcon class="mr-3 h-4 w-4" />
-            {{ $t('common.settings') || '设置' }}
+            {{ $t('navbar.settings') }}
           </NuxtLink>
         </MenuItem>
 
@@ -51,7 +51,7 @@
             :class="[active ? 'bg-gray-100 dark:bg-gray-700' : '', 'flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 transition-colors duration-200']"
           >
             <HomeIcon class="mr-3 h-4 w-4" />
-            {{ $t('common.dashboard') || '控制台' }}
+            {{ $t('navbar.dashboard') }}
           </NuxtLink>
         </MenuItem>
 
@@ -64,8 +64,8 @@
             :disabled="loading"
           >
             <ArrowRightOnRectangleIcon class="mr-3 h-4 w-4" />
-            <span v-if="loading">{{ $t('common.loading') || '退出中...' }}</span>
-            <span v-else>{{ $t('common.logout') || '退出登录' }}</span>
+            <span v-if="loading">{{ $t('common.loading') }}</span>
+            <span v-else>{{ $t('common.logout') }}</span>
           </button>
         </MenuItem>
       </MenuItems>

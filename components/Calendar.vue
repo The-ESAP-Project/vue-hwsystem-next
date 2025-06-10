@@ -3,16 +3,16 @@
     <!-- 头部控制区域 - 移动端优化 -->
     <div class="calendar-header">
       <div class="header-left">
-        <h2 class="calendar-title">{{ title || '日历' }}</h2>
+        <h2 class="calendar-title">{{ title || $t('common.calendar') || '日历' }}</h2>
         <div class="current-date">{{ currentMonth }}</div>
       </div>
       <div class="header-controls">
-        <button @click="prevMonth" class="nav-btn touch-manipulation">
+        <button @click="prevMonth" class="nav-btn touch-manipulation" :aria-label="$t('common.prevMonth') || '上个月'">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <polyline points="15,18 9,12 15,6"></polyline>
           </svg>
         </button>
-        <button @click="nextMonth" class="nav-btn touch-manipulation">
+        <button @click="nextMonth" class="nav-btn touch-manipulation" :aria-label="$t('common.nextMonth') || '下个月'">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <polyline points="9,18 15,12 9,6"></polyline>
           </svg>
@@ -25,7 +25,7 @@
       <div class="legend-items">
         <div v-for="legend in legends" :key="legend.label" class="legend-item">
           <div :class="['legend-dot', legend.color]"></div>
-          <span>{{ legend.label }}</span>
+          <span>{{ getLocalizedLegendLabel(legend.label) }}</span>
         </div>
       </div>
     </div>
@@ -34,9 +34,9 @@
     <div class="calendar-grid">
       <!-- 星期标题 -->
       <div class="weekdays">
-        <div v-for="day in weekdays" :key="day" class="weekday">
-          <span class="hidden sm:inline">{{ day }}</span>
-          <span class="sm:hidden">{{ day.slice(0, 1) }}</span>
+        <div v-for="(day, index) in localizedWeekdays" :key="index" class="weekday">
+          <span class="hidden sm:inline">{{ day.full }}</span>
+          <span class="sm:hidden">{{ day.short }}</span>
         </div>
       </div>
       
@@ -79,7 +79,6 @@
       <div class="tooltip-content">
         <div class="tooltip-header">
           <span class="tooltip-date">{{ formatTooltipDate(hoveredDate) }}</span>
-          <!-- 移除关闭按钮，改为点击遮罩关闭 -->
         </div>
         <div class="tooltip-body">
           <div v-for="event in hoveredDate.events" :key="event.id" class="tooltip-event">
@@ -108,6 +107,7 @@
 
 <script setup lang="ts">
 import { XMarkIcon } from '@heroicons/vue/24/outline'
+import { useI18n } from 'vue-i18n'
 
 interface CalendarEvent {
   id: string | number
@@ -172,13 +172,59 @@ const isMobile = ref(false)
 const touchStartTime = ref(0)
 
 // 计算属性
+const { t, locale } = useI18n()
+
 const currentMonth = computed(() => {
   const year = currentDate.value.getFullYear()
   const month = currentDate.value.getMonth() + 1
-  return `${year}年${month}月`
+  
+  // 根据语言格式化月份显示
+  if (locale.value === 'en') {
+    const monthNames = [
+      'January', 'February', 'March', 'April', 'May', 'June',
+      'July', 'August', 'September', 'October', 'November', 'December'
+    ]
+    return `${monthNames[currentDate.value.getMonth()]} ${year}`
+  } else if (locale.value === 'ja') {
+    return `${year}年${month}月`
+  } else {
+    return `${year}年${month}月`
+  }
 })
 
-const weekdays = ['日', '一', '二', '三', '四', '五', '六']
+const localizedWeekdays = computed(() => {
+  if (locale.value === 'en') {
+    return [
+      { full: 'Sun', short: 'S' },
+      { full: 'Mon', short: 'M' },
+      { full: 'Tue', short: 'T' },
+      { full: 'Wed', short: 'W' },
+      { full: 'Thu', short: 'T' },
+      { full: 'Fri', short: 'F' },
+      { full: 'Sat', short: 'S' }
+    ]
+  } else if (locale.value === 'ja') {
+    return [
+      { full: '日曜日', short: '日' },
+      { full: '月曜日', short: '月' },
+      { full: '火曜日', short: '火' },
+      { full: '水曜日', short: '水' },
+      { full: '木曜日', short: '木' },
+      { full: '金曜日', short: '金' },
+      { full: '土曜日', short: '土' }
+    ]
+  } else {
+    return [
+      { full: '星期日', short: '日' },
+      { full: '星期一', short: '一' },
+      { full: '星期二', short: '二' },
+      { full: '星期三', short: '三' },
+      { full: '星期四', short: '四' },
+      { full: '星期五', short: '五' },
+      { full: '星期六', short: '六' }
+    ]
+  }
+})
 
 const calendarDates = computed(() => {
   const year = currentDate.value.getFullYear()
@@ -416,11 +462,62 @@ const handleDateHover = (date: CalendarDate, isHovered: boolean) => {
   }
 }
 
+// 获取本地化的图例标签
+const getLocalizedLegendLabel = (label: string) => {
+  const legendTranslations = {
+    '已过期': {
+      en: 'Overdue',
+      ja: '期限切れ',
+      zh: '已过期'
+    },
+    '紧急': {
+      en: 'Urgent',
+      ja: '緊急',
+      zh: '紧急'
+    },
+    '未完成': {
+      en: 'Pending',
+      ja: '未完了',
+      zh: '未完成'
+    },
+    '已完成': {
+      en: 'Completed',
+      ja: '完了済み',
+      zh: '已完成'
+    },
+    '进行中': {
+      en: 'Active',
+      ja: '進行中',
+      zh: '进行中'
+    },
+    '草稿': {
+      en: 'Draft',
+      ja: '下書き',
+      zh: '草稿'
+    }
+  }
+  
+  return legendTranslations[label]?.[locale.value] || label
+}
+
 const formatTooltipDate = (date: CalendarDate) => {
-  const weekDays = ['周日', '周一', '周二', '周三', '周四', '周五', '周六']
   const dateObj = new Date(date.year, date.month, date.day)
-  const weekDay = weekDays[dateObj.getDay()]
-  return `${date.year}年${date.month + 1}月${date.day}日 ${weekDay}`
+  
+  if (locale.value === 'en') {
+    const weekDays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+    const weekDay = weekDays[dateObj.getDay()]
+    const monthName = months[date.month]
+    return `${weekDay}, ${monthName} ${date.day}, ${date.year}`
+  } else if (locale.value === 'ja') {
+    const weekDays = ['日曜日', '月曜日', '火曜日', '水曜日', '木曜日', '金曜日', '土曜日']
+    const weekDay = weekDays[dateObj.getDay()]
+    return `${date.year}年${date.month + 1}月${date.day}日 ${weekDay}`
+  } else {
+    const weekDays = ['周日', '周一', '周二', '周三', '周四', '周五', '周六']
+    const weekDay = weekDays[dateObj.getDay()]
+    return `${date.year}年${date.month + 1}月${date.day}日 ${weekDay}`
+  }
 }
 
 const getEventStatusClass = (event: CalendarEvent) => {
@@ -431,26 +528,26 @@ const getEventStatusClass = (event: CalendarEvent) => {
 const getEventStatusText = (event: CalendarEvent) => {
   // 优先显示过期和紧急状态
   if (isOverdue(event)) {
-    return '已过期'
+    return t('common.overdue') || '已过期'
   }
   if (isUrgent(event)) {
-    return '紧急'
+    return t('common.urgent') || '紧急'
   }
   
   const status = event.extendedProps?.status || event.className
   
-  const statusTexts = {
-    'submitted': '已提交',
-    'pending': '未提交',
-    'overdue': '已逾期',
-    'urgent': '紧急',
-    'warning': '即将到期',
-    'active': '进行中',
-    'draft': '草稿',
-    'closed': '已结束'
+  const statusTranslations = {
+    submitted: t('common.submitted') || '已提交',
+    pending: t('common.pending') || '未提交',
+    overdue: t('common.overdue') || '已逾期',
+    urgent: t('common.urgent') || '紧急',
+    warning: t('common.warning') || '即将到期',
+    active: t('common.active') || '进行中',
+    draft: t('common.draft') || '草稿',
+    closed: t('common.closed') || '已结束'
   }
   
-  return statusTexts[status as keyof typeof statusTexts] || '未知状态'
+  return statusTranslations[status] || t('common.unknown') || '未知状态'
 }
 
 // 关闭tooltip的方法

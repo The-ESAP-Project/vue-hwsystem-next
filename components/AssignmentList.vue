@@ -3,11 +3,11 @@
     <div class="p-4 sm:p-6 border-b border-gray-200 dark:border-gray-700">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-3 sm:gap-0">
         <h2 class="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">
-          {{ title || $t('dashboard.assignments') || '作业列表' }}
+          {{ title || $t('dashboard.assignments') }}
         </h2>
         <div class="flex items-center gap-2">
           <span class="text-sm text-gray-500 dark:text-gray-400">
-            {{ filteredAndSortedAssignments.length }} {{ $t('dashboard.total') || '项' }}
+            {{ filteredAndSortedAssignments.length }} {{ $t('dashboard.total') }}
           </span>
           <slot name="header-actions"></slot>
         </div>
@@ -62,10 +62,10 @@
                 <div class="flex items-center gap-2 flex-wrap">
                   <!-- 紧急/过期状态 -->
                   <span v-if="isOverdue(assignment)" class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-200 animate-pulse">
-                    已过期
+                    {{ $t('common.overdue') || '已过期' }}
                   </span>
                   <span v-else-if="isUrgent(assignment)" class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-orange-100 dark:bg-orange-900/30 text-orange-800 dark:text-orange-200 animate-pulse">
-                    紧急
+                    {{ $t('common.urgent') || '紧急' }}
                   </span>
                   
                   <!-- 班级进度显示 -->
@@ -85,15 +85,15 @@
               <div class="flex flex-col sm:grid gap-2 sm:gap-4 text-sm sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 <div class="flex items-center gap-2 text-gray-600 dark:text-gray-400">
                   <CalendarIcon class="h-4 w-4 flex-shrink-0" />
-                  <span class="truncate">{{ $t('dashboard.assigned') || '布置' }}: {{ assignment.assignDate }}</span>
+                  <span class="truncate">{{ $t('dashboard.assigned') }}: {{ assignment.assignDate }}</span>
                 </div>
                 <div class="flex items-center gap-2 text-gray-600 dark:text-gray-400">
                   <ClockIcon class="h-4 w-4 flex-shrink-0" />
-                  <span class="truncate">{{ $t('dashboard.due') || '截止' }}: {{ assignment.dueDate }}</span>
+                  <span class="truncate">{{ $t('dashboard.due') }}: {{ assignment.dueDate }}</span>
                 </div>
                 <div v-if="showAttempts" class="flex items-center gap-2 text-gray-600 dark:text-gray-400">
                   <ArrowPathIcon class="h-4 w-4 flex-shrink-0" />
-                  <span class="truncate">{{ $t('dashboard.attempts') || '提交次数' }}: {{ assignment.attempts }}</span>
+                  <span class="truncate">{{ $t('dashboard.attempts') }}: {{ assignment.attempts }}</span>
                 </div>
                 <div v-if="showProgress" class="flex items-center gap-2 text-gray-600 dark:text-gray-400">
                   <ChartBarIcon class="h-4 w-4 flex-shrink-0" />
@@ -107,8 +107,8 @@
               <div class="flex items-center gap-1">
                 <slot name="assignment-actions" :assignment="assignment">
                   <button class="inline-flex items-center gap-1 px-2 sm:px-3 py-1.5 text-xs font-medium text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 rounded-lg transition-all duration-200 touch-manipulation">
-                    <span class="hidden sm:inline">{{ $t('dashboard.viewDetails') || '查看详情' }}</span>
-                    <span class="sm:hidden">详情</span>
+                    <span class="hidden sm:inline">{{ $t('dashboard.viewDetails') }}</span>
+                    <span class="sm:hidden">{{ $t('common.view') || '详情' }}</span>
                     <ChevronRightIcon class="h-3 w-3" />
                   </button>
                 </slot>
@@ -152,15 +152,15 @@
                 </div>
                 <div v-if="showAttempts" class="flex items-center gap-2">
                   <ArrowPathIcon class="h-4 w-4 flex-shrink-0" />
-                  <span class="truncate">{{ assignment.attempts }} 次提交</span>
+                  <span class="truncate">{{ assignment.attempts }} {{ $t('common.attempts') || '次提交' }}</span>
                 </div>
                 <div v-if="showClassProgress" class="flex items-center gap-2">
                   <UsersIcon class="h-4 w-4 flex-shrink-0" />
-                  <span class="truncate">{{ classProgressLabel }}: {{ assignment.classSubmitted || assignment.submitted }}/{{ assignment.classTotal || assignment.totalStudents }} 已提交</span>
+                  <span class="truncate">{{ classProgressLabel }}: {{ assignment.classSubmitted || assignment.submitted }}/{{ assignment.classTotal || assignment.totalStudents }} {{ $t('common.submitted') || '已提交' }}</span>
                 </div>
                 <div v-if="showProgress" class="flex items-center gap-2">
                   <ChartBarIcon class="h-4 w-4 flex-shrink-0" />
-                  <span class="truncate">{{ getProgressPercentage(assignment) }}% 完成率</span>
+                  <span class="truncate">{{ getProgressPercentage(assignment) }}% {{ $t('common.completion') || '完成率' }}</span>
                 </div>
               </div>
             </div>
@@ -171,7 +171,7 @@
               <div class="opacity-0 group-hover:opacity-100 sm:opacity-100 flex items-center gap-1 transition-all duration-200">
                 <slot name="grid-actions" :assignment="assignment">
                   <button class="inline-flex items-center gap-1 px-2 py-1.5 text-xs font-medium text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 rounded-lg transition-all duration-200 touch-manipulation">
-                    查看
+                    {{ $t('common.view') || '查看' }}
                     <ChevronRightIcon class="h-3 w-3" />
                   </button>
                 </slot>
@@ -300,27 +300,27 @@ const selectedFilter = ref('all')
 // 筛选选项
 const filterOptions = computed(() => [
   { 
-    label: '全部', 
+    label: t('common.all') || '全部', 
     value: 'all', 
     count: props.assignments.length 
   },
   { 
-    label: '紧急', 
+    label: t('common.urgent') || '紧急', 
     value: 'urgent', 
     count: props.assignments.filter(a => isUrgent(a)).length 
   },
   { 
-    label: '过期', 
+    label: t('common.overdue') || '过期', 
     value: 'overdue', 
     count: props.assignments.filter(a => isOverdue(a)).length 
   },
   { 
-    label: '待完成', 
+    label: t('common.pending') || '待完成', 
     value: 'pending', 
     count: props.assignments.filter(a => a.status === 'pending' || a.status === 'active' || a.status === 'draft').length 
   },
   { 
-    label: '已完成', 
+    label: t('common.completed') || '已完成', 
     value: 'completed', 
     count: props.assignments.filter(a => a.status === 'submitted' || a.status === 'closed').length 
   }
@@ -441,7 +441,15 @@ const getStatusBadgeClass = (assignment: Assignment) => {
 
 const getStatusText = (assignment: Assignment) => {
   // 不在这里返回紧急/过期状态，这些在模板中单独处理
-  return props.statusTexts[assignment.status] || assignment.status
+  const statusKey = assignment.status
+  const statusTranslations = {
+    submitted: t('common.submitted') || '已提交',
+    pending: t('common.pending') || '待提交',
+    active: t('common.active') || '进行中',
+    draft: t('common.draft') || '草稿',
+    closed: t('common.closed') || '已结束'
+  }
+  return statusTranslations[statusKey] || assignment.status
 }
 
 const getProgressPercentage = (assignment: Assignment) => {

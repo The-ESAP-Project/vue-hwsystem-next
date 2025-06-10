@@ -67,7 +67,24 @@
     "teacher": "教师",
     "upload": "上传",
     "username": "用户名",
-    "view": "查看"
+    "view": "查看",
+    "all": "全部",
+    "urgent": "紧急",
+    "overdue": "已过期",
+    "pending": "待完成",
+    "completed": "已完成",
+    "active": "进行中",
+    "draft": "草稿",
+    "closed": "已结束",
+    "submitted": "已提交",
+    "attempts": "次提交",
+    "completion": "完成率",
+    "calendar": "日历",
+    "prevMonth": "上个月",
+    "nextMonth": "下个月",
+    "warning": "警告",
+    "unknown": "未知",
+    "openUserMenu": "打开用户菜单"
   },
   "dashboard": {
     "about": "关于我们",
@@ -569,6 +586,149 @@
         "active": "进行中",
         "draft": "草稿",
         "closed": "已结束"
+      }
+    }
+  },
+  "pages": {
+    "about": {
+      "title": "关于我们",
+      "companyIntro": "公司介绍",
+      "companyDescription1": "我们是一家专注于硬件系统开发的技术公司，致力于为客户提供高质量的硬件解决方案。凭借多年的行业经验和专业技术团队，我们为各种规模的企业提供定制化服务。",
+      "companyDescription2": "我们的使命是通过创新的硬件技术，帮助客户实现业务目标，提升竞争力。",
+      "ourAdvantages": "我们的优势",
+      "advantages": {
+        "professionalTeam": {
+          "title": "专业团队",
+          "description": "拥有丰富经验的技术专家"
+        },
+        "qualityAssurance": {
+          "title": "质量保证",
+          "description": "严格的质量控制体系"
+        },
+        "customerService": {
+          "title": "客户服务",
+          "description": "7x24小时技术支持"
+        }
+      }
+    },
+    "terms": {
+      "title": "服务条款",
+      "lastUpdated": "最后更新日期",
+      "sections": {
+        "acceptance": {
+          "title": "接受条款",
+          "content": "欢迎使用我们的硬件系统服务。通过访问或使用我们的服务，您同意受这些服务条款的约束。如果您不同意这些条款，请不要使用我们的服务。"
+        },
+        "serviceDescription": {
+          "title": "服务描述",
+          "content": "我们提供硬件系统开发、维护和技术支持服务。具体服务内容可能会根据客户需求和合同约定而有所不同。"
+        },
+        "userResponsibilities": {
+          "title": "用户责任",
+          "items": [
+            "您必须提供准确、完整的信息",
+            "您有责任保护您的账户安全",
+            "您不得滥用我们的服务或违反相关法律法规"
+          ]
+        },
+        "intellectualProperty": {
+          "title": "知识产权",
+          "content": "我们保留对所有服务内容的知识产权。未经书面许可，您不得复制、修改或分发我们的专有技术。"
+        },
+        "disclaimer": {
+          "title": "免责声明",
+          "content": "我们的服务按\"现状\"提供，不提供任何明示或暗示的保证。在法律允许的最大范围内，我们不对任何直接或间接损失承担责任。"
+        },
+        "modification": {
+          "title": "条款修改",
+          "content": "我们保留随时修改这些条款的权利。修改后的条款将在网站上公布，继续使用服务即表示您接受修改后的条款。"
+        }
+      }
+    },
+    "privacy": {
+      "title": "隐私政策",
+      "effectiveDate": "生效日期",
+      "sections": {
+        "informationCollection": {
+          "title": "信息收集",
+          "description": "我们可能收集以下类型的信息：",
+          "items": [
+            "个人标识信息（姓名、邮箱地址、电话号码等）",
+            "技术信息（IP地址、浏览器类型、设备信息等）",
+            "使用数据（访问时间、页面浏览记录等）"
+          ]
+        },
+        "informationUse": {
+          "title": "信息使用",
+          "description": "我们使用收集的信息用于：",
+          "items": [
+            "提供和改进我们的服务",
+            "与您沟通服务相关事宜",
+            "分析网站使用情况以优化用户体验",
+            "遵守相关法律法规要求"
+          ]
+        },
+        "informationSharing": {
+          "title": "信息共享",
+          "content": "除非获得您的明确同意或法律要求，我们不会向第三方出售、交易或转让您的个人信息。我们可能与可信的第三方服务提供商共享信息，但仅限于提供服务所必需的范围。"
+        },
+        "dataSecurity": {
+          "title": "数据安全",
+          "content": "我们采用适当的技术和组织措施来保护您的个人信息，防止未授权访问、使用、披露、修改或销毁。"
+        },
+        "cookies": {
+          "title": "Cookie使用",
+          "content": "我们的网站使用Cookie来改善用户体验。您可以通过浏览器设置控制Cookie的使用，但禁用Cookie可能影响网站的某些功能。"
+        },
+        "userRights": {
+          "title": "您的权利",
+          "description": "您有权：",
+          "items": [
+            "访问和更正您的个人信息",
+            "请求删除您的个人信息",
+            "撤回对数据处理的同意",
+            "投诉数据处理活动"
+          ]
+        },
+        "contactUs": {
+          "title": "联系我们",
+          "content": "如果您对本隐私政策有任何疑问或关切，请通过联系页面与我们联系。"
+        }
+      }
+    },
+    "contact": {
+      "title": "联系我们",
+      "contactInfo": "联系信息",
+      "address": {
+        "title": "地址",
+        "value": "中国上海市浦东新区张江高科技园区"
+      },
+      "phone": {
+        "title": "电话",
+        "value": "+86 21 1234 5678"
+      },
+      "email": {
+        "title": "邮箱",
+        "value": "mailto:contact{'@'}hwsystem.com"
+      },
+      "workingHours": {
+        "title": "工作时间",
+        "weekdays": "周一至周五：9:00 - 18:00",
+        "saturday": "周六：9:00 - 12:00"
+      },
+      "sendMessage": "发送消息",
+      "form": {
+        "name": "姓名",
+        "nameRequired": "请输入姓名",
+        "email": "邮箱",
+        "emailRequired": "请输入邮箱",
+        "phone": "电话",
+        "subject": "主题",
+        "subjectRequired": "请输入主题",
+        "message": "消息",
+        "messageRequired": "请输入消息",
+        "submit": "发送消息",
+        "successMessage": "感谢您的消息，我们会尽快回复！"
       }
     }
   }
