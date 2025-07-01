@@ -1,0 +1,544 @@
+{
+  "app": {
+    "name": "作业管理系统"
+  },
+  "header": {
+    "login": "登录",
+    "logout": "退出",
+    "logoutMobile": "退出登录",
+    "dashboard": "控制台",
+    "user": "用户",
+    "language": "语言",
+    "theme": {
+      "settings": "主题设置",
+      "light": "浅色模式",
+      "dark": "深色模式",
+      "system": "跟随系统",
+      "lightShort": "浅色",
+      "darkShort": "深色",
+      "systemShort": "自动"
+    }
+  },
+  "footer": {
+    "copyright": "© 2022-{year} 作业管理系统. 保留所有权利.",
+    "about": "关于我们",
+    "contact": "联系我们",
+    "privacy": "隐私政策",
+    "terms": "服务条款"
+  },
+  "auth": {
+    "login": {
+      "title": "用户登录",
+      "subtitle": "支持学生、老师、课代表身份登录",
+      "username": "用户名",
+      "usernamePlaceholder": "请输入用户名",
+      "password": "密码",
+      "passwordPlaceholder": "请输入密码",
+      "rememberMe": "记住我",
+      "forgotPassword": "忘记密码？",
+      "loginButton": "登录账户",
+      "loggingIn": "登录中...",
+      "noAccount": "还没有账户？",
+      "register": "立即注册",
+      "validation": {
+        "usernameRequired": "请输入用户名",
+        "passwordRequired": "请输入密码",
+        "loginFailed": "登录失败，请重试"
+      }
+    },
+    "forgotPassword": {
+      "title": "忘记密码",
+      "subtitle": "输入您的用户名，我们将帮您重置密码",
+      "username": "用户名",
+      "usernamePlaceholder": "请输入您的用户名",
+      "submitButton": "重置密码",
+      "processing": "处理中...",
+      "successTitle": "重置申请已提交",
+      "successMessage": "请联系管理员获取新密码，或稍后重试",
+      "backToLogin": "记起密码了？",
+      "loginLink": "返回登录",
+      "validation": {
+        "usernameRequired": "请输入用户名",
+        "resetFailed": "重置失败，请重试"
+      }
+    },
+    "register": {
+      "title": "创建账户",
+      "subtitle": "加入我们的学习平台",
+      "notAvailable": "注册功能暂未开放",
+      "notAvailableMessage": "注册功能正在开发中，请联系管理员获取账户或稍后重试",
+      "username": "用户名",
+      "usernamePlaceholder": "请输入用户名",
+      "realName": "真实姓名",
+      "realNamePlaceholder": "请输入真实姓名",
+      "role": "角色",
+      "rolePlaceholder": "请选择您的角色",
+      "roles": {
+        "student": "学生",
+        "teacher": "教师",
+        "monitor": "课代表"
+      },
+      "password": "密码",
+      "passwordPlaceholder": "请输入密码",
+      "confirmPassword": "确认密码",
+      "confirmPasswordPlaceholder": "请再次输入密码",
+      "submitButton": "创建账户",
+      "processing": "注册中...",
+      "hasAccount": "已有账户？",
+      "loginLink": "立即登录",
+      "validation": {
+        "usernameRequired": "请输入用户名",
+        "realNameRequired": "请输入真实姓名",
+        "roleRequired": "请选择角色",
+        "passwordRequired": "请输入密码",
+        "passwordMismatch": "两次输入的密码不一致",
+        "registerFailed": "注册失败，请重试"
+      }
+    }
+  },
+  "home": {
+    "title": "首页",
+    "hero": {
+      "badge": "现代化的教学管理平台",
+      "learnMore": "了解更多",
+      "title": "作业管理系统",
+      "subtitle": "为学生、老师和课代表提供完整的作业管理解决方案",
+      "dashboard": "前往控制台",
+      "login": "立即登录",
+      "learnRoles": "了解角色功能"
+    },
+    "features": {
+      "title": "现代化功能",
+      "subtitle": "全面的教学管理解决方案",
+      "description": "基于现代技术栈构建，提供直观易用的界面和强大的功能",
+      "items": {
+        "responsive": {
+          "name": "响应式设计",
+          "description": "完美适配各种设备，提供一致的用户体验"
+        },
+        "notification": {
+          "name": "实时通知",
+          "description": "及时推送作业提醒和重要通知"
+        },
+        "visualization": {
+          "name": "数据可视化",
+          "description": "直观的图表展示学习进度和统计数据"
+        },
+        "grading": {
+          "name": "智能批改",
+          "description": "自动化作业评分和反馈系统"
+        },
+        "security": {
+          "name": "安全保障",
+          "description": "多层次安全防护，保护用户隐私和数据"
+        },
+        "performance": {
+          "name": "高性能",
+          "description": "优化的系统架构，快速响应用户操作"
+        }
+      }
+    },
+    "roles": {
+      "title": "角色功能",
+      "subtitle": "为每个角色量身定制",
+      "description": "不同的角色拥有不同的功能权限，确保系统的安全性和易用性",
+      "dashboard": "前往控制台",
+      "loginAs": "以{role}身份登录",
+      "items": {
+        "student": {
+          "name": "学生",
+          "description": "查看作业、提交答案、跟踪进度",
+          "features": [
+            "查看和提交作业",
+            "跟踪成绩和进度",
+            "接收作业通知",
+            "管理个人资料",
+            "设置提醒事项"
+          ]
+        },
+        "monitor": {
+          "name": "课代表",
+          "description": "监督班级进度、提醒同学、协助管理",
+          "features": [
+            "查看班级统计",
+            "监督提交情况",
+            "发送提醒通知",
+            "生成进度报告",
+            "协助沟通管理"
+          ]
+        },
+        "teacher": {
+          "name": "老师",
+          "description": "布置作业、批改评分、管理班级",
+          "features": [
+            "布置和管理作业",
+            "批改和评分",
+            "班级学生管理",
+            "数据分析统计",
+            "课堂互动管理"
+          ]
+        }
+      }
+    },
+    "cta": {
+      "title": "开始您的学习之旅",
+      "subtitle": "加入我们的平台，体验现代化的教学管理",
+      "dashboard": "前往控制台",
+      "start": "立即体验",
+      "source": "查看源码"
+    }
+  },
+  "about": {
+    "title": "关于作业管理系统",
+    "subtitle": "现代化的教学作业管理平台，基于 Vue 3 + TypeScript 构建",
+    "features": {
+      "title": "产品特色",
+      "subtitle": "为教育场景精心打造",
+      "description": "专为中小学作业管理设计，支持完整的教学流程，让教学更高效",
+      "items": {
+        "multiRole": {
+          "title": "多角色支持",
+          "description": "学生、教师、课代表的完整工作流程，精确的权限控制体系"
+        },
+        "responsive": {
+          "title": "响应式设计",
+          "description": "完美适配桌面端和移动端设备，随时随地使用"
+        },
+        "modernTech": {
+          "title": "现代化技术栈",
+          "description": "Vue 3 + Composition API + TypeScript，类型安全和开发体验"
+        },
+        "darkMode": {
+          "title": "深色模式",
+          "description": "支持浅色/深色/跟随系统三种主题模式，护眼体验"
+        },
+        "security": {
+          "title": "安全保障",
+          "description": "JWT 认证 + 权限控制，多层次安全防护"
+        },
+        "visualization": {
+          "title": "数据可视化",
+          "description": "直观的统计图表和进度展示，数据驱动决策"
+        }
+      }
+    },
+    "tech": {
+      "title": "技术架构",
+      "subtitle": "现代化的技术选型",
+      "description": "采用业界最佳实践，确保项目的可维护性和扩展性",
+      "frontend": {
+        "title": "前端技术栈",
+        "vue": "渐进式 JavaScript 框架",
+        "typescript": "类型安全的 JavaScript 超集",
+        "vite": "下一代前端构建工具",
+        "tailwind": "实用优先的 CSS 框架",
+        "pinia": "Vue.js 状态管理库"
+      },
+      "backend": {
+        "title": "后端技术栈",
+        "rust": "系统编程语言，内存安全",
+        "actix": "高性能异步 Web 框架",
+        "postgresql": "企业级关系型数据库",
+        "jwt": "无状态身份认证",
+        "serde": "高效序列化/反序列化"
+      }
+    },
+    "performance": {
+      "title": "性能指标",
+      "subtitle": "追求极致的用户体验",
+      "responseTime": {
+        "title": "响应时间",
+        "value": "< 50ms",
+        "description": "P95 API 响应"
+      },
+      "concurrency": {
+        "title": "并发处理",
+        "value": "1000+",
+        "description": "单机并发连接"
+      },
+      "memory": {
+        "title": "内存占用",
+        "value": "< 100MB",
+        "description": "空载内存使用"
+      },
+      "startup": {
+        "title": "启动时间",
+        "value": "< 2s",
+        "description": "冷启动到就绪"
+      }
+    },
+    "opensource": {
+      "title": "开源项目",
+      "subtitle": "基于 MIT 许可证开源，欢迎社区贡献和反馈",
+      "frontend": "前端源码",
+      "backend": "后端源码",
+      "team": {
+        "title": "开发团队",
+        "name": "The ESAP Project",
+        "description": "致力于构建更好的教育技术"
+      }
+    }
+  },
+  "contact": {
+    "title": "联系我们",
+    "subtitle": "有任何问题或建议，欢迎随时联系我们",
+    "info": {
+      "title": "联系方式",
+      "email": {
+        "title": "邮箱地址",
+        "support": "support{'@'}hwsystem.com",
+        "admin": "admin{'@'}hwsystem.com"
+      },
+      "phone": {
+        "title": "联系电话",
+        "number": "+86 400-123-4567",
+        "hours": "工作时间：周一至周五 9:00-18:00"
+      },
+      "address": {
+        "title": "办公地址",
+        "street": "北京市海淀区中关村大街1号",
+        "building": "科技大厦 15 层"
+      },
+      "online": {
+        "title": "在线支持",
+        "wechat": "微信客服：HWSystem2024",
+        "qq": "QQ群：123456789"
+      }
+    },
+    "form": {
+      "title": "发送消息",
+      "name": {
+        "label": "姓名",
+        "placeholder": "请输入您的姓名"
+      },
+      "email": {
+        "label": "邮箱",
+        "placeholder": "请输入您的邮箱"
+      },
+      "subject": {
+        "label": "主题",
+        "placeholder": "请选择主题",
+        "options": {
+          "bug": "错误反馈",
+          "feature": "功能建议",
+          "support": "技术支持",
+          "other": "其他问题"
+        }
+      },
+      "message": {
+        "label": "消息内容",
+        "placeholder": "请详细描述您的问题或建议..."
+      },
+      "submit": "发送消息",
+      "submitting": "发送中...",
+      "success": "消息发送成功！我们会尽快回复您。",
+      "error": "发送失败，请重试"
+    },
+    "backHome": "返回首页"
+  },
+  "privacy": {
+    "title": "隐私政策",
+    "subtitle": "我们重视您的隐私，本政策说明我们如何收集、使用和保护您的个人信息",
+    "lastUpdated": "最后更新时间：2024年12月28日",
+    "sections": {
+      "collection": {
+        "title": "信息收集",
+        "intro": "我们收集以下类型的信息：",
+        "items": [
+          "账户信息：用户名、姓名、角色（学生/老师/课代表）",
+          "学习数据：作业提交记录、成绩信息、学习进度",
+          "系统日志：登录记录、操作日志（不包含敏感信息）",
+          "设备信息：IP地址、浏览器类型、设备标识符"
+        ]
+      },
+      "usage": {
+        "title": "信息使用",
+        "intro": "我们使用收集的信息来：",
+        "items": [
+          "提供和改进教学管理服务",
+          "个性化学习体验和内容推荐",
+          "生成学习统计和进度报告",
+          "确保系统安全和防止滥用",
+          "提供客户支持服务"
+        ]
+      },
+      "sharing": {
+        "title": "信息共享",
+        "intro": "我们不会将您的个人信息出售给第三方。我们仅在以下情况下共享信息：",
+        "items": [
+          "在同一班级内共享必要的学习数据（如作业完成情况）",
+          "向教师和课代表提供班级管理所需的统计信息",
+          "遵守法律法规要求或配合执法部门调查",
+          "获得您明确同意的其他情况"
+        ]
+      },
+      "security": {
+        "title": "数据安全",
+        "intro": "我们采取多种安全措施保护您的信息：",
+        "items": [
+          "使用SSL加密传输敏感数据",
+          "定期备份数据并存储在安全环境中",
+          "限制员工访问个人信息的权限",
+          "定期进行安全审计和漏洞扫描",
+          "实施严格的访问控制和身份验证"
+        ]
+      },
+      "rights": {
+        "title": "您的权利",
+        "intro": "您对自己的个人信息享有以下权利：",
+        "items": [
+          "查看和更新您的账户信息",
+          "要求删除您的个人数据（在法律允许的范围内）",
+          "导出您的学习数据",
+          "拒绝某些数据处理活动",
+          "向我们举报数据处理方面的问题"
+        ]
+      },
+      "cookies": {
+        "title": "Cookie使用",
+        "content": "我们使用Cookie来改善用户体验，包括记住登录状态、个性化设置和分析网站使用情况。您可以通过浏览器设置管理Cookie偏好。"
+      },
+      "updates": {
+        "title": "政策更新",
+        "content": "我们可能会定期更新此隐私政策。重大变更时，我们会通过平台通知或邮件提前告知用户。继续使用服务即表示您接受更新后的政策。"
+      },
+      "contact": {
+        "title": "联系我们",
+        "intro": "如果您对本隐私政策有任何疑问或需要行使您的权利，请通过以下方式联系我们：",
+        "items": [
+          "邮箱：privacy@hwsystem.com",
+          "电话：+86 400-123-4567",
+          "地址：北京市海淀区中关村大街1号科技大厦15层"
+        ]
+      }
+    },
+    "notice": {
+      "title": "重要提醒：",
+      "content": "本平台面向教育用途，我们特别注重保护未成年用户的隐私。如果您是18岁以下用户，请在监护人同意下使用本服务。"
+    },
+    "backHome": "返回首页"
+  },
+  "terms": {
+    "title": "服务条款",
+    "subtitle": "请仔细阅读以下条款，使用我们的服务即表示您同意这些条款",
+    "lastUpdated": "最后更新时间：2024年12月28日",
+    "sections": {
+      "service": {
+        "title": "服务说明",
+        "content": "作业管理系统（以下简称\"本服务\"）是一个面向教育机构的在线平台，为学生、教师和课代表提供作业管理、进度跟踪和班级协作功能。"
+      },
+      "account": {
+        "title": "用户注册与账户",
+        "items": [
+          "用户必须提供真实、准确的注册信息",
+          "每个用户只能注册一个账户",
+          "用户有责任保护账户安全，不得与他人共享账户信息",
+          "发现账户被盗用时应立即联系我们",
+          "用户对使用其账户进行的所有活动负责"
+        ]
+      },
+      "conduct": {
+        "title": "用户行为规范",
+        "intro": "使用本服务时，用户不得：",
+        "items": [
+          "上传、发布或传播违法、有害、威胁、辱骂、骚扰、诽谤、粗俗、淫秽或其他不当内容",
+          "侵犯他人的知识产权、隐私权或其他合法权益",
+          "进行任何可能损害、禁用、过载或破坏服务器的活动",
+          "尝试未经授权访问系统或其他用户的账户",
+          "使用自动化工具或脚本干扰正常服务",
+          "代替他人完成作业或协助学术不端行为"
+        ]
+      },
+      "integrity": {
+        "title": "学术诚信",
+        "intro": "本平台致力于维护学术诚信环境：",
+        "items": [
+          "学生应独立完成作业，不得抄袭或代写",
+          "禁止分享作业答案或协助他人作弊",
+          "教师应公平评判学生作业，不得徇私舞弊",
+          "发现学术不端行为时，平台有权采取相应措施"
+        ]
+      },
+      "ip": {
+        "title": "知识产权",
+        "items": [
+          "本服务的软件、界面设计、商标等均受知识产权法保护",
+          "用户上传的内容仍归用户所有，但授予我们使用许可",
+          "用户保证上传内容不侵犯第三方知识产权",
+          "发现侵权内容时，我们有权立即删除并追究责任"
+        ]
+      },
+      "availability": {
+        "title": "服务可用性",
+        "items": [
+          "我们努力确保服务的持续可用性，但不保证100%无中断",
+          "定期维护、系统升级可能导致临时服务中断",
+          "重要维护活动将提前通知用户",
+          "因不可抗力导致的服务中断不承担责任"
+        ]
+      },
+      "backup": {
+        "title": "数据备份与恢复",
+        "items": [
+          "我们定期备份用户数据以防数据丢失",
+          "用户也应自行备份重要数据",
+          "数据恢复服务将尽力而为，但不保证完全恢复",
+          "建议用户定期导出重要学习记录"
+        ]
+      },
+      "payment": {
+        "title": "费用与付款",
+        "items": [
+          "基础功能免费提供给所有用户",
+          "高级功能可能需要付费订阅",
+          "所有费用以人民币计价，支持多种支付方式",
+          "退款政策将在购买时明确说明"
+        ]
+      },
+      "liability": {
+        "title": "责任限制",
+        "items": [
+          "本服务按\"现状\"提供，不提供任何明示或暗示的保证",
+          "我们不对用户的学习成果或教学效果负责",
+          "在法律允许的最大范围内，我们的责任限于服务费用",
+          "用户应自行承担使用服务的风险"
+        ]
+      },
+      "termination": {
+        "title": "服务终止",
+        "items": [
+          "用户可随时停止使用服务并删除账户",
+          "违反服务条款的用户可能被暂停或终止服务",
+          "服务终止前将提供合理时间导出数据",
+          "某些数据可能在法律要求下保留一定期间"
+        ]
+      },
+      "legal": {
+        "title": "法律适用与争议解决",
+        "items": [
+          "本条款适用中华人民共和国法律",
+          "因本条款产生的争议应首先通过友好协商解决",
+          "协商不成的，提交北京市海淀区人民法院管辖"
+        ]
+      },
+      "modifications": {
+        "title": "条款修改",
+        "content": "我们保留随时修改这些条款的权利。重大修改将通过平台公告或邮件通知用户。修改后的条款自发布之日起生效，继续使用服务即表示同意修改后的条款。"
+      },
+      "contact": {
+        "title": "联系信息",
+        "intro": "如有任何问题或需要帮助，请联系我们：",
+        "items": [
+          "邮箱：legal@hwsystem.com",
+          "电话：+86 400-123-4567",
+          "地址：北京市海淀区中关村大街1号科技大厦15层"
+        ]
+      }
+    },
+    "notice": {
+      "title": "注意：",
+      "content": "使用本服务即表示您已阅读、理解并同意遵守上述所有条款。如果您不同意任何条款，请停止使用本服务。"
+    },
+    "backHome": "返回首页"
+  }
+}

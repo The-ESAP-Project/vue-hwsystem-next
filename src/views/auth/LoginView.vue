@@ -9,10 +9,10 @@
           </svg>
         </div>
         <h1 class="text-4xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400 bg-clip-text text-transparent">
-          用户登录
+          {{ t('auth.login.title') }}
         </h1>
         <p class="mt-3 text-lg text-gray-600 dark:text-gray-300 transition-colors duration-200">
-          支持学生、老师、课代表身份登录
+          {{ t('auth.login.subtitle') }}
         </p>
       </div>
 
@@ -28,7 +28,7 @@
             <div class="space-y-5">
               <div class="group">
                 <label for="username" class="block text-sm font-semibold text-gray-900 dark:text-white mb-2 transition-colors duration-200">
-                  用户名
+                  {{ t('auth.login.username') }}
                 </label>
                 <div class="relative">
                   <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -41,7 +41,7 @@
                     v-model="form.username"
                     type="text"
                     name="username"
-                    placeholder="请输入用户名"
+                    :placeholder="t('auth.login.usernamePlaceholder')"
                     autocomplete="username"
                     required
                     :disabled="userStore.isLoading"
@@ -53,7 +53,7 @@
 
               <div class="group">
                 <label for="password" class="block text-sm font-semibold text-gray-900 dark:text-white mb-2 transition-colors duration-200">
-                  密码
+                  {{ t('auth.login.password') }}
                 </label>
                 <div class="relative">
                   <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -66,7 +66,7 @@
                     v-model="form.password"
                     :type="showPassword ? 'text' : 'password'"
                     name="password"
-                    placeholder="请输入密码"
+                    :placeholder="t('auth.login.passwordPlaceholder')"
                     autocomplete="current-password"
                     required
                     :disabled="userStore.isLoading"
@@ -121,7 +121,7 @@
                   >
                 </div>
                 <label for="remember-me" class="ml-3 block text-sm text-gray-700 dark:text-gray-300 transition-colors duration-200">
-                  记住我
+                  {{ t('auth.login.rememberMe') }}
                 </label>
               </div>
 
@@ -129,7 +129,7 @@
                 to="/auth/forgot-password"
                 class="text-sm font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300 transition-colors duration-200"
               >
-                忘记密码？
+                {{ t('auth.login.forgotPassword') }}
               </router-link>
             </div>
 
@@ -145,13 +145,13 @@
                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
                     <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"/>
                   </svg>
-                  登录中...
+                  {{ t('auth.login.loggingIn') }}
                 </span>
                 <span v-else class="flex items-center">
                   <svg class="mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
                   </svg>
-                  登录账户
+                  {{ t('auth.login.loginButton') }}
                 </span>
               </button>
             </div>
@@ -161,12 +161,12 @@
           <div class="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700 transition-colors duration-200">
             <div class="text-center">
               <p class="text-sm text-gray-600 dark:text-gray-400 transition-colors duration-200">
-                还没有账户？
+                {{ t('auth.login.noAccount') }}
                 <router-link
                   to="/auth/register"
                   class="font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 dark:hover:text-indigo-300 transition-colors duration-200"
                 >
-                  立即注册
+                  {{ t('auth.login.register') }}
                 </router-link>
               </p>
             </div>
@@ -181,9 +181,11 @@
 import { ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/user'
+import { useLanguage } from '@/composables/useLanguage'
 
 const router = useRouter()
 const userStore = useUserStore()
+const { t } = useLanguage()
 
 // 响应式数据
 const form = reactive({
@@ -202,10 +204,10 @@ const handleLogin = async () => {
 
     // 表单验证
     if (!form.username.trim()) {
-      throw new Error('请输入用户名')
+      throw new Error(t('auth.login.validation.usernameRequired'))
     }
     if (!form.password.trim()) {
-      throw new Error('请输入密码')
+      throw new Error(t('auth.login.validation.passwordRequired'))
     }
 
     // 使用 store 登录
@@ -219,7 +221,7 @@ const handleLogin = async () => {
     await router.push(userStore.dashboardPath)
 
   } catch (err: unknown) {
-    error.value = err instanceof Error ? err.message : '登录失败，请重试'
+    error.value = err instanceof Error ? err.message : t('auth.login.validation.loginFailed')
   }
 }
 </script>

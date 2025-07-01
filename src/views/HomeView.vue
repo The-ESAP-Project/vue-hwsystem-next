@@ -9,20 +9,20 @@
       <div class="mx-auto max-w-2xl py-16 sm:py-24 lg:py-32">
         <div class="hidden sm:mb-8 sm:flex sm:justify-center">
           <div class="relative rounded-full px-3 py-1 text-sm/6 text-gray-600 dark:text-gray-300 ring-1 ring-gray-900/10 dark:ring-gray-700/50 hover:ring-gray-900/20 dark:hover:ring-gray-700 transition-colors duration-200">
-            现代化的教学管理平台
+            {{ t('home.hero.badge') }}
             <a href="#features" class="font-semibold text-indigo-600 dark:text-indigo-400">
               <span class="absolute inset-0" aria-hidden="true"/>
-              了解更多 <span aria-hidden="true">&rarr;</span>
+              {{ t('home.hero.learnMore') }} <span aria-hidden="true">&rarr;</span>
             </a>
           </div>
         </div>
 
         <div class="text-center">
           <h1 class="text-balance text-5xl font-semibold tracking-tight text-gray-900 dark:text-white sm:text-7xl transition-colors duration-200">
-            作业管理系统
+            {{ t('home.hero.title') }}
           </h1>
           <p class="mt-8 text-pretty text-lg font-medium text-gray-500 dark:text-gray-400 sm:text-xl/8 transition-colors duration-200">
-            为学生、老师和课代表提供完整的作业管理解决方案
+            {{ t('home.hero.subtitle') }}
           </p>
           <div class="mt-10 flex items-center justify-center gap-x-6">
             <template v-if="isAuthenticated">
@@ -31,7 +31,7 @@
                 :to="dashboardPath"
                 class="rounded-md bg-indigo-600 dark:bg-indigo-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 dark:hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:focus-visible:outline-indigo-500 transition-colors duration-200"
               >
-                前往控制台
+                {{ t('home.hero.dashboard') }}
               </router-link>
             </template>
             <template v-else>
@@ -40,11 +40,11 @@
                 to="/auth/login"
                 class="rounded-md bg-indigo-600 dark:bg-indigo-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 dark:hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:focus-visible:outline-indigo-500 transition-colors duration-200"
               >
-                立即登录
+                {{ t('home.hero.login') }}
               </router-link>
             </template>
             <a href="#roles" class="text-sm/6 font-semibold text-gray-900 dark:text-white transition-colors duration-200">
-              了解角色功能 <span aria-hidden="true">→</span>
+              {{ t('home.hero.learnRoles') }} <span aria-hidden="true">→</span>
             </a>
           </div>
         </div>
@@ -59,12 +59,12 @@
     <div id="features" class="py-24 sm:py-32">
       <div class="mx-auto max-w-7xl px-6 lg:px-8">
         <div class="mx-auto max-w-2xl lg:text-center">
-          <h2 class="text-base/7 font-semibold text-indigo-600 dark:text-indigo-400 transition-colors duration-200">现代化功能</h2>
+          <h2 class="text-base/7 font-semibold text-indigo-600 dark:text-indigo-400 transition-colors duration-200">{{ t('home.features.title') }}</h2>
           <p class="mt-2 text-pretty text-4xl font-semibold tracking-tight text-gray-900 dark:text-white sm:text-5xl lg:text-balance transition-colors duration-200">
-            全面的教学管理解决方案
+            {{ t('home.features.subtitle') }}
           </p>
           <p class="mt-6 text-lg/8 text-gray-600 dark:text-gray-300 transition-colors duration-200">
-            基于现代技术栈构建，提供直观易用的界面和强大的功能
+            {{ t('home.features.description') }}
           </p>
         </div>
 
@@ -88,12 +88,12 @@
     <div id="roles" class="bg-gray-50 dark:bg-gray-800 py-24 sm:py-32 transition-colors duration-200">
       <div class="mx-auto max-w-7xl px-6 lg:px-8">
         <div class="mx-auto max-w-2xl text-center">
-          <h2 class="text-base/7 font-semibold text-indigo-600 dark:text-indigo-400 transition-colors duration-200">角色功能</h2>
+          <h2 class="text-base/7 font-semibold text-indigo-600 dark:text-indigo-400 transition-colors duration-200">{{ t('home.roles.title') }}</h2>
           <p class="mt-2 text-balance text-4xl font-semibold tracking-tight text-gray-900 dark:text-white sm:text-5xl transition-colors duration-200">
-            为每个角色量身定制
+            {{ t('home.roles.subtitle') }}
           </p>
           <p class="mt-6 text-lg/8 text-gray-600 dark:text-gray-300 transition-colors duration-200">
-            不同的角色拥有不同的功能权限，确保系统的安全性和易用性
+            {{ t('home.roles.description') }}
           </p>
         </div>
 
@@ -125,7 +125,7 @@
                   :to="dashboardPath"
                   class="block w-full rounded-md bg-green-50 dark:bg-green-900/50 px-3 py-2 text-sm font-semibold text-green-600 dark:text-green-400 hover:bg-green-100 dark:hover:bg-green-900/75 text-center transition-colors duration-200"
                 >
-                  前往控制台
+                  {{ t('home.roles.dashboard') }}
                 </router-link>
               </template>
               <template v-else>
@@ -134,7 +134,7 @@
                   to="/auth/login"
                   class="block w-full rounded-md bg-indigo-50 dark:bg-indigo-900/50 px-3 py-2 text-sm font-semibold text-indigo-600 dark:text-indigo-400 hover:bg-indigo-100 dark:hover:bg-indigo-900/75 text-center transition-colors duration-200"
                 >
-                  以{{ role.name }}身份登录
+                  {{ t('home.roles.loginAs', { role: role.name }) }}
                 </router-link>
               </template>
             </div>
@@ -148,10 +148,10 @@
       <div class="px-6 py-24 sm:px-6 sm:py-32 lg:px-8">
         <div class="mx-auto max-w-2xl text-center">
           <h2 class="text-balance text-4xl font-semibold tracking-tight text-white sm:text-5xl">
-            开始您的学习之旅
+            {{ t('home.cta.title') }}
           </h2>
           <p class="mx-auto mt-6 max-w-xl text-lg/8 text-indigo-200 dark:text-indigo-100">
-            加入我们的平台，体验现代化的教学管理
+            {{ t('home.cta.subtitle') }}
           </p>
           <div class="mt-10 flex items-center justify-center gap-x-6">
             <template v-if="isAuthenticated">
@@ -160,7 +160,7 @@
                 :to="dashboardPath"
                 class="rounded-md bg-white dark:bg-gray-100 px-3.5 py-2.5 text-sm font-semibold text-indigo-600 dark:text-indigo-700 shadow-sm hover:bg-gray-50 dark:hover:bg-gray-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white transition-colors duration-200"
               >
-                前往控制台
+                {{ t('home.cta.dashboard') }}
               </router-link>
             </template>
             <template v-else>
@@ -169,11 +169,11 @@
                 to="/auth/login"
                 class="rounded-md bg-white dark:bg-gray-100 px-3.5 py-2.5 text-sm font-semibold text-indigo-600 dark:text-indigo-700 shadow-sm hover:bg-gray-50 dark:hover:bg-gray-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white transition-colors duration-200"
               >
-                立即体验
+                {{ t('home.cta.start') }}
               </router-link>
             </template>
             <a href="https://github.com/The-ESAP-Project/vue-hwsystem-next" class="text-sm/6 font-semibold text-white">
-              查看源码 <span aria-hidden="true">→</span>
+              {{ t('home.cta.source') }} <span aria-hidden="true">→</span>
             </a>
           </div>
         </div>
@@ -183,7 +183,12 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 import { useUserStore } from '@/stores/user'
+import { useLanguage } from '@/composables/useLanguage'
+
+// 使用 i18n
+const { t } = useLanguage()
 
 // 图标组件 - 简化版本，暂时使用 div 替代
 const DevicePhoneMobileIcon = 'div'
@@ -200,78 +205,81 @@ const PresentationChartBarIcon = 'div'
 const userStore = useUserStore()
 const { currentUser, isAuthenticated, dashboardPath } = userStore
 
-const features = [
+const features = computed(() => [
   {
-    name: '响应式设计',
-    description: '完美适配各种设备，提供一致的用户体验',
+    name: t('home.features.items.responsive.name'),
+    description: t('home.features.items.responsive.description'),
     icon: DevicePhoneMobileIcon,
   },
   {
-    name: '实时通知',
-    description: '及时推送作业提醒和重要通知',
+    name: t('home.features.items.notification.name'),
+    description: t('home.features.items.notification.description'),
     icon: BellIcon,
   },
   {
-    name: '数据可视化',
-    description: '直观的图表展示学习进度和统计数据',
+    name: t('home.features.items.visualization.name'),
+    description: t('home.features.items.visualization.description'),
     icon: ChartBarIcon,
   },
   {
-    name: '智能批改',
-    description: '自动化作业评分和反馈系统',
+    name: t('home.features.items.grading.name'),
+    description: t('home.features.items.grading.description'),
     icon: PencilSquareIcon,
   },
   {
-    name: '安全保障',
-    description: '多层次安全防护，保护用户隐私和数据',
+    name: t('home.features.items.security.name'),
+    description: t('home.features.items.security.description'),
     icon: ShieldCheckIcon,
   },
   {
-    name: '高性能',
-    description: '优化的系统架构，快速响应用户操作',
+    name: t('home.features.items.performance.name'),
+    description: t('home.features.items.performance.description'),
     icon: LightBulbIcon,
   },
-]
+])
 
-const roles = [
+const roles = computed(() => [
   {
-    name: '学生',
-    description: '查看作业、提交答案、跟踪进度',
+    name: t('home.roles.items.student.name'),
+    description: t('home.roles.items.student.description'),
     icon: AcademicCapIcon,
     roleKey: 'student',
     features: [
-      '查看和提交作业',
-      '跟踪成绩和进度',
-      '接收作业通知',
-      '管理个人资料',
-      '设置提醒事项'
+      t('home.roles.items.student.features.0'),
+      t('home.roles.items.student.features.1'),
+      t('home.roles.items.student.features.2'),
+      t('home.roles.items.student.features.3'),
+      t('home.roles.items.student.features.4')
     ]
   },
   {
-    name: '课代表',
-    description: '监督班级进度、提醒同学、协助管理',
+    name: t('home.roles.items.monitor.name'),
+    description: t('home.roles.items.monitor.description'),
     icon: UserGroupIcon,
     roleKey: 'monitor',
     features: [
-      '查看班级统计',
-      '监督提交情况',
-      '发送提醒通知',
-      '生成进度报告',
-      '协助沟通管理'
+      t('home.roles.items.monitor.features.0'),
+      t('home.roles.items.monitor.features.1'),
+      t('home.roles.items.monitor.features.2'),
+      t('home.roles.items.monitor.features.3'),
+      t('home.roles.items.monitor.features.4')
     ]
   },
   {
-    name: '老师',
-    description: '布置作业、批改评分、管理班级',
+    name: t('home.roles.items.teacher.name'),
+    description: t('home.roles.items.teacher.description'),
     icon: PresentationChartBarIcon,
     roleKey: 'teacher',
     features: [
-      '布置和管理作业',
-      '批改和评分',
-      '班级学生管理',
-      '数据分析统计',
-      '课堂互动管理'
+      t('home.roles.items.teacher.features.0'),
+      t('home.roles.items.teacher.features.1'),
+      t('home.roles.items.teacher.features.2'),
+      t('home.roles.items.teacher.features.3'),
+      t('home.roles.items.teacher.features.4')
     ]
   }
-]
+])
+
+// 页面标题
+document.title = `${t('home.title')} - ${t('app.name')}`
 </script>

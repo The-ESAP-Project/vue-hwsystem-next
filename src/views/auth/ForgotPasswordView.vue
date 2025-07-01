@@ -9,10 +9,10 @@
           </svg>
         </div>
         <h1 class="text-4xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
-          忘记密码
+          {{ t('auth.forgotPassword.title') }}
         </h1>
         <p class="mt-3 text-lg text-gray-600 dark:text-gray-300">
-          输入您的用户名，我们将帮您重置密码
+          {{ t('auth.forgotPassword.subtitle') }}
         </p>
       </div>
 
@@ -22,13 +22,13 @@
           <form class="space-y-6" @submit.prevent="handleSubmit">
             <div>
               <label class="block text-sm font-semibold text-gray-900 dark:text-white mb-2">
-                用户名
+                {{ t('auth.forgotPassword.username') }}
               </label>
               <input
                 v-model="form.username"
                 type="text"
                 required
-                placeholder="请输入您的用户名"
+                :placeholder="t('auth.forgotPassword.usernamePlaceholder')"
                 class="block w-full px-3 py-3 rounded-2xl border-0 bg-gray-50 dark:bg-gray-700/50 text-gray-900 dark:text-white placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-600 transition-all duration-200"
               >
             </div>
@@ -46,8 +46,8 @@
               :disabled="pending"
               class="w-full py-3 px-4 text-sm font-semibold rounded-2xl text-white bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 disabled:opacity-50 transition-all duration-200 transform hover:scale-105 disabled:hover:scale-100"
             >
-              <span v-if="pending">处理中...</span>
-              <span v-else>重置密码</span>
+              <span v-if="pending">{{ t('auth.forgotPassword.processing') }}</span>
+              <span v-else>{{ t('auth.forgotPassword.submitButton') }}</span>
             </button>
           </form>
         </div>
@@ -60,22 +60,22 @@
             </svg>
           </div>
           <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-            重置申请已提交
+            {{ t('auth.forgotPassword.successTitle') }}
           </h3>
           <p class="text-gray-600 dark:text-gray-300 mb-6">
-            请联系管理员获取新密码，或稍后重试
+            {{ t('auth.forgotPassword.successMessage') }}
           </p>
         </div>
 
         <!-- 返回登录链接 -->
         <div class="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700 text-center">
           <p class="text-sm text-gray-600 dark:text-gray-400">
-            记起密码了？
+            {{ t('auth.forgotPassword.backToLogin') }}
             <router-link
               to="/auth/login"
               class="font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 transition-colors"
             >
-              返回登录
+              {{ t('auth.forgotPassword.loginLink') }}
             </router-link>
           </p>
         </div>
@@ -86,6 +86,9 @@
 
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
+import { useLanguage } from '@/composables/useLanguage'
+
+const { t } = useLanguage()
 
 const form = reactive({
   username: ''
@@ -100,7 +103,7 @@ const handleSubmit = async () => {
     error.value = ''
 
     if (!form.username.trim()) {
-      throw new Error('请输入用户名')
+      throw new Error(t('auth.forgotPassword.validation.usernameRequired'))
     }
 
     pending.value = true
@@ -110,8 +113,8 @@ const handleSubmit = async () => {
 
     submitted.value = true
 
-  } catch (err: any) {
-    error.value = err.message || '重置失败，请重试'
+  } catch (err: unknown) {
+    error.value = err instanceof Error ? err.message : t('auth.forgotPassword.validation.resetFailed')
   } finally {
     pending.value = false
   }

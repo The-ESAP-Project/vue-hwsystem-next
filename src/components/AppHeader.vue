@@ -11,13 +11,54 @@
               </svg>
             </div>
             <span class="ml-2 text-lg sm:text-xl font-bold text-gray-900 dark:text-white transition-colors duration-200 truncate">
-              作业管理系统
+              {{ t('app.name') }}
             </span>
           </router-link>
         </div>
 
         <!-- Desktop Controls -->
         <div class="hidden sm:flex items-center space-x-4">
+          <!-- 语言切换 -->
+          <div class="relative language-menu-container">
+            <button
+              @click="toggleLanguageMenu"
+              class="p-2 rounded-lg text-gray-500 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors duration-200"
+              :title="t('header.language')"
+            >
+              <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
+              </svg>
+            </button>
+
+            <!-- 语言选择下拉菜单 -->
+            <Transition
+              enter-active-class="transition duration-200 ease-out"
+              enter-from-class="transform scale-95 opacity-0"
+              enter-to-class="transform scale-100 opacity-100"
+              leave-active-class="transition duration-75 ease-in"
+              leave-from-class="transform scale-100 opacity-100"
+              leave-to-class="transform scale-95 opacity-0"
+            >
+              <div
+                v-show="isLanguageMenuOpen"
+                class="absolute right-0 top-full mt-2 w-32 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-1 z-50"
+              >
+                <button
+                  v-for="lang in availableLocales"
+                  :key="lang.code"
+                  @click="selectLanguage(lang.code)"
+                  class="flex items-center justify-between w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
+                  :class="{ 'bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400': locale === lang.code }"
+                >
+                  {{ lang.name }}
+                  <svg v-if="locale === lang.code" class="h-4 w-4 text-indigo-600 dark:text-indigo-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                  </svg>
+                </button>
+              </div>
+            </Transition>
+          </div>
+
           <!-- 主题切换按钮 -->
           <div class="relative theme-menu-container">
             <button
@@ -60,7 +101,7 @@
                   :class="{ 'bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400': theme === themeOption.value }"
                 >
                   <component :is="themeOption.icon" class="h-4 w-4" />
-                  {{ themeOption.label }}
+                  {{ t(`header.theme.${themeOption.key}`) }}
                   <svg v-if="theme === themeOption.value" class="h-4 w-4 ml-auto text-indigo-600 dark:text-indigo-400" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
                   </svg>
@@ -83,7 +124,7 @@
                 @click="handleLogout"
                 class="px-3 py-1.5 text-sm text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors duration-200"
               >
-                退出
+                {{ t('header.logout') }}
               </button>
             </div>
           </template>
@@ -93,7 +134,7 @@
               to="/auth/login"
               class="px-4 py-2 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg transition-colors duration-200"
             >
-              登录
+              {{ t('header.login') }}
             </router-link>
           </template>
         </div>
@@ -149,14 +190,32 @@
                 <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
                 </svg>
-                控制台
+                {{ t('header.dashboard') }}
               </router-link>
 
               <div class="border-t border-gray-200 dark:border-gray-700 my-2"></div>
 
+              <!-- 移动端语言切换 -->
+              <div class="px-3 py-2">
+                <p class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">{{ t('header.language') }}</p>
+                <div class="grid grid-cols-2 gap-2">
+                  <button
+                    v-for="lang in availableLocales"
+                    :key="lang.code"
+                    @click="selectLanguage(lang.code)"
+                    class="flex items-center justify-center gap-2 p-2 rounded-lg text-xs font-medium transition-colors duration-200"
+                    :class="locale === lang.code
+                      ? 'bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400'
+                      : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700'"
+                  >
+                    {{ lang.shortName }}
+                  </button>
+                </div>
+              </div>
+
               <!-- 移动端主题切换 -->
               <div class="px-3 py-2">
-                <p class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">主题设置</p>
+                <p class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">{{ t('header.theme.settings') }}</p>
                 <div class="grid grid-cols-3 gap-2">
                   <button
                     v-for="themeOption in themeOptions"
@@ -168,7 +227,7 @@
                       : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700'"
                   >
                     <component :is="themeOption.icon" class="h-4 w-4" />
-                    {{ themeOption.shortLabel }}
+                    {{ t(`header.theme.${themeOption.key}Short`) }}
                   </button>
                 </div>
               </div>
@@ -182,7 +241,7 @@
                 <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                 </svg>
-                退出登录
+                {{ t('header.logoutMobile') }}
               </button>
             </template>
             <template v-else>
@@ -192,7 +251,7 @@
                 @click="closeMobileMenu"
                 class="block px-3 py-3 text-base font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-50 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-700 rounded-md transition-colors duration-200"
               >
-                登录
+                {{ t('header.login') }}
               </router-link>
             </template>
           </div>
@@ -207,6 +266,7 @@ import { ref, h, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/user'
 import { useDarkMode } from '@/composables/useDarkMode'
+import { useLanguage } from '@/composables/useLanguage'
 
 const router = useRouter()
 const userStore = useUserStore()
@@ -214,16 +274,19 @@ const userStore = useUserStore()
 // 主题管理
 const { theme, themeIcon, themeLabel, setTheme } = useDarkMode()
 
+// 语言管理
+const { locale, availableLocales, setLocale, t } = useLanguage()
+
 // Mobile menu state
 const isMobileMenuOpen = ref(false)
 const isThemeMenuOpen = ref(false)
+const isLanguageMenuOpen = ref(false)
 
 // 主题选项配置
 const themeOptions = [
   {
     value: 'light' as const,
-    label: '浅色模式',
-    shortLabel: '浅色',
+    key: 'light',
     icon: () => h('svg', {
       class: 'h-4 w-4',
       fill: 'none',
@@ -240,8 +303,7 @@ const themeOptions = [
   },
   {
     value: 'dark' as const,
-    label: '深色模式',
-    shortLabel: '深色',
+    key: 'dark',
     icon: () => h('svg', {
       class: 'h-4 w-4',
       fill: 'none',
@@ -258,8 +320,7 @@ const themeOptions = [
   },
   {
     value: 'system' as const,
-    label: '跟随系统',
-    shortLabel: '自动',
+    key: 'system',
     icon: () => h('svg', {
       class: 'h-4 w-4',
       fill: 'none',
@@ -282,9 +343,10 @@ const { currentUser, isAuthenticated, roleText, userAvatar, userAvatarColor, das
 // Toggle mobile menu
 const toggleMobileMenu = () => {
   isMobileMenuOpen.value = !isMobileMenuOpen.value
-  // 关闭移动端菜单时也关闭主题菜单
+  // 关闭移动端菜单时也关闭其他菜单
   if (!isMobileMenuOpen.value) {
     isThemeMenuOpen.value = false
+    isLanguageMenuOpen.value = false
   }
 }
 
@@ -293,16 +355,28 @@ const toggleThemeMenu = () => {
   isThemeMenuOpen.value = !isThemeMenuOpen.value
 }
 
+// Toggle language menu
+const toggleLanguageMenu = () => {
+  isLanguageMenuOpen.value = !isLanguageMenuOpen.value
+}
+
 // Select theme
 const selectTheme = (themeValue: 'light' | 'dark' | 'system') => {
   setTheme(themeValue)
   isThemeMenuOpen.value = false
 }
 
+// Select language
+const selectLanguage = (langCode: string) => {
+  setLocale(langCode)
+  isLanguageMenuOpen.value = false
+}
+
 // Close mobile menu
 const closeMobileMenu = () => {
   isMobileMenuOpen.value = false
   isThemeMenuOpen.value = false
+  isLanguageMenuOpen.value = false
 }
 
 // 处理退出登录
@@ -326,6 +400,9 @@ const handleClickOutside = (event: MouseEvent) => {
   const target = event.target as Element
   if (!target.closest('.theme-menu-container')) {
     isThemeMenuOpen.value = false
+  }
+  if (!target.closest('.language-menu-container')) {
+    isLanguageMenuOpen.value = false
   }
 }
 

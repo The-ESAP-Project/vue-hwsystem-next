@@ -1,0 +1,544 @@
+{
+  "app": {
+    "name": "Homework Management System"
+  },
+  "header": {
+    "login": "Login",
+    "logout": "Logout",
+    "logoutMobile": "Logout",
+    "dashboard": "Dashboard",
+    "user": "User",
+    "language": "Language",
+    "theme": {
+      "settings": "Theme Settings",
+      "light": "Light Mode",
+      "dark": "Dark Mode",
+      "system": "Follow System",
+      "lightShort": "Light",
+      "darkShort": "Dark",
+      "systemShort": "Auto"
+    }
+  },
+  "footer": {
+    "copyright": "© 2022-{year} Homework Management System. All rights reserved.",
+    "about": "About Us",
+    "contact": "Contact Us",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service"
+  },
+  "auth": {
+    "login": {
+      "title": "User Login",
+      "subtitle": "Support for student, teacher, and class representative login",
+      "username": "Username",
+      "usernamePlaceholder": "Enter your username",
+      "password": "Password",
+      "passwordPlaceholder": "Enter your password",
+      "rememberMe": "Remember me",
+      "forgotPassword": "Forgot password?",
+      "loginButton": "Login",
+      "loggingIn": "Logging in...",
+      "noAccount": "Don't have an account?",
+      "register": "Register now",
+      "validation": {
+        "usernameRequired": "Please enter username",
+        "passwordRequired": "Please enter password",
+        "loginFailed": "Login failed, please try again"
+      }
+    },
+    "forgotPassword": {
+      "title": "Forgot Password",
+      "subtitle": "Enter your username and we'll help you reset your password",
+      "username": "Username",
+      "usernamePlaceholder": "Enter your username",
+      "submitButton": "Reset Password",
+      "processing": "Processing...",
+      "successTitle": "Reset Request Submitted",
+      "successMessage": "Please contact the administrator for a new password, or try again later",
+      "backToLogin": "Remember your password?",
+      "loginLink": "Back to Login",
+      "validation": {
+        "usernameRequired": "Please enter username",
+        "resetFailed": "Reset failed, please try again"
+      }
+    },
+    "register": {
+      "title": "Create Account",
+      "subtitle": "Join our learning platform",
+      "notAvailable": "Registration Not Available",
+      "notAvailableMessage": "Registration feature is under development. Please contact the administrator for an account or try again later",
+      "username": "Username",
+      "usernamePlaceholder": "Enter username",
+      "realName": "Real Name",
+      "realNamePlaceholder": "Enter your real name",
+      "role": "Role",
+      "rolePlaceholder": "Select your role",
+      "roles": {
+        "student": "Student",
+        "teacher": "Teacher",
+        "monitor": "Class Representative"
+      },
+      "password": "Password",
+      "passwordPlaceholder": "Enter password",
+      "confirmPassword": "Confirm Password",
+      "confirmPasswordPlaceholder": "Enter password again",
+      "submitButton": "Create Account",
+      "processing": "Registering...",
+      "hasAccount": "Already have an account?",
+      "loginLink": "Login now",
+      "validation": {
+        "usernameRequired": "Please enter username",
+        "realNameRequired": "Please enter real name",
+        "roleRequired": "Please select role",
+        "passwordRequired": "Please enter password",
+        "passwordMismatch": "Passwords do not match",
+        "registerFailed": "Registration failed, please try again"
+      }
+    }
+  },
+  "home": {
+    "title": "Welcome",
+    "hero": {
+      "badge": "Modern Educational Management Platform",
+      "learnMore": "Learn more",
+      "title": "Homework Management System",
+      "subtitle": "Complete homework management solution for students, teachers and class representatives",
+      "dashboard": "Go to Dashboard",
+      "login": "Login Now",
+      "learnRoles": "Learn Role Features"
+    },
+    "features": {
+      "title": "Modern Features",
+      "subtitle": "Comprehensive Educational Management Solution",
+      "description": "Built with modern tech stack, providing intuitive interface and powerful functionality",
+      "items": {
+        "responsive": {
+          "name": "Responsive Design",
+          "description": "Perfect adaptation to various devices, providing consistent user experience"
+        },
+        "notification": {
+          "name": "Real-time Notifications",
+          "description": "Timely push homework reminders and important notifications"
+        },
+        "visualization": {
+          "name": "Data Visualization",
+          "description": "Intuitive charts displaying learning progress and statistical data"
+        },
+        "grading": {
+          "name": "Smart Grading",
+          "description": "Automated homework scoring and feedback system"
+        },
+        "security": {
+          "name": "Security Assurance",
+          "description": "Multi-layer security protection, safeguarding user privacy and data"
+        },
+        "performance": {
+          "name": "High Performance",
+          "description": "Optimized system architecture, fast response to user operations"
+        }
+      }
+    },
+    "roles": {
+      "title": "Role Features",
+      "subtitle": "Tailored for Each Role",
+      "description": "Different roles have different functional permissions, ensuring system security and usability",
+      "dashboard": "Go to Dashboard",
+      "loginAs": "Login as {role}",
+      "items": {
+        "student": {
+          "name": "Student",
+          "description": "View assignments, submit answers, track progress",
+          "features": [
+            "View and submit assignments",
+            "Track grades and progress",
+            "Receive assignment notifications",
+            "Manage personal profile",
+            "Set reminders"
+          ]
+        },
+        "monitor": {
+          "name": "Class Representative",
+          "description": "Monitor class progress, remind classmates, assist management",
+          "features": [
+            "View class statistics",
+            "Monitor submission status",
+            "Send reminder notifications",
+            "Generate progress reports",
+            "Assist communication management"
+          ]
+        },
+        "teacher": {
+          "name": "Teacher",
+          "description": "Assign homework, grade assignments, manage classes",
+          "features": [
+            "Assign and manage homework",
+            "Grade and score",
+            "Manage class students",
+            "Data analysis and statistics",
+            "Classroom interaction management"
+          ]
+        }
+      }
+    },
+    "cta": {
+      "title": "Start Your Learning Journey",
+      "subtitle": "Join our platform and experience modern educational management",
+      "dashboard": "Go to Dashboard",
+      "start": "Try Now",
+      "source": "View Source"
+    }
+  },
+  "about": {
+    "title": "About Homework Management System",
+    "subtitle": "Modern educational homework management platform built with Vue 3 + TypeScript",
+    "features": {
+      "title": "Product Features",
+      "subtitle": "Crafted for Educational Scenarios",
+      "description": "Designed specifically for homework management in elementary and secondary schools, supporting complete teaching processes for more efficient education",
+      "items": {
+        "multiRole": {
+          "title": "Multi-Role Support",
+          "description": "Complete workflows for students, teachers, and class representatives with precise permission control system"
+        },
+        "responsive": {
+          "title": "Responsive Design",
+          "description": "Perfect adaptation to desktop and mobile devices, usable anytime, anywhere"
+        },
+        "modernTech": {
+          "title": "Modern Technology Stack",
+          "description": "Vue 3 + Composition API + TypeScript, type safety and development experience"
+        },
+        "darkMode": {
+          "title": "Dark Mode",
+          "description": "Support for light/dark/system three theme modes, eye-friendly experience"
+        },
+        "security": {
+          "title": "Security Assurance",
+          "description": "JWT authentication + permission control, multi-layer security protection"
+        },
+        "visualization": {
+          "title": "Data Visualization",
+          "description": "Intuitive statistical charts and progress display, data-driven decisions"
+        }
+      }
+    },
+    "tech": {
+      "title": "Technical Architecture",
+      "subtitle": "Modern Technology Selection",
+      "description": "Adopting industry best practices to ensure project maintainability and scalability",
+      "frontend": {
+        "title": "Frontend Tech Stack",
+        "vue": "Progressive JavaScript Framework",
+        "typescript": "Type-safe JavaScript Superset",
+        "vite": "Next Generation Frontend Build Tool",
+        "tailwind": "Utility-first CSS Framework",
+        "pinia": "Vue.js State Management Library"
+      },
+      "backend": {
+        "title": "Backend Tech Stack",
+        "rust": "Systems Programming Language, Memory Safe",
+        "actix": "High-performance Async Web Framework",
+        "postgresql": "Enterprise-grade Relational Database",
+        "jwt": "Stateless Authentication",
+        "serde": "Efficient Serialization/Deserialization"
+      }
+    },
+    "performance": {
+      "title": "Performance Metrics",
+      "subtitle": "Pursuing Ultimate User Experience",
+      "responseTime": {
+        "title": "Response Time",
+        "value": "< 50ms",
+        "description": "P95 API Response"
+      },
+      "concurrency": {
+        "title": "Concurrent Processing",
+        "value": "1000+",
+        "description": "Single Machine Concurrent Connections"
+      },
+      "memory": {
+        "title": "Memory Usage",
+        "value": "< 100MB",
+        "description": "Idle Memory Usage"
+      },
+      "startup": {
+        "title": "Startup Time",
+        "value": "< 2s",
+        "description": "Cold Start to Ready"
+      }
+    },
+    "opensource": {
+      "title": "Open Source Project",
+      "subtitle": "Open source under MIT license, community contributions and feedback welcome",
+      "frontend": "Frontend Source",
+      "backend": "Backend Source",
+      "team": {
+        "title": "Development Team",
+        "name": "The ESAP Project",
+        "description": "Committed to building better educational technology"
+      }
+    }
+  },
+  "contact": {
+    "title": "Contact Us",
+    "subtitle": "Have any questions or suggestions? Feel free to contact us anytime",
+    "info": {
+      "title": "Contact Information",
+      "email": {
+        "title": "Email Address",
+        "support": "support{'@'}hwsystem.com",
+        "admin": "admin{'@'}hwsystem.com"
+      },
+      "phone": {
+        "title": "Phone Number",
+        "number": "+86 400-123-4567",
+        "hours": "Business Hours: Monday to Friday 9:00-18:00"
+      },
+      "address": {
+        "title": "Office Address",
+        "street": "No.1 Zhongguancun Street, Haidian District, Beijing",
+        "building": "Technology Building, 15th Floor"
+      },
+      "online": {
+        "title": "Online Support",
+        "wechat": "WeChat Support: HWSystem2024",
+        "qq": "QQ Group: 123456789"
+      }
+    },
+    "form": {
+      "title": "Send Message",
+      "name": {
+        "label": "Name",
+        "placeholder": "Please enter your name"
+      },
+      "email": {
+        "label": "Email",
+        "placeholder": "Please enter your email"
+      },
+      "subject": {
+        "label": "Subject",
+        "placeholder": "Please select a subject",
+        "options": {
+          "bug": "Bug Report",
+          "feature": "Feature Request",
+          "support": "Technical Support",
+          "other": "Other Issues"
+        }
+      },
+      "message": {
+        "label": "Message",
+        "placeholder": "Please describe your question or suggestion in detail..."
+      },
+      "submit": "Send Message",
+      "submitting": "Sending...",
+      "success": "Message sent successfully! We will reply to you as soon as possible.",
+      "error": "Failed to send, please try again"
+    },
+    "backHome": "Back to Home"
+  },
+  "privacy": {
+    "title": "Privacy Policy",
+    "subtitle": "We value your privacy. This policy explains how we collect, use, and protect your personal information",
+    "lastUpdated": "Last Updated: December 28, 2024",
+    "sections": {
+      "collection": {
+        "title": "Information Collection",
+        "intro": "We collect the following types of information:",
+        "items": [
+          "Account Information: Username, name, role (student/teacher/class representative)",
+          "Learning Data: Homework submissions, grades, learning progress",
+          "System Logs: Login records, operation logs (excluding sensitive information)",
+          "Device Information: IP address, browser type, device identifiers"
+        ]
+      },
+      "usage": {
+        "title": "Information Usage",
+        "intro": "We use the collected information to:",
+        "items": [
+          "Provide and improve educational management services",
+          "Personalize learning experience and content recommendations",
+          "Generate learning statistics and progress reports",
+          "Ensure system security and prevent abuse",
+          "Provide customer support services"
+        ]
+      },
+      "sharing": {
+        "title": "Information Sharing",
+        "intro": "We do not sell your personal information to third parties. We only share information in the following situations:",
+        "items": [
+          "Share necessary learning data within the same class (such as homework completion status)",
+          "Provide statistical information required for class management to teachers and class representatives",
+          "Comply with legal requirements or cooperate with law enforcement investigations",
+          "Other situations with your explicit consent"
+        ]
+      },
+      "security": {
+        "title": "Data Security",
+        "intro": "We take multiple security measures to protect your information:",
+        "items": [
+          "Use SSL encryption to transmit sensitive data",
+          "Regularly backup data and store in secure environments",
+          "Limit employee access to personal information",
+          "Conduct regular security audits and vulnerability scans",
+          "Implement strict access control and authentication"
+        ]
+      },
+      "rights": {
+        "title": "Your Rights",
+        "intro": "You have the following rights regarding your personal information:",
+        "items": [
+          "View and update your account information",
+          "Request deletion of your personal data (within legal limits)",
+          "Export your learning data",
+          "Refuse certain data processing activities",
+          "Report data processing issues to us"
+        ]
+      },
+      "cookies": {
+        "title": "Cookie Usage",
+        "content": "We use cookies to improve user experience, including remembering login status, personalized settings, and analyzing website usage. You can manage cookie preferences through your browser settings."
+      },
+      "updates": {
+        "title": "Policy Updates",
+        "content": "We may periodically update this privacy policy. For major changes, we will notify users in advance through platform notifications or email. Continued use of the service indicates acceptance of the updated policy."
+      },
+      "contact": {
+        "title": "Contact Us",
+        "intro": "If you have any questions about this privacy policy or need to exercise your rights, please contact us through:",
+        "items": [
+          "Email: privacy@hwsystem.com",
+          "Phone: +86 400-123-4567",
+          "Address: No.1 Zhongguancun Street, Haidian District, Beijing, Technology Building, 15th Floor"
+        ]
+      }
+    },
+    "notice": {
+      "title": "Important Notice:",
+      "content": "This platform is designed for educational purposes, and we pay special attention to protecting the privacy of minor users. If you are under 18, please use this service with guardian consent."
+    },
+    "backHome": "Back to Home"
+  },
+  "terms": {
+    "title": "Terms of Service",
+    "subtitle": "Please read the following terms carefully. Using our service indicates that you agree to these terms",
+    "lastUpdated": "Last Updated: December 28, 2024",
+    "sections": {
+      "service": {
+        "title": "Service Description",
+        "content": "The Homework Management System (hereinafter referred to as \"the Service\") is an online platform for educational institutions, providing homework management, progress tracking, and class collaboration features for students, teachers, and class representatives."
+      },
+      "account": {
+        "title": "User Registration and Account",
+        "items": [
+          "Users must provide true and accurate registration information",
+          "Each user can only register one account",
+          "Users are responsible for protecting account security and must not share account information with others",
+          "Contact us immediately if account theft is discovered",
+          "Users are responsible for all activities conducted using their account"
+        ]
+      },
+      "conduct": {
+        "title": "User Code of Conduct",
+        "intro": "When using the Service, users must not:",
+        "items": [
+          "Upload, publish, or disseminate illegal, harmful, threatening, abusive, harassing, defamatory, vulgar, obscene, or other inappropriate content",
+          "Infringe upon others' intellectual property rights, privacy rights, or other legitimate rights",
+          "Engage in any activities that may damage, disable, overload, or impair servers",
+          "Attempt unauthorized access to systems or other users' accounts",
+          "Use automated tools or scripts to interfere with normal service",
+          "Complete homework for others or assist in academic misconduct"
+        ]
+      },
+      "integrity": {
+        "title": "Academic Integrity",
+        "intro": "This platform is committed to maintaining an academic integrity environment:",
+        "items": [
+          "Students should complete homework independently and must not plagiarize or use ghostwriters",
+          "Sharing homework answers or assisting others in cheating is prohibited",
+          "Teachers should fairly evaluate student homework without favoritism",
+          "The platform has the right to take appropriate measures when academic misconduct is discovered"
+        ]
+      },
+      "ip": {
+        "title": "Intellectual Property",
+        "items": [
+          "The Service's software, interface design, trademarks, etc. are protected by intellectual property law",
+          "User-uploaded content remains owned by users but grants us usage license",
+          "Users guarantee that uploaded content does not infringe third-party intellectual property rights",
+          "We have the right to immediately delete and pursue liability when infringing content is discovered"
+        ]
+      },
+      "availability": {
+        "title": "Service Availability",
+        "items": [
+          "We strive to ensure continuous service availability but do not guarantee 100% uptime",
+          "Regular maintenance and system upgrades may cause temporary service interruptions",
+          "Important maintenance activities will be notified to users in advance",
+          "We are not liable for service interruptions caused by force majeure"
+        ]
+      },
+      "backup": {
+        "title": "Data Backup and Recovery",
+        "items": [
+          "We regularly backup user data to prevent data loss",
+          "Users should also backup important data themselves",
+          "Data recovery services will be provided on a best-effort basis but complete recovery is not guaranteed",
+          "Users are recommended to regularly export important learning records"
+        ]
+      },
+      "payment": {
+        "title": "Fees and Payment",
+        "items": [
+          "Basic features are provided free to all users",
+          "Advanced features may require paid subscription",
+          "All fees are priced in RMB and support multiple payment methods",
+          "Refund policy will be clearly explained at time of purchase"
+        ]
+      },
+      "liability": {
+        "title": "Limitation of Liability",
+        "items": [
+          "The Service is provided \"as is\" without any express or implied warranties",
+          "We are not responsible for users' learning outcomes or teaching effectiveness",
+          "To the maximum extent permitted by law, our liability is limited to service fees",
+          "Users should bear the risks of using the service themselves"
+        ]
+      },
+      "termination": {
+        "title": "Service Termination",
+        "items": [
+          "Users can stop using the service and delete their account at any time",
+          "Users who violate the terms of service may have their service suspended or terminated",
+          "Reasonable time will be provided to export data before service termination",
+          "Certain data may be retained for a period as required by law"
+        ]
+      },
+      "legal": {
+        "title": "Applicable Law and Dispute Resolution",
+        "items": [
+          "These terms are governed by the laws of the People's Republic of China",
+          "Disputes arising from these terms should first be resolved through friendly negotiation",
+          "If negotiation fails, disputes shall be submitted to the jurisdiction of Beijing Haidian District People's Court"
+        ]
+      },
+      "modifications": {
+        "title": "Terms Modification",
+        "content": "We reserve the right to modify these terms at any time. Major modifications will be notified to users through platform announcements or email. Modified terms take effect from the date of publication, and continued use of the service indicates agreement to the modified terms."
+      },
+      "contact": {
+        "title": "Contact Information",
+        "intro": "If you have any questions or need help, please contact us:",
+        "items": [
+          "Email: legal@hwsystem.com",
+          "Phone: +86 400-123-4567",
+          "Address: No.1 Zhongguancun Street, Haidian District, Beijing, Technology Building, 15th Floor"
+        ]
+      }
+    },
+    "notice": {
+      "title": "Notice:",
+      "content": "Using this service indicates that you have read, understood, and agree to comply with all the above terms. If you do not agree to any terms, please stop using this service."
+    },
+    "backHome": "Back to Home"
+  }
+}
