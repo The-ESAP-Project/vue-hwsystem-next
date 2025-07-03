@@ -2,7 +2,6 @@ import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import AuthService from '@/services/auth'
 import type { User, LoginRequest } from '@/types/auth'
-import type { ApiError } from '@/services/api'
 
 export const useUserStore = defineStore('user', () => {
   // 状态

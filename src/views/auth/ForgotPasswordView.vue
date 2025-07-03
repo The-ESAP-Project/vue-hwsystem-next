@@ -145,4 +145,7 @@ const handleSubmit = async () => {
     pending.value = false
   }
 }
+
+// 页面标题
+document.title = `${t('auth.forgotPassword.title')} - ${t('app.name')}`
 </script>

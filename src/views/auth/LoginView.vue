@@ -332,6 +332,9 @@ const handleLogin = async () => {
     error.value = err instanceof Error ? err.message : t('auth.login.validation.loginFailed')
   }
 }
+
+// 页面标题
+document.title = `${t('auth.login.title')} - ${t('app.name')}`
 </script>
 
 <style scoped>
