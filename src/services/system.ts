@@ -14,7 +14,7 @@ export class SystemService {
    * 获取系统设置
    */
   static async getSettings(): Promise<SystemSettings> {
-    const response = await api.get<ApiResponse<SystemSettings>>('/system/settings')
+    const response = await api.get<ApiResponse<SystemSettings>>('/v1/system/settings')
     return response.data.data
   }
 
@@ -25,7 +25,7 @@ export class SystemService {
     data: UpdateSystemSettingsRequest,
   ): Promise<UpdateSystemSettingsResponse> {
     const response = await api.put<ApiResponse<UpdateSystemSettingsResponse>>(
-      '/system/settings',
+      '/v1/system/settings',
       data,
     )
     return response.data.data
@@ -35,7 +35,7 @@ export class SystemService {
    * 获取系统日志
    */
   static async getLogs(params?: SystemLogParams): Promise<SystemLogResponse> {
-    const response = await api.get<ApiResponse<SystemLogResponse>>('/system/logs', {
+    const response = await api.get<ApiResponse<SystemLogResponse>>('/v1/system/logs', {
       params,
     })
     return response.data.data

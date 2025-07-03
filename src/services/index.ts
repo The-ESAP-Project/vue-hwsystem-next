@@ -8,7 +8,6 @@ export { default as SystemService } from './system'
 
 // 导出 HTTP 客户端
 export { default as api } from './api'
-export { httpClient } from './httpClient'
 
 // 导出类型
 export type { ApiResponse, ApiError } from './api'

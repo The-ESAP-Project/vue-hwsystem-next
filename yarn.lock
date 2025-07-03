@@ -705,6 +705,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@heroicons/vue@npm:^2.2.0":
+  version: 2.2.0
+  resolution: "@heroicons/vue@npm:2.2.0"
+  peerDependencies:
+    vue: ">= 3"
+  checksum: 10/ba0bf2e6c55afafb7bfacbb1bfeee1276f2870d9bd78236cdd8b563f70196cdfda840e7ed16c9d3c52db724bec0766ccab049605e93a1eb82d6f83cef1e9c75a
+  languageName: node
+  linkType: hard
+
 "@humanfs/core@npm:^0.19.1":
   version: 0.19.1
   resolution: "@humanfs/core@npm:0.19.1"
@@ -5382,6 +5391,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "vue-hwsystem-next@workspace:."
   dependencies:
+    "@heroicons/vue": "npm:^2.2.0"
     "@tailwindcss/vite": "npm:^4.1.11"
     "@tsconfig/node22": "npm:^22.0.2"
     "@types/jsdom": "npm:^21.1.7"

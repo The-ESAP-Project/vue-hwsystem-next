@@ -14,7 +14,7 @@ export class AuthService {
    * 用户登录
    */
   static async login(credentials: LoginRequest): Promise<LoginResponseData> {
-    const response = await api.post<ApiResponse<LoginResponseData>>('/auth/login', credentials)
+    const response = await api.post<ApiResponse<LoginResponseData>>('/v1/auth/login', credentials)
     return response.data.data
   }
 
@@ -33,7 +33,7 @@ export class AuthService {
    * 获取当前用户信息
    */
   static async getCurrentUser(): Promise<User> {
-    const response = await api.get<ApiResponse<User>>('/auth/me')
+    const response = await api.get<ApiResponse<User>>('/v1/auth/me')
     return response.data.data
   }
 
@@ -42,7 +42,7 @@ export class AuthService {
    */
   static async verifyToken(): Promise<boolean> {
     try {
-      await api.get('/auth/verify')
+      await api.get('/v1/auth/verify')
       return true
     } catch {
       return false

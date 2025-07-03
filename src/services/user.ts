@@ -14,7 +14,7 @@ export class UserService {
    * 获取用户列表
    */
   static async getUsers(params?: UserListParams): Promise<UserListResponse> {
-    const response = await api.get<ApiResponse<UserListResponse>>('/users', {
+    const response = await api.get<ApiResponse<UserListResponse>>('/v1/users', {
       params,
     })
     return response.data.data
@@ -24,7 +24,7 @@ export class UserService {
    * 创建用户
    */
   static async createUser(data: CreateUserRequest): Promise<User> {
-    const response = await api.post<ApiResponse<User>>('/users', data)
+    const response = await api.post<ApiResponse<User>>('/v1/users', data)
     return response.data.data
   }
 
@@ -32,7 +32,7 @@ export class UserService {
    * 获取用户详情
    */
   static async getUser(userId: number): Promise<User> {
-    const response = await api.get<ApiResponse<User>>(`/users/${userId}`)
+    const response = await api.get<ApiResponse<User>>(`/v1/users/${userId}`)
     return response.data.data
   }
 
@@ -40,7 +40,7 @@ export class UserService {
    * 更新用户信息
    */
   static async updateUser(userId: number, data: UpdateUserRequest): Promise<User> {
-    const response = await api.put<ApiResponse<User>>(`/users/${userId}`, data)
+    const response = await api.put<ApiResponse<User>>(`/v1/users/${userId}`, data)
     return response.data.data
   }
 
@@ -48,7 +48,7 @@ export class UserService {
    * 删除用户
    */
   static async deleteUser(userId: number): Promise<void> {
-    await api.delete(`/users/${userId}`)
+    await api.delete(`/v1/users/${userId}`)
   }
 }
 

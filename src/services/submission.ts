@@ -31,7 +31,7 @@ export class SubmissionService {
     }
 
     const response = await api.post<ApiResponse<Submission>>(
-      `/homeworks/${homeworkId}/submissions`,
+      `/v1/homeworks/${homeworkId}/submissions`,
       formData,
       {
         headers: {
@@ -50,7 +50,7 @@ export class SubmissionService {
     params?: SubmissionListParams,
   ): Promise<SubmissionListResponse> {
     const response = await api.get<ApiResponse<SubmissionListResponse>>(
-      `/homeworks/${homeworkId}/submissions`,
+      `/v1/homeworks/${homeworkId}/submissions`,
       { params },
     )
     return response.data.data
@@ -60,7 +60,7 @@ export class SubmissionService {
    * 获取提交详情
    */
   static async getSubmission(submissionId: number): Promise<Submission> {
-    const response = await api.get<ApiResponse<Submission>>(`/submissions/${submissionId}`)
+    const response = await api.get<ApiResponse<Submission>>(`/v1/submissions/${submissionId}`)
     return response.data.data
   }
 
@@ -69,7 +69,7 @@ export class SubmissionService {
    */
   static async gradeSubmission(submissionId: number, data: GradingRequest): Promise<Submission> {
     const response = await api.post<ApiResponse<Submission>>(
-      `/submissions/${submissionId}/feedback`,
+      `/v1/submissions/${submissionId}/feedback`,
       data,
     )
     return response.data.data
@@ -83,7 +83,7 @@ export class SubmissionService {
     data: ExportSubmissionsRequest,
   ): Promise<ExportTaskResponse> {
     const response = await api.post<ApiResponse<ExportTaskResponse>>(
-      `/homeworks/${homeworkId}/submissions/export`,
+      `/v1/homeworks/${homeworkId}/submissions/export`,
       data,
     )
     return response.data.data
@@ -95,7 +95,7 @@ export class SubmissionService {
   static async getStudentSubmissions(
     params?: SubmissionListParams,
   ): Promise<SubmissionListResponse> {
-    const response = await api.get<ApiResponse<SubmissionListResponse>>('/submissions', {
+    const response = await api.get<ApiResponse<SubmissionListResponse>>('/v1/submissions', {
       params,
     })
     return response.data.data

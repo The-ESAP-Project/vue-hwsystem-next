@@ -38,7 +38,7 @@ export class HomeworkService {
       })
     }
 
-    const response = await api.post<ApiResponse<Homework>>('/homeworks', formData, {
+    const response = await api.post<ApiResponse<Homework>>('/v1/homeworks', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
@@ -50,7 +50,7 @@ export class HomeworkService {
    * 获取作业列表
    */
   static async getHomeworks(params?: HomeworkListParams): Promise<HomeworkListResponse> {
-    const response = await api.get<ApiResponse<HomeworkListResponse>>('/homeworks', {
+    const response = await api.get<ApiResponse<HomeworkListResponse>>('/v1/homeworks', {
       params,
     })
     return response.data.data
@@ -60,7 +60,7 @@ export class HomeworkService {
    * 获取作业详情
    */
   static async getHomework(homeworkId: number): Promise<Homework> {
-    const response = await api.get<ApiResponse<Homework>>(`/homeworks/${homeworkId}`)
+    const response = await api.get<ApiResponse<Homework>>(`/v1/homeworks/${homeworkId}`)
     return response.data.data
   }
 
@@ -68,7 +68,7 @@ export class HomeworkService {
    * 更新作业
    */
   static async updateHomework(homeworkId: number, data: UpdateHomeworkRequest): Promise<Homework> {
-    const response = await api.put<ApiResponse<Homework>>(`/homeworks/${homeworkId}`, data)
+    const response = await api.put<ApiResponse<Homework>>(`/v1/homeworks/${homeworkId}`, data)
     return response.data.data
   }
 
@@ -76,7 +76,7 @@ export class HomeworkService {
    * 删除作业
    */
   static async deleteHomework(homeworkId: number): Promise<void> {
-    await api.delete(`/homeworks/${homeworkId}`)
+    await api.delete(`/v1/homeworks/${homeworkId}`)
   }
 }
 
