@@ -20,64 +20,64 @@ const router = createRouter({
       path: '/auth/login',
       name: 'login',
       component: () => import('@/views/auth/LoginView.vue'),
-      meta: { requiresGuest: true }
+      meta: { requiresGuest: true },
     },
     {
       path: '/auth/register',
       name: 'register',
       component: () => import('@/views/auth/RegisterView.vue'),
-      meta: { requiresGuest: true }
+      meta: { requiresGuest: true },
     },
     {
       path: '/auth/forgot-password',
       name: 'forgot-password',
       component: () => import('@/views/auth/ForgotPasswordView.vue'),
-      meta: { requiresGuest: true }
+      meta: { requiresGuest: true },
     },
     // 学生页面
     {
       path: '/student',
       name: 'student',
       component: () => import('@/views/student/StudentIndexView.vue'),
-      meta: { requiresAuth: true, roles: ['student'] }
+      meta: { requiresAuth: true, roles: ['student'] },
     },
     {
       path: '/student/dashboard',
       name: 'student-dashboard',
       component: () => import('@/views/student/StudentDashboardView.vue'),
-      meta: { requiresAuth: true, roles: ['student'] }
+      meta: { requiresAuth: true, roles: ['student'] },
     },
     {
       path: '/student/homework/:id',
       name: 'student-homework',
       component: () => import('@/views/student/StudentHomeworkView.vue'),
-      meta: { requiresAuth: true, roles: ['student'] }
+      meta: { requiresAuth: true, roles: ['student'] },
     },
     // 老师页面
     {
       path: '/teacher',
       name: 'teacher',
       component: () => import('@/views/teacher/TeacherIndexView.vue'),
-      meta: { requiresAuth: true, roles: ['teacher'] }
+      meta: { requiresAuth: true, roles: ['teacher'] },
     },
     {
       path: '/teacher/dashboard',
       name: 'teacher-dashboard',
       component: () => import('@/views/teacher/TeacherDashboardView.vue'),
-      meta: { requiresAuth: true, roles: ['teacher'] }
+      meta: { requiresAuth: true, roles: ['teacher'] },
     },
     // 课代表页面
     {
       path: '/monitor',
       name: 'monitor',
       component: () => import('@/views/monitor/MonitorIndexView.vue'),
-      meta: { requiresAuth: true, roles: ['monitor'] }
+      meta: { requiresAuth: true, roles: ['monitor'] },
     },
     {
       path: '/monitor/dashboard',
       name: 'monitor-dashboard',
       component: () => import('@/views/monitor/MonitorDashboardView.vue'),
-      meta: { requiresAuth: true, roles: ['monitor'] }
+      meta: { requiresAuth: true, roles: ['monitor'] },
     },
     // 其他页面
     {
@@ -108,7 +108,7 @@ router.beforeEach(async (to, from, next) => {
       // 未登录，重定向到登录页
       next({
         name: 'login',
-        query: { redirect: to.fullPath }
+        query: { redirect: to.fullPath },
       })
       return
     }

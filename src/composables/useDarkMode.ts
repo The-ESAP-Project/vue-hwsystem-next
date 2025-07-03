@@ -105,10 +105,14 @@ export const useDarkMode = () => {
 
   const themeLabel = computed(() => {
     switch (theme.value) {
-      case 'light': return '浅色模式'
-      case 'dark': return '深色模式'
-      case 'system': return '跟随系统'
-      default: return '跟随系统'
+      case 'light':
+        return '浅色模式'
+      case 'dark':
+        return '深色模式'
+      case 'system':
+        return '跟随系统'
+      default:
+        return '跟随系统'
     }
   })
 
@@ -125,7 +129,7 @@ export const useDarkMode = () => {
     themeLabel,
     setTheme,
     toggleDarkMode,
-    initTheme
+    initTheme,
   }
 }
 
@@ -137,5 +141,5 @@ export const darkMode = {
   storeTheme,
   getSystemTheme,
   applyTheme,
-  updateDarkMode
+  updateDarkMode,
 }

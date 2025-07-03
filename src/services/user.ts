@@ -6,7 +6,7 @@ import type {
   UserListParams,
   UserListResponse,
   CreateUserRequest,
-  UpdateUserRequest
+  UpdateUserRequest,
 } from '@/types/user'
 
 export class UserService {
@@ -15,7 +15,7 @@ export class UserService {
    */
   static async getUsers(params?: UserListParams): Promise<UserListResponse> {
     const response = await api.get<ApiResponse<UserListResponse>>('/users', {
-      params
+      params,
     })
     return response.data.data
   }

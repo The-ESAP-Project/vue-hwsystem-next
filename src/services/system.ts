@@ -6,7 +6,7 @@ import type {
   UpdateSystemSettingsRequest,
   UpdateSystemSettingsResponse,
   SystemLogParams,
-  SystemLogResponse
+  SystemLogResponse,
 } from '@/types/system'
 
 export class SystemService {
@@ -21,8 +21,13 @@ export class SystemService {
   /**
    * 更新系统设置
    */
-  static async updateSettings(data: UpdateSystemSettingsRequest): Promise<UpdateSystemSettingsResponse> {
-    const response = await api.put<ApiResponse<UpdateSystemSettingsResponse>>('/system/settings', data)
+  static async updateSettings(
+    data: UpdateSystemSettingsRequest,
+  ): Promise<UpdateSystemSettingsResponse> {
+    const response = await api.put<ApiResponse<UpdateSystemSettingsResponse>>(
+      '/system/settings',
+      data,
+    )
     return response.data.data
   }
 
@@ -31,7 +36,7 @@ export class SystemService {
    */
   static async getLogs(params?: SystemLogParams): Promise<SystemLogResponse> {
     const response = await api.get<ApiResponse<SystemLogResponse>>('/system/logs', {
-      params
+      params,
     })
     return response.data.data
   }

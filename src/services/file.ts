@@ -1,11 +1,7 @@
 // 文件管理服务
 import api from './api'
 import type { ApiResponse } from './api'
-import type {
-  UploadFileRequest,
-  UploadFileResponse,
-  FileDownloadResponse
-} from '@/types/file'
+import type { UploadFileRequest, UploadFileResponse, FileDownloadResponse } from '@/types/file'
 
 export class FileService {
   /**
@@ -21,15 +17,11 @@ export class FileService {
       formData.append('related_id', data.related_id.toString())
     }
 
-    const response = await api.post<ApiResponse<UploadFileResponse>>(
-      '/files/upload',
-      formData,
-      {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      }
-    )
+    const response = await api.post<ApiResponse<UploadFileResponse>>('/files/upload', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    })
     return response.data.data
   }
 
@@ -38,7 +30,7 @@ export class FileService {
    */
   static async downloadFile(fileId: string): Promise<FileDownloadResponse> {
     const response = await api.get(`/files/download/${fileId}`, {
-      responseType: 'blob'
+      responseType: 'blob',
     })
 
     // 从响应头中获取文件名
@@ -54,7 +46,7 @@ export class FileService {
 
     return {
       blob: response.data,
-      filename
+      filename,
     }
   }
 

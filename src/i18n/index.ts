@@ -22,8 +22,8 @@ const i18n = createI18n({
   fallbackLocale: 'zh',
   messages: {
     zh,
-    en
-  }
+    en,
+  },
 })
 
 export default i18n

@@ -38,7 +38,7 @@ api.interceptors.request.use(
   },
   (error) => {
     return Promise.reject(error)
-  }
+  },
 )
 
 // 响应拦截器
@@ -104,7 +104,7 @@ api.interceptors.response.use(
         timestamp: new Date().toISOString(),
       } as ApiError)
     }
-  }
+  },
 )
 
 export default api

@@ -6,7 +6,7 @@ import type {
   LoginResponseData,
   RefreshTokenRequest,
   RefreshTokenResponseData,
-  User
+  User,
 } from '@/types/auth'
 
 export class AuthService {
@@ -22,7 +22,10 @@ export class AuthService {
    * 刷新访问令牌
    */
   static async refreshToken(refreshData: RefreshTokenRequest): Promise<RefreshTokenResponseData> {
-    const response = await api.post<ApiResponse<RefreshTokenResponseData>>('/auth/refresh', refreshData)
+    const response = await api.post<ApiResponse<RefreshTokenResponseData>>(
+      '/auth/refresh',
+      refreshData,
+    )
     return response.data.data
   }
 

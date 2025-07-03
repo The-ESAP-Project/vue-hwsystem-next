@@ -6,7 +6,7 @@ import type {
   CreateHomeworkRequest,
   UpdateHomeworkRequest,
   HomeworkListParams,
-  HomeworkListResponse
+  HomeworkListResponse,
 } from '@/types/homework'
 
 export class HomeworkService {
@@ -51,7 +51,7 @@ export class HomeworkService {
    */
   static async getHomeworks(params?: HomeworkListParams): Promise<HomeworkListResponse> {
     const response = await api.get<ApiResponse<HomeworkListResponse>>('/homeworks', {
-      params
+      params,
     })
     return response.data.data
   }

@@ -1,5 +1,10 @@
 import axios from 'axios'
-import type { AxiosInstance, AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig } from 'axios'
+import type {
+  AxiosInstance,
+  AxiosRequestConfig,
+  AxiosResponse,
+  InternalAxiosRequestConfig,
+} from 'axios'
 import type { ApiResponse, ApiError } from '@/types/api'
 
 class HttpClient {
@@ -33,7 +38,7 @@ class HttpClient {
       },
       (error) => {
         return Promise.reject(error)
-      }
+      },
     )
 
     // 响应拦截器 - 处理通用错误和令牌刷新
@@ -82,7 +87,7 @@ class HttpClient {
         }
 
         return Promise.reject(apiError)
-      }
+      },
     )
   }
 
@@ -98,27 +103,45 @@ class HttpClient {
   }
 
   // GET 请求
-  async get<T = unknown>(url: string, config?: AxiosRequestConfig): Promise<AxiosResponse<ApiResponse<T>>> {
+  async get<T = unknown>(
+    url: string,
+    config?: AxiosRequestConfig,
+  ): Promise<AxiosResponse<ApiResponse<T>>> {
     return this.instance.get(url, config)
   }
 
   // POST 请求
-  async post<T = unknown>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<AxiosResponse<ApiResponse<T>>> {
+  async post<T = unknown>(
+    url: string,
+    data?: unknown,
+    config?: AxiosRequestConfig,
+  ): Promise<AxiosResponse<ApiResponse<T>>> {
     return this.instance.post(url, data, config)
   }
 
   // PUT 请求
-  async put<T = unknown>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<AxiosResponse<ApiResponse<T>>> {
+  async put<T = unknown>(
+    url: string,
+    data?: unknown,
+    config?: AxiosRequestConfig,
+  ): Promise<AxiosResponse<ApiResponse<T>>> {
     return this.instance.put(url, data, config)
   }
 
   // DELETE 请求
-  async delete<T = unknown>(url: string, config?: AxiosRequestConfig): Promise<AxiosResponse<ApiResponse<T>>> {
+  async delete<T = unknown>(
+    url: string,
+    config?: AxiosRequestConfig,
+  ): Promise<AxiosResponse<ApiResponse<T>>> {
     return this.instance.delete(url, config)
   }
 
   // PATCH 请求
-  async patch<T = unknown>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<AxiosResponse<ApiResponse<T>>> {
+  async patch<T = unknown>(
+    url: string,
+    data?: unknown,
+    config?: AxiosRequestConfig,
+  ): Promise<AxiosResponse<ApiResponse<T>>> {
     return this.instance.patch(url, data, config)
   }
 

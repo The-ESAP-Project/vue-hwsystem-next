@@ -5,12 +5,21 @@
         <!-- Logo -->
         <div class="flex items-center">
           <router-link to="/" class="flex items-center">
-            <div class="h-8 w-8 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-lg flex items-center justify-center">
+            <div
+              class="h-8 w-8 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-lg flex items-center justify-center"
+            >
               <svg class="h-5 w-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                />
               </svg>
             </div>
-            <span class="ml-2 text-lg sm:text-xl font-bold text-gray-900 dark:text-white transition-colors duration-200 truncate">
+            <span
+              class="ml-2 text-lg sm:text-xl font-bold text-gray-900 dark:text-white transition-colors duration-200 truncate"
+            >
               {{ t('app.name') }}
             </span>
           </router-link>
@@ -26,7 +35,12 @@
               :title="t('header.language')"
             >
               <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"
+                />
               </svg>
             </button>
 
@@ -48,11 +62,23 @@
                   :key="lang.code"
                   @click="selectLanguage(lang.code)"
                   class="flex items-center justify-between w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
-                  :class="{ 'bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400': locale === lang.code }"
+                  :class="{
+                    'bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400':
+                      locale === lang.code,
+                  }"
                 >
                   {{ lang.name }}
-                  <svg v-if="locale === lang.code" class="h-4 w-4 text-indigo-600 dark:text-indigo-400" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                  <svg
+                    v-if="locale === lang.code"
+                    class="h-4 w-4 text-indigo-600 dark:text-indigo-400"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                      clip-rule="evenodd"
+                    />
                   </svg>
                 </button>
               </div>
@@ -67,16 +93,43 @@
               :title="themeLabel"
             >
               <!-- 太阳图标 (浅色模式) -->
-              <svg v-if="themeIcon === 'sun'" class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+              <svg
+                v-if="themeIcon === 'sun'"
+                class="h-5 w-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
+                />
               </svg>
               <!-- 月亮图标 (深色模式) -->
-              <svg v-else-if="themeIcon === 'moon'" class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+              <svg
+                v-else-if="themeIcon === 'moon'"
+                class="h-5 w-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
+                />
               </svg>
               <!-- 系统图标 (跟随系统) -->
               <svg v-else class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                />
               </svg>
             </button>
 
@@ -98,12 +151,24 @@
                   :key="themeOption.value"
                   @click="selectTheme(themeOption.value)"
                   class="flex items-center gap-3 w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
-                  :class="{ 'bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400': theme === themeOption.value }"
+                  :class="{
+                    'bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400':
+                      theme === themeOption.value,
+                  }"
                 >
                   <component :is="themeOption.icon" class="h-4 w-4" />
                   {{ t(`header.theme.${themeOption.key}`) }}
-                  <svg v-if="theme === themeOption.value" class="h-4 w-4 ml-auto text-indigo-600 dark:text-indigo-400" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                  <svg
+                    v-if="theme === themeOption.value"
+                    class="h-4 w-4 ml-auto text-indigo-600 dark:text-indigo-400"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                      clip-rule="evenodd"
+                    />
                   </svg>
                 </button>
               </div>
@@ -114,10 +179,17 @@
             <!-- 已登录：显示用户信息和退出按钮 -->
             <div class="flex items-center gap-3">
               <div class="text-right">
-                <p class="text-sm font-medium text-gray-900 dark:text-white">{{ currentUser?.profile?.name || '用户' }}</p>
+                <p class="text-sm font-medium text-gray-900 dark:text-white">
+                  {{ currentUser?.profile?.name || '用户' }}
+                </p>
                 <p class="text-xs text-gray-500 dark:text-gray-400">{{ roleText }}</p>
               </div>
-              <div :class="['w-8 h-8 rounded-full flex items-center justify-center text-white font-medium text-sm', userAvatarColor]">
+              <div
+                :class="[
+                  'w-8 h-8 rounded-full flex items-center justify-center text-white font-medium text-sm',
+                  userAvatarColor,
+                ]"
+              >
                 {{ userAvatar }}
               </div>
               <button
@@ -146,11 +218,27 @@
             class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500 transition-colors duration-200"
             :aria-expanded="isMobileMenuOpen"
           >
-            <svg v-if="!isMobileMenuOpen" class="block h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+            <svg
+              v-if="!isMobileMenuOpen"
+              class="block h-6 w-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M4 6h16M4 12h16M4 18h16"
+              />
             </svg>
             <svg v-else class="block h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              />
             </svg>
           </button>
         </div>
@@ -172,12 +260,21 @@
           <div class="px-2 pt-2 pb-3 space-y-1">
             <template v-if="isAuthenticated">
               <!-- 移动端用户信息 -->
-              <div class="flex items-center gap-3 px-3 py-3 border-b border-gray-200 dark:border-gray-700 mb-2">
-                <div :class="['w-10 h-10 rounded-lg flex items-center justify-center text-white font-medium text-lg', userAvatarColor]">
+              <div
+                class="flex items-center gap-3 px-3 py-3 border-b border-gray-200 dark:border-gray-700 mb-2"
+              >
+                <div
+                  :class="[
+                    'w-10 h-10 rounded-lg flex items-center justify-center text-white font-medium text-lg',
+                    userAvatarColor,
+                  ]"
+                >
                   {{ userAvatar }}
                 </div>
                 <div class="flex-1 min-w-0">
-                  <p class="text-sm font-medium text-gray-900 dark:text-white truncate">{{ currentUser?.profile?.name || '用户' }}</p>
+                  <p class="text-sm font-medium text-gray-900 dark:text-white truncate">
+                    {{ currentUser?.profile?.name || '用户' }}
+                  </p>
                   <p class="text-xs text-gray-500 dark:text-gray-400">{{ roleText }}</p>
                 </div>
               </div>
@@ -188,7 +285,12 @@
                 class="flex items-center gap-3 px-3 py-3 text-base font-medium text-gray-500 hover:text-gray-900 hover:bg-gray-50 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-700 rounded-md transition-colors duration-200"
               >
                 <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+                  />
                 </svg>
                 {{ t('header.dashboard') }}
               </router-link>
@@ -197,16 +299,22 @@
 
               <!-- 移动端语言切换 -->
               <div class="px-3 py-2">
-                <p class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">{{ t('header.language') }}</p>
+                <p
+                  class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2"
+                >
+                  {{ t('header.language') }}
+                </p>
                 <div class="grid grid-cols-2 gap-2">
                   <button
                     v-for="lang in availableLocales"
                     :key="lang.code"
                     @click="selectLanguage(lang.code)"
                     class="flex items-center justify-center gap-2 p-2 rounded-lg text-xs font-medium transition-colors duration-200"
-                    :class="locale === lang.code
-                      ? 'bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400'
-                      : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700'"
+                    :class="
+                      locale === lang.code
+                        ? 'bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400'
+                        : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700'
+                    "
                   >
                     {{ lang.shortName }}
                   </button>
@@ -215,16 +323,22 @@
 
               <!-- 移动端主题切换 -->
               <div class="px-3 py-2">
-                <p class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">{{ t('header.theme.settings') }}</p>
+                <p
+                  class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2"
+                >
+                  {{ t('header.theme.settings') }}
+                </p>
                 <div class="grid grid-cols-3 gap-2">
                   <button
                     v-for="themeOption in themeOptions"
                     :key="themeOption.value"
                     @click="selectTheme(themeOption.value)"
                     class="flex flex-col items-center gap-1 p-2 rounded-lg text-xs font-medium transition-colors duration-200"
-                    :class="theme === themeOption.value
-                      ? 'bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400'
-                      : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700'"
+                    :class="
+                      theme === themeOption.value
+                        ? 'bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400'
+                        : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700'
+                    "
                   >
                     <component :is="themeOption.icon" class="h-4 w-4" />
                     {{ t(`header.theme.${themeOption.key}Short`) }}
@@ -239,7 +353,12 @@
                 class="flex items-center gap-3 w-full px-3 py-3 text-base font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-md transition-colors duration-200"
               >
                 <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                  />
                 </svg>
                 {{ t('header.logoutMobile') }}
               </button>
@@ -287,58 +406,74 @@ const themeOptions = [
   {
     value: 'light' as const,
     key: 'light',
-    icon: () => h('svg', {
-      class: 'h-4 w-4',
-      fill: 'none',
-      stroke: 'currentColor',
-      viewBox: '0 0 24 24'
-    }, [
-      h('path', {
-        'stroke-linecap': 'round',
-        'stroke-linejoin': 'round',
-        'stroke-width': '2',
-        d: 'M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z'
-      })
-    ])
+    icon: () =>
+      h(
+        'svg',
+        {
+          class: 'h-4 w-4',
+          fill: 'none',
+          stroke: 'currentColor',
+          viewBox: '0 0 24 24',
+        },
+        [
+          h('path', {
+            'stroke-linecap': 'round',
+            'stroke-linejoin': 'round',
+            'stroke-width': '2',
+            d: 'M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z',
+          }),
+        ],
+      ),
   },
   {
     value: 'dark' as const,
     key: 'dark',
-    icon: () => h('svg', {
-      class: 'h-4 w-4',
-      fill: 'none',
-      stroke: 'currentColor',
-      viewBox: '0 0 24 24'
-    }, [
-      h('path', {
-        'stroke-linecap': 'round',
-        'stroke-linejoin': 'round',
-        'stroke-width': '2',
-        d: 'M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z'
-      })
-    ])
+    icon: () =>
+      h(
+        'svg',
+        {
+          class: 'h-4 w-4',
+          fill: 'none',
+          stroke: 'currentColor',
+          viewBox: '0 0 24 24',
+        },
+        [
+          h('path', {
+            'stroke-linecap': 'round',
+            'stroke-linejoin': 'round',
+            'stroke-width': '2',
+            d: 'M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z',
+          }),
+        ],
+      ),
   },
   {
     value: 'system' as const,
     key: 'system',
-    icon: () => h('svg', {
-      class: 'h-4 w-4',
-      fill: 'none',
-      stroke: 'currentColor',
-      viewBox: '0 0 24 24'
-    }, [
-      h('path', {
-        'stroke-linecap': 'round',
-        'stroke-linejoin': 'round',
-        'stroke-width': '2',
-        d: 'M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z'
-      })
-    ])
-  }
+    icon: () =>
+      h(
+        'svg',
+        {
+          class: 'h-4 w-4',
+          fill: 'none',
+          stroke: 'currentColor',
+          viewBox: '0 0 24 24',
+        },
+        [
+          h('path', {
+            'stroke-linecap': 'round',
+            'stroke-linejoin': 'round',
+            'stroke-width': '2',
+            d: 'M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z',
+          }),
+        ],
+      ),
+  },
 ]
 
 // 从 store 获取用户状态
-const { currentUser, isAuthenticated, roleText, userAvatar, userAvatarColor, dashboardPath } = userStore
+const { currentUser, isAuthenticated, roleText, userAvatar, userAvatarColor, dashboardPath } =
+  userStore
 
 // Toggle mobile menu
 const toggleMobileMenu = () => {

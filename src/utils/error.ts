@@ -12,9 +12,16 @@ export const formatApiError = (error: ApiError | unknown): string => {
     }
 
     // 如果是 axios 错误
-    if ('response' in error && error.response && typeof error.response === 'object' &&
-        'data' in error.response && error.response.data && typeof error.response.data === 'object' &&
-        'message' in error.response.data && typeof error.response.data.message === 'string') {
+    if (
+      'response' in error &&
+      error.response &&
+      typeof error.response === 'object' &&
+      'data' in error.response &&
+      error.response.data &&
+      typeof error.response.data === 'object' &&
+      'message' in error.response.data &&
+      typeof error.response.data.message === 'string'
+    ) {
       return error.response.data.message
     }
 
@@ -34,13 +41,18 @@ export const formatApiError = (error: ApiError | unknown): string => {
 export const isAuthError = (error: ApiError | unknown): boolean => {
   if (error && typeof error === 'object') {
     // 检查状态码
-    if (('code' in error && (error.code === 401)) || ('status' in error && (error.status === 401))) {
+    if (('code' in error && error.code === 401) || ('status' in error && error.status === 401)) {
       return true
     }
 
     // 检查 axios 错误
-    if ('response' in error && error.response && typeof error.response === 'object' &&
-        'status' in error.response && error.response.status === 401) {
+    if (
+      'response' in error &&
+      error.response &&
+      typeof error.response === 'object' &&
+      'status' in error.response &&
+      error.response.status === 401
+    ) {
       return true
     }
   }
@@ -54,13 +66,18 @@ export const isAuthError = (error: ApiError | unknown): boolean => {
 export const isPermissionError = (error: ApiError | unknown): boolean => {
   if (error && typeof error === 'object') {
     // 检查状态码
-    if (('code' in error && (error.code === 403)) || ('status' in error && (error.status === 403))) {
+    if (('code' in error && error.code === 403) || ('status' in error && error.status === 403)) {
       return true
     }
 
     // 检查 axios 错误
-    if ('response' in error && error.response && typeof error.response === 'object' &&
-        'status' in error.response && error.response.status === 403) {
+    if (
+      'response' in error &&
+      error.response &&
+      typeof error.response === 'object' &&
+      'status' in error.response &&
+      error.response.status === 403
+    ) {
       return true
     }
   }
@@ -74,13 +91,16 @@ export const isPermissionError = (error: ApiError | unknown): boolean => {
 export const isNetworkError = (error: ApiError | unknown): boolean => {
   if (error && typeof error === 'object') {
     // 检查是否为网络连接错误
-    if (('code' in error && (error.code === -1)) || !('response' in error)) {
+    if (('code' in error && error.code === -1) || !('response' in error)) {
       return true
     }
 
     // 检查 axios 网络错误
-    if (('code' in error && typeof error.code === 'string' &&
-         (error.code === 'NETWORK_ERROR' || error.code === 'ECONNREFUSED'))) {
+    if (
+      'code' in error &&
+      typeof error.code === 'string' &&
+      (error.code === 'NETWORK_ERROR' || error.code === 'ECONNREFUSED')
+    ) {
       return true
     }
   }

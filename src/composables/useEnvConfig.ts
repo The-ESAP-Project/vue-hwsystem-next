@@ -26,6 +26,6 @@ export function useEnvConfig() {
     isRegistrationEnabled,
     appTitle,
     apiBaseUrl,
-    isDev
+    isDev,
   }
 }

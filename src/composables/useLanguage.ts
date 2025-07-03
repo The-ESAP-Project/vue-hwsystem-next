@@ -8,12 +8,12 @@ export function useLanguage() {
   // 可用语言列表
   const availableLocales = [
     { code: 'zh', name: '中文', shortName: '中' },
-    { code: 'en', name: 'English', shortName: 'EN' }
+    { code: 'en', name: 'English', shortName: 'EN' },
   ]
 
   // 当前语言信息
   const currentLocale = computed(() => {
-    return availableLocales.find(lang => lang.code === locale.value) || availableLocales[0]
+    return availableLocales.find((lang) => lang.code === locale.value) || availableLocales[0]
   })
 
   // 切换语言
@@ -27,6 +27,6 @@ export function useLanguage() {
     availableLocales,
     currentLocale,
     setLocale,
-    t
+    t,
   }
 }

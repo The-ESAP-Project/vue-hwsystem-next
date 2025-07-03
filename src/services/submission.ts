@@ -8,14 +8,17 @@ import type {
   SubmissionListResponse,
   GradingRequest,
   ExportSubmissionsRequest,
-  ExportTaskResponse
+  ExportTaskResponse,
 } from '@/types/homework'
 
 export class SubmissionService {
   /**
    * 提交作业
    */
-  static async createSubmission(homeworkId: number, data: CreateSubmissionRequest): Promise<Submission> {
+  static async createSubmission(
+    homeworkId: number,
+    data: CreateSubmissionRequest,
+  ): Promise<Submission> {
     const formData = new FormData()
 
     formData.append('content', data.content)
@@ -34,7 +37,7 @@ export class SubmissionService {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
-      }
+      },
     )
     return response.data.data
   }
@@ -42,10 +45,13 @@ export class SubmissionService {
   /**
    * 获取作业的提交列表
    */
-  static async getSubmissions(homeworkId: number, params?: SubmissionListParams): Promise<SubmissionListResponse> {
+  static async getSubmissions(
+    homeworkId: number,
+    params?: SubmissionListParams,
+  ): Promise<SubmissionListResponse> {
     const response = await api.get<ApiResponse<SubmissionListResponse>>(
       `/homeworks/${homeworkId}/submissions`,
-      { params }
+      { params },
     )
     return response.data.data
   }
@@ -64,7 +70,7 @@ export class SubmissionService {
   static async gradeSubmission(submissionId: number, data: GradingRequest): Promise<Submission> {
     const response = await api.post<ApiResponse<Submission>>(
       `/submissions/${submissionId}/feedback`,
-      data
+      data,
     )
     return response.data.data
   }
@@ -72,10 +78,13 @@ export class SubmissionService {
   /**
    * 导出提交统计
    */
-  static async exportSubmissions(homeworkId: number, data: ExportSubmissionsRequest): Promise<ExportTaskResponse> {
+  static async exportSubmissions(
+    homeworkId: number,
+    data: ExportSubmissionsRequest,
+  ): Promise<ExportTaskResponse> {
     const response = await api.post<ApiResponse<ExportTaskResponse>>(
       `/homeworks/${homeworkId}/submissions/export`,
-      data
+      data,
     )
     return response.data.data
   }
@@ -83,9 +92,11 @@ export class SubmissionService {
   /**
    * 获取学生的提交历史
    */
-  static async getStudentSubmissions(params?: SubmissionListParams): Promise<SubmissionListResponse> {
+  static async getStudentSubmissions(
+    params?: SubmissionListParams,
+  ): Promise<SubmissionListResponse> {
     const response = await api.get<ApiResponse<SubmissionListResponse>>('/submissions', {
-      params
+      params,
     })
     return response.data.data
   }
