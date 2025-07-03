@@ -202,14 +202,7 @@
           to="/"
           class="inline-flex items-center gap-2 px-6 py-3 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors duration-200"
         >
-          <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M15 19l-7-7 7-7"
-            />
-          </svg>
+          <ChevronLeftIcon class="w-5 h-5" />
           {{ t('terms.backHome') }}
         </router-link>
       </div>
@@ -218,6 +211,7 @@
 </template>
 
 <script setup lang="ts">
+import { ChevronLeftIcon } from '@heroicons/vue/24/outline'
 import { useLanguage } from '@/composables/useLanguage'
 
 const { t } = useLanguage()

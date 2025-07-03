@@ -8,14 +8,7 @@
         <div
           class="mx-auto h-16 w-16 rounded-2xl bg-gradient-to-r from-indigo-600 to-purple-600 flex items-center justify-center mb-6 shadow-lg"
         >
-          <svg class="h-8 w-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M15 7a2 2 0 012 2m4 0a6 6 0 01-11.674 1.515A6 6 0 003 9a6 6 0 1011.674 1.515zM12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"
-            />
-          </svg>
+          <ClockIcon class="h-8 w-8 text-white" />
         </div>
         <h1
           class="text-4xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent"
@@ -60,7 +53,10 @@
               :disabled="pending"
               class="w-full py-3 px-4 text-sm font-semibold rounded-2xl text-white bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 disabled:opacity-50 transition-all duration-200 transform hover:scale-105 disabled:hover:scale-100"
             >
-              <span v-if="pending">{{ t('auth.forgotPassword.processing') }}</span>
+              <span v-if="pending" class="flex items-center justify-center">
+                <LoadingSpinner class="mr-2" size="sm" color="white" />
+                {{ t('auth.forgotPassword.processing') }}
+              </span>
               <span v-else>{{ t('auth.forgotPassword.submitButton') }}</span>
             </button>
           </form>
@@ -71,19 +67,7 @@
           <div
             class="w-16 h-16 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto mb-4"
           >
-            <svg
-              class="w-8 h-8 text-green-600 dark:text-green-400"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M5 13l4 4L19 7"
-              />
-            </svg>
+            <CheckIcon class="w-8 h-8 text-green-600 dark:text-green-400" />
           </div>
           <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
             {{ t('auth.forgotPassword.successTitle') }}
@@ -113,6 +97,8 @@
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
 import { useLanguage } from '@/composables/useLanguage'
+import { ClockIcon, CheckIcon } from '@heroicons/vue/24/outline'
+import LoadingSpinner from '@/components/icon/LoadingSpinner.vue'
 
 const { t } = useLanguage()
 
