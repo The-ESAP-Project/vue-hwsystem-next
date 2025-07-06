@@ -289,7 +289,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/user'
 import { useDarkMode } from '@/composables/useDarkMode'
@@ -340,9 +340,13 @@ const themeOptions = [
   },
 ]
 
-// 从 store 获取用户状态
-const { currentUser, isAuthenticated, roleText, userAvatar, userAvatarColor, dashboardPath } =
-  userStore
+// 使用计算属性来确保响应性
+const isAuthenticated = computed(() => userStore.isAuthenticated)
+const currentUser = computed(() => userStore.currentUser)
+const roleText = computed(() => userStore.roleText)
+const userAvatar = computed(() => userStore.userAvatar)
+const userAvatarColor = computed(() => userStore.userAvatarColor)
+const dashboardPath = computed(() => userStore.dashboardPath)
 
 // Toggle mobile menu
 const toggleMobileMenu = () => {

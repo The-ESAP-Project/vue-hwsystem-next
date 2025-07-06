@@ -2,6 +2,9 @@
   "app": {
     "name": "作业管理系统"
   },
+  "common": {
+    "user": "用户"
+  },
   "header": {
     "login": "登录",
     "logout": "退出",
@@ -44,6 +47,16 @@
         "usernameRequired": "请输入用户名",
         "passwordRequired": "请输入密码",
         "loginFailed": "登录失败，请重试"
+      },
+      "success": {
+        "title": "登录成功",
+        "message": "欢迎回来，{name}！正在跳转到控制台..."
+      }
+    },
+    "logout": {
+      "success": {
+        "title": "已安全退出",
+        "message": "再见，{name}！期待您的再次光临。"
       }
     },
     "forgotPassword": {
@@ -540,5 +553,22 @@
       "content": "使用本服务即表示您已阅读、理解并同意遵守上述所有条款。如果您不同意任何条款，请停止使用本服务。"
     },
     "backHome": "返回首页"
+  },
+  "error": {
+    "notFound": {
+      "title": "页面未找到",
+      "description": "抱歉，您访问的页面不存在。可能是链接错误或页面已被移动。",
+      "path": "请求路径",
+      "goBack": "返回上一页",
+      "goHome": "回到首页",
+      "suggestions": "您可能想要访问以下页面："
+    }
+  },
+  "nav": {
+    "home": "首页",
+    "about": "关于我们",
+    "contact": "联系我们",
+    "privacy": "隐私政策",
+    "terms": "服务条款"
   }
 }

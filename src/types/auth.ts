@@ -1,7 +1,7 @@
 // 认证相关的类型定义
 
 // 用户角色
-export type UserRole = 'student' | 'teacher' | 'monitor'
+export type UserRole = 'student' | 'teacher' | 'class_representative' | 'admin'
 
 // 用户状态
 export type UserStatus = 'active' | 'inactive' | 'suspended'
@@ -35,7 +35,6 @@ export interface LoginRequest {
 // 登录响应数据
 export interface LoginResponseData {
   access_token: string
-  refresh_token: string
   token_type: string
   expires_in: number
   user: User
@@ -52,4 +51,15 @@ export interface RefreshTokenResponseData {
   refresh_token: string
   token_type: string
   expires_in: number
+}
+
+// Token 验证结果接口
+export interface TokenVerificationResult {
+  isValid: boolean
+  isNetworkError: boolean
+  error?: {
+    code: number
+    message: string
+    timestamp: string
+  }
 }

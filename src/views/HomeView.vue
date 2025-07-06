@@ -316,7 +316,10 @@ const PresentationChartBarIcon = 'div'
 
 // 使用 user store
 const userStore = useUserStore()
-const { currentUser, isAuthenticated, dashboardPath } = userStore
+
+const currentUser = computed(() => userStore.currentUser)
+const isAuthenticated = computed(() => userStore.isAuthenticated)
+const dashboardPath = computed(() => userStore.dashboardPath)
 
 const features = computed(() => [
   {

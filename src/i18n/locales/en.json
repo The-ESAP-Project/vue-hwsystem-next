@@ -2,6 +2,9 @@
   "app": {
     "name": "Homework Management System"
   },
+  "common": {
+    "user": "User"
+  },
   "header": {
     "login": "Login",
     "logout": "Logout",
@@ -44,6 +47,10 @@
         "usernameRequired": "Please enter username",
         "passwordRequired": "Please enter password",
         "loginFailed": "Login failed, please try again"
+      },
+      "success": {
+        "title": "Login Successful",
+        "message": "Welcome back, {name}! Redirecting to dashboard..."
       }
     },
     "forgotPassword": {
@@ -540,5 +547,22 @@
       "content": "Using this service indicates that you have read, understood, and agree to comply with all the above terms. If you do not agree to any terms, please stop using this service."
     },
     "backHome": "Back to Home"
+  },
+  "error": {
+    "notFound": {
+      "title": "Page Not Found",
+      "description": "Sorry, the page you are looking for doesn't exist. The link might be broken or the page may have been moved.",
+      "path": "Requested path",
+      "goBack": "Go Back",
+      "goHome": "Go Home",
+      "suggestions": "You might want to visit these pages:"
+    }
+  },
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "contact": "Contact",
+    "privacy": "Privacy",
+    "terms": "Terms"
   }
 }

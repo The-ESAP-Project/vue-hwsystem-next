@@ -2,6 +2,8 @@
 import axios from 'axios'
 import type { AxiosInstance, AxiosResponse, InternalAxiosRequestConfig } from 'axios'
 
+import { ErrorCode } from './error_code'
+
 // API 响应基础接口
 export interface ApiResponse<T = unknown> {
   code: number
@@ -45,7 +47,7 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response: AxiosResponse<ApiResponse>) => {
     // 检查业务状态码
-    if (response.data.code === 0) {
+    if (response.data.code === ErrorCode.Success) {
       return response
     } else {
       // 业务错误
@@ -65,11 +67,19 @@ api.interceptors.response.use(
       switch (status) {
         case 401:
           // 未授权，清除本地存储的认证信息
-          localStorage.removeItem('authToken')
-          localStorage.removeItem('refreshToken')
-          localStorage.removeItem('currentUser')
-          // 可以在这里触发跳转到登录页
-          window.location.href = '/auth/login'
+          // 需要验证返回体 code 是否真正为 Unauthorized
+          if (data?.code === ErrorCode.Unauthorized) {
+            // 清除本地存储
+            localStorage.removeItem('authToken')
+            localStorage.removeItem('currentUser')
+            localStorage.removeItem('refreshToken')
+            localStorage.removeItem('tokenType')
+            localStorage.removeItem('tokenExpiresIn')
+            
+            // 通过自定义事件通知用户 store
+            window.dispatchEvent(new CustomEvent('auth:logout'))
+            console.error('认证已过期，请重新登录')
+          }
           break
         case 403:
           console.error('权限不足')
