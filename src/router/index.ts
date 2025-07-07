@@ -165,6 +165,12 @@ router.beforeEach(async (to, from, next) => {
     ...matchedRoute?.meta,
   }
 
+  // 如果已登录用户访问首页，重定向到对应的 dashboard
+  if (to.name === 'home' && userStore.isAuthenticated) {
+    next({ path: userStore.dashboardPath })
+    return
+  }
+
   // 检查是否需要认证
   if (combinedMeta.requiresAuth) {
     if (!userStore.isAuthenticated) {
@@ -181,8 +187,8 @@ router.beforeEach(async (to, from, next) => {
     if (combinedMeta.roles && Array.isArray(combinedMeta.roles)) {
       const userRole = userStore.currentUser?.role
       if (!userRole || !combinedMeta.roles.includes(userRole)) {
-        // 角色不匹配，重定向到首页或显示错误页面
-        next({ name: 'home' })
+        // 角色不匹配，重定向到对应的 dashboard
+        next({ path: userStore.dashboardPath })
         return
       }
     }

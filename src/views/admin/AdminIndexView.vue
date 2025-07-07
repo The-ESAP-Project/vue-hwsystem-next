@@ -21,17 +21,39 @@
           管理员功能正在开发中，敬请期待...
         </p>
 
-        <router-link
-          to="/"
-          class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-lg text-white font-medium hover:from-indigo-700 hover:to-purple-700 transition-colors duration-200"
+        <button
+          @click="handleLogout"
+          class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-red-600 to-pink-600 rounded-lg text-white font-medium hover:from-red-700 hover:to-pink-700 transition-colors duration-200"
         >
-          返回首页
-        </router-link>
+          <svg class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+            />
+          </svg>
+          退出登录
+        </button>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { useUserStore } from '@/stores/user'
+import { useRouter } from 'vue-router'
+
 // 管理员页面 - 待开发
+const userStore = useUserStore()
+const router = useRouter()
+
+const handleLogout = async () => {
+  try {
+    await userStore.logout()
+    router.push({ name: 'home' })
+  } catch (error) {
+    console.error('退出登录失败:', error)
+  }
+}
 </script>
