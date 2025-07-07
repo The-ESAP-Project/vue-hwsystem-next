@@ -295,6 +295,17 @@
 </template>
 
 <script setup lang="ts">
+import {
+  DevicePhoneMobileIcon,
+  BellIcon,
+  ChartBarIcon,
+  PencilSquareIcon,
+  ShieldCheckIcon,
+  LightBulbIcon,
+  AcademicCapIcon,
+  UserGroupIcon,
+  PresentationChartBarIcon
+} from '@heroicons/vue/24/outline'
 import { computed } from 'vue'
 import { useUserStore } from '@/stores/user'
 import { useLanguage } from '@/composables/useLanguage'
@@ -302,17 +313,6 @@ import { CheckIcon } from '@heroicons/vue/24/outline'
 
 // 使用 i18n
 const { t } = useLanguage()
-
-// 图标组件 - 简化版本，暂时使用 div 替代
-const DevicePhoneMobileIcon = 'div'
-const BellIcon = 'div'
-const ChartBarIcon = 'div'
-const PencilSquareIcon = 'div'
-const ShieldCheckIcon = 'div'
-const LightBulbIcon = 'div'
-const AcademicCapIcon = 'div'
-const UserGroupIcon = 'div'
-const PresentationChartBarIcon = 'div'
 
 // 使用 user store
 const userStore = useUserStore()
