@@ -73,9 +73,8 @@ api.interceptors.response.use(
             localStorage.removeItem('authToken')
             localStorage.removeItem('currentUser')
             localStorage.removeItem('refreshToken')
-            localStorage.removeItem('tokenType')
             localStorage.removeItem('tokenExpiresIn')
-            
+
             // 通过自定义事件通知用户 store
             window.dispatchEvent(new CustomEvent('auth:logout'))
             console.error('认证已过期，请重新登录')

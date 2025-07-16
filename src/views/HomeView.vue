@@ -304,7 +304,7 @@ import {
   LightBulbIcon,
   AcademicCapIcon,
   UserGroupIcon,
-  PresentationChartBarIcon
+  PresentationChartBarIcon,
 } from '@heroicons/vue/24/outline'
 import { computed } from 'vue'
 import { useUserStore } from '@/stores/user'

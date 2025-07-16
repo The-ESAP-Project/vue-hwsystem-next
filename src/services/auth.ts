@@ -4,11 +4,10 @@ import type { ApiResponse, ApiError } from './api'
 import type {
   LoginRequest,
   LoginResponseData,
-  RefreshTokenRequest,
   RefreshTokenResponseData,
   TokenVerificationResult,
-  User,
 } from '@/types/auth'
+import type { User } from '@/types/user'
 
 export class AuthService {
   /**
@@ -22,11 +21,8 @@ export class AuthService {
   /**
    * 刷新访问令牌
    */
-  static async refreshToken(refreshData: RefreshTokenRequest): Promise<RefreshTokenResponseData> {
-    const response = await api.post<ApiResponse<RefreshTokenResponseData>>(
-      '/auth/refresh',
-      refreshData,
-    )
+  static async refreshToken(): Promise<RefreshTokenResponseData> {
+    const response = await api.get<ApiResponse<RefreshTokenResponseData>>('/v1/auth/refresh')
     return response.data.data
   }
 

@@ -2,7 +2,8 @@ import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import AuthService from '@/services/auth'
 import { useNotification } from '@/composables/useNotification'
-import type { User, LoginRequest } from '@/types/auth'
+import type { LoginRequest } from '@/types/auth'
+import type { User } from '@/types/user'
 
 export const useUserStore = defineStore('user', () => {
   // 通知系统
@@ -21,12 +22,10 @@ export const useUserStore = defineStore('user', () => {
     switch (currentUser.value.role) {
       case 'admin':
         return '管理员'
-      case 'class_representative':
-        return '课代表'
       case 'teacher':
         return '教师'
-      case 'student':
-        return '学生'
+      case 'user':
+        return '用户'
       default:
         return ''
     }
@@ -37,12 +36,10 @@ export const useUserStore = defineStore('user', () => {
     switch (currentUser.value.role) {
       case 'admin':
         return '管'
-      case 'class_representative':
-        return '课'
       case 'teacher':
         return '师'
-      case 'student':
-        return '生'
+      case 'user':
+        return '用'
       default:
         return '用'
     }
@@ -53,11 +50,9 @@ export const useUserStore = defineStore('user', () => {
     switch (currentUser.value.role) {
       case 'admin':
         return 'bg-gradient-to-r from-red-500 to-orange-500'
-      case 'class_representative':
-        return 'bg-gradient-to-r from-purple-500 to-pink-500'
       case 'teacher':
         return 'bg-gradient-to-r from-blue-500 to-indigo-500'
-      case 'student':
+      case 'user':
         return 'bg-gradient-to-r from-green-500 to-emerald-500'
       default:
         return 'bg-gradient-to-r from-gray-500 to-gray-600'
@@ -69,11 +64,9 @@ export const useUserStore = defineStore('user', () => {
     switch (currentUser.value.role) {
       case 'admin':
         return '/admin/dashboard'
-      case 'class_representative':
-        return '/class_representative/dashboard'
       case 'teacher':
         return '/teacher/dashboard'
-      case 'student':
+      case 'user':
         return '/student/dashboard'
       default:
         return '/'
@@ -93,11 +86,10 @@ export const useUserStore = defineStore('user', () => {
       // 保存到本地存储
       localStorage.setItem('currentUser', JSON.stringify(loginData.user))
       localStorage.setItem('authToken', loginData.access_token)
-      localStorage.setItem('tokenType', loginData.token_type)
       localStorage.setItem('tokenExpiresIn', loginData.expires_in.toString())
 
       // 显示登录成功通知
-      const userName = loginData.user.profile?.name || loginData.user.username
+      const userName = loginData.user.profile?.profile_name || loginData.user.username
       success('登录成功', `欢迎回来，${userName}！`)
 
       return loginData.user
@@ -113,7 +105,8 @@ export const useUserStore = defineStore('user', () => {
     isLoading.value = true
 
     // 保存当前用户名用于通知
-    const userName = currentUser.value?.profile?.name || currentUser.value?.username || '用户'
+    const userName =
+      currentUser.value?.profile?.profile_name || currentUser.value?.username || '用户'
 
     try {
       // JWT 模式下主要由客户端处理退出
@@ -180,7 +173,6 @@ export const useUserStore = defineStore('user', () => {
     localStorage.removeItem('currentUser')
     localStorage.removeItem('authToken')
     localStorage.removeItem('refreshToken')
-    localStorage.removeItem('tokenType')
     localStorage.removeItem('tokenExpiresIn')
   }
 

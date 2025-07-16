@@ -10,7 +10,7 @@
     <div
       v-show="true"
       :class="[
-        'pointer-events-auto w-full max-w-sm overflow-hidden rounded-lg bg-white dark:bg-gray-800 shadow-lg ring-1 ring-black ring-opacity-5 dark:ring-gray-700',
+        'pointer-events-auto w-full max-w-sm overflow-hidden rounded-lg bg-white dark:bg-gray-800 shadow-lg',
         typeClasses,
       ]"
     >

@@ -1,19 +1,15 @@
 // 文件管理相关类型定义
 
-export interface UploadFileRequest {
+export interface FileUploadRequest {
   file: File
-  type: 'homework_attachment' | 'submission_attachment' | 'avatar'
-  related_id?: number
 }
 
-export interface UploadFileResponse {
-  id: string
-  filename: string
-  original_name: string
+export interface FileUploadResponse {
+  submission_token: string
+  file_name: string
   size: number
   content_type: string
-  download_url: string
-  uploaded_at: string
+  uploaded_at: string // ISO 8601 字符串（"2024-07-16T12:34:56Z"）
 }
 
 export interface FileDownloadResponse {

@@ -117,7 +117,7 @@
             <div class="flex items-center gap-3">
               <div class="text-right">
                 <p class="text-sm font-medium text-gray-900 dark:text-white">
-                  {{ currentUser?.profile?.name || '用户' }}
+                  {{ currentUser?.profile?.profile_name || '用户' }}
                 </p>
                 <p class="text-xs text-gray-500 dark:text-gray-400">{{ roleText }}</p>
               </div>
@@ -190,7 +190,7 @@
                 </div>
                 <div class="flex-1 min-w-0">
                   <p class="text-sm font-medium text-gray-900 dark:text-white truncate">
-                    {{ currentUser?.profile?.name || '用户' }}
+                    {{ currentUser?.profile?.profile_name || '用户' }}
                   </p>
                   <p class="text-xs text-gray-500 dark:text-gray-400">{{ roleText }}</p>
                 </div>

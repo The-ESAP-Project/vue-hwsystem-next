@@ -1,23 +1,18 @@
 // 文件管理服务
 import api from './api'
 import type { ApiResponse } from './api'
-import type { UploadFileRequest, UploadFileResponse, FileDownloadResponse } from '@/types/file'
+import type { FileUploadRequest, FileUploadResponse, FileDownloadResponse } from '@/types/file'
 
 export class FileService {
   /**
    * 上传文件
    */
-  static async uploadFile(data: UploadFileRequest): Promise<UploadFileResponse> {
+  static async uploadFile(data: FileUploadRequest): Promise<FileUploadResponse> {
     const formData = new FormData()
 
     formData.append('file', data.file)
-    formData.append('type', data.type)
 
-    if (data.related_id) {
-      formData.append('related_id', data.related_id.toString())
-    }
-
-    const response = await api.post<ApiResponse<UploadFileResponse>>('/v1/files/upload', formData, {
+    const response = await api.post<ApiResponse<FileUploadResponse>>('/v1/files/upload', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
