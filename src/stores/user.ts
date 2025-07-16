@@ -67,7 +67,7 @@ export const useUserStore = defineStore('user', () => {
       case 'teacher':
         return '/teacher/dashboard'
       case 'user':
-        return '/student/dashboard'
+        return '/user/dashboard'
       default:
         return '/'
     }

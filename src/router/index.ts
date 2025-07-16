@@ -1,5 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '@/views/HomeView.vue'
+import DefaultLayout from '@/layouts/DefaultLayout.vue'
+import AppLayout from '@/layouts/AppLayout.vue'
 import { useUserStore } from '@/stores/user'
 
 const router = createRouter({
@@ -20,15 +22,37 @@ const router = createRouter({
     return { top: 0, behavior: 'smooth' }
   },
   routes: [
+    // 首页路由
     {
       path: '/',
-      name: 'home',
-      component: HomeView,
-    },
-    {
-      path: '/about',
-      name: 'about',
-      component: () => import('@/views/AboutView.vue'),
+      component: DefaultLayout, // 这里用你的布局组件
+      children: [
+        {
+          path: '',
+          name: 'home',
+          component: HomeView,
+        },
+        {
+          path: 'about',
+          name: 'about',
+          component: () => import('@/views/AboutView.vue'),
+        },
+        {
+          path: 'contact',
+          name: 'contact',
+          component: () => import('@/views/ContactView.vue'),
+        },
+        {
+          path: 'privacy',
+          name: 'privacy',
+          component: () => import('@/views/PrivacyView.vue'),
+        },
+        {
+          path: 'terms',
+          name: 'terms',
+          component: () => import('@/views/TermsView.vue'),
+        },
+      ],
     },
     // 认证页面路由组
     {
@@ -52,25 +76,25 @@ const router = createRouter({
         },
       ],
     },
-    // 学生页面路由组
+    // 用户页面路由组
     {
-      path: '/student',
-      meta: { requiresAuth: true, roles: ['student'] },
+      path: '/user',
+      meta: { requiresAuth: true, roles: ['user'] },
       children: [
         {
           path: '',
           name: 'student',
-          component: () => import('@/views/student/StudentIndexView.vue'),
+          component: () => import('@/views/user/UserIndexView.vue'),
         },
         {
           path: 'dashboard',
           name: 'student-dashboard',
-          component: () => import('@/views/student/StudentDashboardView.vue'),
+          component: () => import('@/views/user/UserDashboardView.vue'),
         },
         {
           path: 'homework/:id',
           name: 'student-homework',
-          component: () => import('@/views/student/StudentHomeworkView.vue'),
+          component: () => import('@/views/user/UserHomeworkView.vue'),
         },
       ],
     },
@@ -91,24 +115,6 @@ const router = createRouter({
         },
       ],
     },
-    // 课代表页面路由组
-    {
-      path: '/class_representative',
-      meta: { requiresAuth: true, roles: ['class_representative'] },
-      children: [
-        {
-          path: '',
-          name: 'class_representative',
-          component: () => import('@/views/class_representative/ClassRepresentativeIndexView.vue'),
-        },
-        {
-          path: 'dashboard',
-          name: 'class_representative-dashboard',
-          component: () =>
-            import('@/views/class_representative/ClassRepresentativeDashboardView.vue'),
-        },
-      ],
-    },
     // 管理员页面路由组
     {
       path: '/admin',
@@ -120,22 +126,6 @@ const router = createRouter({
           component: () => import('@/views/admin/AdminIndexView.vue'),
         },
       ],
-    },
-    // 其他页面
-    {
-      path: '/contact',
-      name: 'contact',
-      component: () => import('@/views/ContactView.vue'),
-    },
-    {
-      path: '/privacy',
-      name: 'privacy',
-      component: () => import('@/views/PrivacyView.vue'),
-    },
-    {
-      path: '/terms',
-      name: 'terms',
-      component: () => import('@/views/TermsView.vue'),
     },
     // 404 页面 - 必须放在最后
     {
@@ -167,8 +157,10 @@ router.beforeEach(async (to, from, next) => {
 
   // 如果已登录用户访问首页，重定向到对应的 dashboard
   if (to.name === 'home' && userStore.isAuthenticated) {
-    next({ path: userStore.dashboardPath })
-    return
+    if (to.path !== userStore.dashboardPath) {
+      next({ path: userStore.dashboardPath })
+      return
+    }
   }
 
   // 检查是否需要认证
@@ -187,18 +179,22 @@ router.beforeEach(async (to, from, next) => {
     if (combinedMeta.roles && Array.isArray(combinedMeta.roles)) {
       const userRole = userStore.currentUser?.role
       if (!userRole || !combinedMeta.roles.includes(userRole)) {
-        // 角色不匹配，重定向到对应的 dashboard
-        next({ path: userStore.dashboardPath })
-        return
+        // 角色不匹配，重定向到对应的 dashboard（避免死循环）
+        if (to.path !== userStore.dashboardPath) {
+          next({ path: userStore.dashboardPath })
+          return
+        }
       }
     }
   }
 
   // 检查是否需要游客状态（如登录页面）
   if (combinedMeta.requiresGuest && userStore.isAuthenticated) {
-    // 已登录用户访问登录页面，重定向到对应的控制台
-    next({ path: userStore.dashboardPath })
-    return
+    // 已登录用户访问登录页面，重定向到对应的控制台（避免死循环）
+    if (to.path !== userStore.dashboardPath) {
+      next({ path: userStore.dashboardPath })
+      return
+    }
   }
 
   next()
