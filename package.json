@@ -19,7 +19,7 @@
     "@headlessui/vue": "^1.7.23",
     "@heroicons/vue": "^2.2.0",
     "@tailwindcss/vite": "^4.1.11",
-    "axios": "^1.11.0",
+    "axios": "^1.12.0",
     "pinia": "^3.0.3",
     "tailwindcss": "^4.1.11",
     "vue": "^3.5.17",
@@ -46,7 +46,7 @@
     "oxlint": "~1.6.0",
     "prettier": "^3.6.2",
     "typescript": "~5.8.3",
-    "vite": "^7.0.7",
+    "vite": "^7.1.6",
     "vite-plugin-vue-devtools": "^7.7.7",
     "vitest": "^3.2.4",
     "vue-tsc": "^3.0.1"
